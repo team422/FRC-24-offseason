@@ -20,6 +20,7 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.DriveConstants;
 import java.util.OptionalDouble;
 import java.util.Queue;
@@ -103,6 +104,11 @@ public class GyroIOPigeon2 implements GyroIO {
         BaseStatusSignal.refreshAll(
                 m_yaw, m_pitch, m_roll, m_yawVelocity, m_pitchVelocity, m_rollVelocity)
             .equals(StatusCode.OK);
+
+    if (RobotBase.isSimulation()) {
+      inputs.connected = false;
+    }
+
     inputs.yawPosition = Rotation2d.fromDegrees(m_yaw.getValueAsDouble());
     inputs.pitchPosition = Rotation2d.fromDegrees(m_pitch.getValueAsDouble());
     inputs.rollPosition = Rotation2d.fromDegrees(m_roll.getValueAsDouble());

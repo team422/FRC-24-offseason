@@ -1,8 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
+import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.subsystems.drive.Drive;
 
-@SuppressWarnings("unused")
 public class RobotState {
   private static RobotState m_instance;
 
@@ -25,4 +26,12 @@ public class RobotState {
   }
 
   public void updateRobotState() {}
+
+  public Pose2d getEstimatedPose() {
+    return m_drive.getPose();
+  }
+
+  public void addVisionObservation(VisionObservation observation) {
+    m_drive.addVisionObservation(observation);
+  }
 }

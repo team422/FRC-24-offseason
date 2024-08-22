@@ -22,7 +22,7 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public double getTurn() {
-    return m_controller.getRightX();
+    return m_controller.getRawAxis(2);
   }
 
   @Override

@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
@@ -86,8 +86,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
   }
 
   /** Configure the button bindings. */

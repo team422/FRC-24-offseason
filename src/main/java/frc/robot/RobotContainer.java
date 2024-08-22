@@ -21,6 +21,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.DriveCommands;
 import frc.robot.oi.DriverControls;
 import frc.robot.oi.DriverControlsXbox;
+import frc.robot.subsystems.aprilTagVision.AprilTagVision;
+import frc.robot.subsystems.aprilTagVision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
@@ -39,6 +41,7 @@ public class RobotContainer {
 
   // Controller
   private DriverControls m_driverControls;
+  private AprilTagVision m_aprilTagVision;
 
   // Dashboard inputs
   private LoggedDashboardChooser<Command> m_autoChooser;
@@ -55,6 +58,11 @@ public class RobotContainer {
 
   /** Configure the subsystems. */
   private void configureSubsystems() {
+    m_aprilTagVision = new AprilTagVision(
+      new AprilTagVisionIONorthstar("northstar_0", null),
+      new AprilTagVisionIONorthstar("northstar_1", null)
+    );
+
     if (RobotBase.isReal()) {
       m_drive =
           new Drive(
@@ -73,7 +81,7 @@ public class RobotContainer {
               new ModuleIOSim());
     }
 
-    RobotState.start(m_drive);
+    RobotState.start(m_drive, m_aprilTagVision);
     m_robotState = RobotState.getInstance();
   }
 

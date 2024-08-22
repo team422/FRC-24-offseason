@@ -1,5 +1,14 @@
 package frc.robot.subsystems.aprilTagVision;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -16,16 +25,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.AprilTagVisionConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotState;
-import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIO.AprilTagVisionInputs;
 import frc.robot.util.GeomUtil;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import org.littletonrobotics.junction.Logger;
 
 public class AprilTagVision extends SubsystemBase {
   public record VisionObservation(
@@ -36,7 +37,6 @@ public class AprilTagVision extends SubsystemBase {
 
   private Map<Integer, Double> m_lastFrameTimes;
   private Map<Integer, Double> m_lastTagDetectionTimes;
-  private ArrayList<Pose2d> m_averageStoppedPositions;
 
   public AprilTagVision(AprilTagVisionIO... ios) {
     m_ios = ios;
@@ -59,8 +59,6 @@ public class AprilTagVision extends SubsystemBase {
             (AprilTag tag) -> {
               m_lastTagDetectionTimes.put(tag.ID, 0.0);
             });
-
-    m_averageStoppedPositions = new ArrayList<>();
   }
 
   @Override
@@ -74,7 +72,6 @@ public class AprilTagVision extends SubsystemBase {
     List<Pose2d> allRobotPoses = new ArrayList<>();
     List<Pose3d> allRobotPoses3d = new ArrayList<>();
     List<VisionObservation> allVisionObservations = new ArrayList<>();
-    int total = 0;
     for (int instanceIndex = 0; instanceIndex < m_ios.length; instanceIndex++) {
       for (int frameIndex = 0;
           frameIndex < m_inputs[instanceIndex].timestamps.length;

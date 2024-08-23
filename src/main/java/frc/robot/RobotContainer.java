@@ -18,6 +18,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.Ports;
 import frc.robot.commands.DriveCommands;
 import frc.robot.oi.DriverControls;
 import frc.robot.oi.DriverControlsPS5;
@@ -25,6 +26,12 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
+import frc.robot.subsystems.intake.IntakeIONeo;
+import frc.robot.subsystems.kicker.Kicker;
+import frc.robot.subsystems.kicker.Kicker.KickerState;
+import frc.robot.subsystems.kicker.KickerIONeo;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -36,6 +43,8 @@ import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 public class RobotContainer {
   // Subsystems
   private Drive m_drive;
+  private Intake m_intake;
+  private Kicker m_kicker;
 
   // Controller
   private DriverControls m_driverControls;
@@ -63,6 +72,10 @@ public class RobotContainer {
               new ModuleIOTalonFX(1),
               new ModuleIOTalonFX(2),
               new ModuleIOTalonFX(3));
+
+      m_intake = new Intake(new IntakeIONeo(Ports.kIntakeNeo));
+
+      m_kicker = new Kicker(new KickerIONeo(Ports.kKickerNeo));
     } else {
       m_drive =
           new Drive(
@@ -73,7 +86,7 @@ public class RobotContainer {
               new ModuleIOSim());
     }
 
-    RobotState.start(m_drive);
+    RobotState.start(m_drive, m_intake, m_kicker);
     m_robotState = RobotState.getInstance();
   }
 
@@ -107,6 +120,47 @@ public class RobotContainer {
                             new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
                     m_drive)
                 .ignoringDisable(true));
+
+    m_driverControls
+        .runIntake()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_intake.updateState(IntakeState.kIntaking);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_intake.updateState(IntakeState.kIdle);
+                }));
+
+    m_driverControls
+        .runKicker()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_kicker.updateState(KickerState.kShooting);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_kicker.updateState(KickerState.kIdle);
+                }));
+
+    m_driverControls
+        .ejectGamePiece()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_kicker.updateState(KickerState.kEjecting);
+                  m_intake.updateState(IntakeState.kOuttaking);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_kicker.updateState(KickerState.kIdle);
+                  m_intake.updateState(IntakeState.kIdle);
+                }));
   }
 
   /**

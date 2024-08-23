@@ -10,4 +10,10 @@ public interface DriverControls {
   public double getTurn();
 
   public Trigger resetOdometry();
+
+  public Trigger runIntake();
+
+  public Trigger runKicker();
+
+  public Trigger ejectGamePiece();
 }

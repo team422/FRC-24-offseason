@@ -29,4 +29,19 @@ public class DriverControlsPS5 implements DriverControls {
   public Trigger resetOdometry() {
     return m_controller.povUp();
   }
+
+  @Override
+  public Trigger runIntake() {
+    return m_controller.R2();
+  }
+
+  @Override
+  public Trigger runKicker() {
+    return m_controller.R1();
+  }
+
+  @Override
+  public Trigger ejectGamePiece() {
+    return m_controller.cross();
+  }
 }

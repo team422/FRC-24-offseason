@@ -29,4 +29,19 @@ public class DriverControlsXbox implements DriverControls {
   public Trigger resetOdometry() {
     return m_controller.povUp();
   }
+
+  @Override
+  public Trigger runIntake() {
+    return m_controller.rightTrigger();
+  }
+
+  @Override
+  public Trigger runKicker() {
+    return m_controller.rightBumper();
+  }
+
+  @Override
+  public Trigger ejectGamePiece() {
+    return m_controller.b();
+  }
 }

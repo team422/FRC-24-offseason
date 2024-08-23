@@ -52,6 +52,18 @@ public final class Constants {
     public static final double kTurnGearRatio = 150.0 / 7.0;
   }
 
+  public static final class IntakeConstants {
+    public static final double kIdleVoltage = 0.0;
+    public static final double kIntakeVoltage = 7.0;
+    public static final double kOuttakeVoltage = -7.0;
+  }
+
+  public static final class KickerConstants {
+    public static final double kIdleVoltage = 0.0;
+    public static final double kShootingVoltage = 7.0;
+    public static final double kEjectingVoltage = -7.0;
+  }
+
   public static final class Ports {
     public static final int kFrontLeftDrive = 0;
     public static final int kFrontLeftTurn = 1;
@@ -68,5 +80,8 @@ public final class Constants {
     public static final int kBackRightDrive = 9;
     public static final int kBackRightTurn = 10;
     public static final int kBackRightCancoder = 11;
+
+    public static final int kIntakeNeo = 1;
+    public static final int kKickerNeo = 2;
   }
 }

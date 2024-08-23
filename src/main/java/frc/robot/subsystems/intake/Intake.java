@@ -47,4 +47,9 @@ public class Intake extends SubsystemBase {
 
     m_profiles.setCurrentProfile(state);
   }
+
+  //Written by Ronith Kollipara
+  //priyanka
+  //olivia
+  //Completed intajes and kicker today vs
 }

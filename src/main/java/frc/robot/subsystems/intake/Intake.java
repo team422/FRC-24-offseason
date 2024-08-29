@@ -35,13 +35,13 @@ public class Intake extends SubsystemBase {
   public void updateState(IntakeState state) {
     switch (state) {
       case kIdle:
-        m_io.setVoltage(IntakeConstants.kIdleVoltage);
+        m_io.setVoltage(IntakeConstants.kIdleVoltage.get());
         break;
       case kIntaking:
-        m_io.setVoltage(IntakeConstants.kIntakeVoltage);
+        m_io.setVoltage(IntakeConstants.kIntakeVoltage.get());
         break;
       case kOuttaking:
-        m_io.setVoltage(IntakeConstants.kOuttakeVoltage);
+        m_io.setVoltage(IntakeConstants.kOuttakeVoltage.get());
         break;
     }
 

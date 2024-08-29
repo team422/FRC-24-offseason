@@ -29,9 +29,11 @@ import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeIONeo;
+import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.kicker.Kicker;
 import frc.robot.subsystems.kicker.Kicker.KickerState;
 import frc.robot.subsystems.kicker.KickerIONeo;
+import frc.robot.subsystems.kicker.KickerIOSim;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -84,6 +86,10 @@ public class RobotContainer {
               new ModuleIOSim(),
               new ModuleIOSim(),
               new ModuleIOSim());
+
+      m_intake = new Intake(new IntakeIOSim());
+
+      m_kicker = new Kicker(new KickerIOSim());
     }
 
     RobotState.start(m_drive, m_intake, m_kicker);

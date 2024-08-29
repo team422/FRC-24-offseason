@@ -15,7 +15,9 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import frc.robot.util.LoggedTunableNumber;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -26,6 +28,8 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final boolean kTuningMode = true;
+
   public static final class DriveConstants {
     public static final double kMaxLinearSpeed = 6.0; // meters per second
     public static final double kTrackWidthX = Units.inchesToMeters(21.5);
@@ -53,15 +57,35 @@ public final class Constants {
   }
 
   public static final class IntakeConstants {
-    public static final double kIdleVoltage = 0.0;
-    public static final double kIntakeVoltage = 7.0;
-    public static final double kOuttakeVoltage = -7.0;
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("IntakeIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kIntakeVoltage =
+        new LoggedTunableNumber("IntakeVoltage", 7.0);
+    public static final LoggedTunableNumber kOuttakeVoltage =
+        new LoggedTunableNumber("OuttakeVoltage", -7.0);
+
+    // Simulation constants
+    public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
+    public static final double kSimGearing = 1.0;
+    public static final double kSimRadius = Units.inchesToMeters(3);
+    public static final double kSimMass = 1.0; // in kg
+    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
   public static final class KickerConstants {
-    public static final double kIdleVoltage = 0.0;
-    public static final double kShootingVoltage = 7.0;
-    public static final double kEjectingVoltage = -7.0;
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("KickerIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kShootingVoltage =
+        new LoggedTunableNumber("KickerShootingVoltage", 7.0);
+    public static final LoggedTunableNumber kEjectingVoltage =
+        new LoggedTunableNumber("KickerEjectVoltage", -7.0);
+
+    // Simulation constants
+    public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
+    public static final double kSimGearing = 1.0;
+    public static final double kSimRadius = Units.inchesToMeters(3);
+    public static final double kSimMass = 0.85; // in kg
+    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
   public static final class Ports {

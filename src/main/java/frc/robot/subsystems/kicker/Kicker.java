@@ -35,13 +35,13 @@ public class Kicker extends SubsystemBase {
   public void updateState(KickerState state) {
     switch (state) {
       case kIdle:
-        m_io.setVoltage(KickerConstants.kIdleVoltage);
+        m_io.setVoltage(KickerConstants.kIdleVoltage.get());
         break;
       case kShooting:
-        m_io.setVoltage(KickerConstants.kShootingVoltage);
+        m_io.setVoltage(KickerConstants.kShootingVoltage.get());
         break;
       case kEjecting:
-        m_io.setVoltage(KickerConstants.kEjectingVoltage);
+        m_io.setVoltage(KickerConstants.kEjectingVoltage.get());
         break;
     }
 

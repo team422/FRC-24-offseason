@@ -1,25 +1,18 @@
-// Copyright (c) 2024 FRC 6328
-// http://github.com/Mechanical-Advantage
-//
-// Use of this source code is governed by an MIT-style
-// license that can be found in the LICENSE file at
-// the root directory of this project.
-
 package frc.robot.util;
 
 import frc.robot.Constants;
+// FROM 6328 Mechanical Advantage
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.DoubleSupplier;
 import org.littletonrobotics.junction.networktables.LoggedDashboardNumber;
 
 /**
  * Class for a tunable number. Gets value from dashboard in tuning mode, returns default if not or
  * value not in dashboard.
  */
-public class LoggedTunableNumber implements DoubleSupplier {
+public class LoggedTunableNumber {
   private static final String tableKey = "TunableNumbers";
 
   private final String key;
@@ -33,7 +26,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
    *
    * @param dashboardKey Key on dashboard
    */
-  public LoggedTunableNumber(String dashboardKey) {
+  public LoggedTunableNumber(String dashboardKey, String tableKey) {
     this.key = tableKey + "/" + dashboardKey;
   }
 
@@ -44,7 +37,12 @@ public class LoggedTunableNumber implements DoubleSupplier {
    * @param defaultValue Default value
    */
   public LoggedTunableNumber(String dashboardKey, double defaultValue) {
-    this(dashboardKey);
+    this(dashboardKey, tableKey);
+    initDefault(defaultValue);
+  }
+
+  public LoggedTunableNumber(String dashboardKey, double defaultValue, String tableKey) {
+    this(dashboardKey, tableKey);
     initDefault(defaultValue);
   }
 
@@ -76,6 +74,10 @@ public class LoggedTunableNumber implements DoubleSupplier {
     }
   }
 
+  public void set(double val) {
+    dashboardNumber.set(val);
+  }
+
   /**
    * Checks whether the number has changed since our last check
    *
@@ -85,6 +87,7 @@ public class LoggedTunableNumber implements DoubleSupplier {
    *     otherwise.
    */
   public boolean hasChanged(int id) {
+    if (!Constants.kTuningMode) return false;
     double currentValue = get();
     Double lastValue = lastHasChangedValues.get(id);
     if (lastValue == null || currentValue != lastValue) {
@@ -114,10 +117,5 @@ public class LoggedTunableNumber implements DoubleSupplier {
   /** Runs action if any of the tunableNumbers have changed */
   public static void ifChanged(int id, Runnable action, LoggedTunableNumber... tunableNumbers) {
     ifChanged(id, values -> action.run(), tunableNumbers);
-  }
-
-  @Override
-  public double getAsDouble() {
-    return get();
   }
 }

@@ -13,7 +13,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
@@ -54,6 +61,25 @@ public final class Constants {
 
     public static final double kDriveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
     public static final double kTurnGearRatio = 150.0 / 7.0;
+  }
+
+  public static final class AprilTagVisionConstants {
+    public static final double kAmbiguityThreshold = 0.4;
+    public static final double kTargetLogTimeSecs = 0.1;
+    public static final double kFieldBorderMargin = 0.5;
+    public static final double kZMargin = 0.75;
+    public static final LoggedTunableNumber kXYStandardDeviationCoefficient =
+        new LoggedTunableNumber("xyStandardDeviationCoefficient", 0.005, "Cameras");
+    public static final LoggedTunableNumber kThetaStandardDeviationCoefficient =
+        new LoggedTunableNumber("thetaStandardDeviationCoefficient", 0.01, "Cameras");
+    ;
+
+    // TODO: Update these values
+    public static final Pose3d[] kCameraPoses =
+        new Pose3d[] {
+          new Pose3d(new Translation3d(), new Rotation3d()),
+          new Pose3d(new Translation3d(), new Rotation3d())
+        };
   }
 
   public static final class IntakeConstants {
@@ -107,5 +133,46 @@ public final class Constants {
 
     public static final int kIntakeNeo = 1;
     public static final int kKickerNeo = 2;
+  }
+
+  public static final class FieldConstants {
+    // copied from frc-24 with some minor tweaks
+
+    public static final Translation2d kSource = new Translation2d(15.696, 0.701);
+
+    public static final Translation3d kTopRightSpeaker =
+        new Translation3d(
+            Units.inchesToMeters(0.0), Units.inchesToMeters(238.815), Units.inchesToMeters(83.091));
+
+    public static final Translation3d kTopLeftSpeaker =
+        new Translation3d(
+            Units.inchesToMeters(18.055),
+            Units.inchesToMeters(197.765),
+            Units.inchesToMeters(83.091));
+
+    public static final Translation3d kBottomRightSpeaker =
+        new Translation3d(0.0, Units.inchesToMeters(238.815), Units.inchesToMeters(78.324));
+    public static final Translation3d kBottomLeftSpeaker =
+        new Translation3d(0.0, Units.inchesToMeters(197.765), Units.inchesToMeters(78.324));
+
+    /** Center of the speaker opening (blue alliance) */
+    public static final Translation3d kCenterSpeakerOpening =
+        kBottomLeftSpeaker.interpolate(kTopRightSpeaker, 0.5);
+
+    public static final double kFieldLength = Units.inchesToMeters(651.223);
+    public static final double kFieldWidth = Units.inchesToMeters(323.277);
+    public static final double kWingX = Units.inchesToMeters(229.201);
+    public static final double kPodiumX = Units.inchesToMeters(126.75);
+    public static final double kStartingLineX = Units.inchesToMeters(74.111);
+
+    public static final double kAprilTagWidth = Units.inchesToMeters(6.5);
+    public static final AprilTagFieldLayout kAprilTagLayout =
+        AprilTagFields.k2024Crescendo.loadAprilTagLayoutField();
+
+    public static final Pose2d kAmpBlue = new Pose2d(1.749, 7.82, Rotation2d.fromDegrees(90));
+    public static final Pose2d kDailedShot = new Pose2d(2.95, 4.08, new Rotation2d(145.00));
+    public static final Translation2d kCorner = new Translation2d(0, 7.82);
+    public static final Translation2d kFeederAim = new Translation2d(1, 6.82);
+    public static final Translation2d kSourceMidShot = new Translation2d(8.04, 2);
   }
 }

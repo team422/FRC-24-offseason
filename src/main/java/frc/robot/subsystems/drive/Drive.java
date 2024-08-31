@@ -34,6 +34,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.util.LocalADStarAK;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -270,5 +271,14 @@ public class Drive extends SubsystemBase {
    */
   public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
     m_poseEstimator.addVisionMeasurement(visionPose, timestamp);
+  }
+
+  /**
+   * Adds a vision measurement to the pose estimator.
+   *
+   * @param observation The VisionObservation object containing the vision data.
+   */
+  public void addVisionObservation(VisionObservation observation) {
+    addVisionMeasurement(observation.visionPose(), observation.timestamp());
   }
 }

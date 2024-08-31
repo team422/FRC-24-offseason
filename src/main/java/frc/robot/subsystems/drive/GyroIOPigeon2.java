@@ -104,9 +104,11 @@ public class GyroIOPigeon2 implements GyroIO {
         BaseStatusSignal.refreshAll(
                 m_yaw, m_pitch, m_roll, m_yawVelocity, m_pitchVelocity, m_rollVelocity)
             .equals(StatusCode.OK);
+
     if (RobotBase.isSimulation()) {
       inputs.connected = false;
     }
+
     inputs.yawPosition = Rotation2d.fromDegrees(m_yaw.getValueAsDouble());
     inputs.pitchPosition = Rotation2d.fromDegrees(m_pitch.getValueAsDouble());
     inputs.rollPosition = Rotation2d.fromDegrees(m_roll.getValueAsDouble());

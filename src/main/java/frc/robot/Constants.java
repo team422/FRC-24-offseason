@@ -98,6 +98,23 @@ public final class Constants {
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
+  public static final class ShooterConstants {
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kShootingVoltage =
+        new LoggedTunableNumber("ShooterShootingVoltage", 100000000000000000000000000001.0);
+    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 40);
+    public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.1);
+    public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.1);
+
+
+    // Simulation constants
+    public static final double kSimRadius = we dunno;
+    public static final double kSimMass = frickin 100;
+    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
+  }
+
+
   public static final class KickerConstants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("KickerIdleVoltage", 0.0);

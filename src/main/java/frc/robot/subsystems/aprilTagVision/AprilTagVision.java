@@ -1,14 +1,5 @@
 package frc.robot.subsystems.aprilTagVision;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import org.littletonrobotics.junction.Logger;
-
 import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
@@ -27,6 +18,13 @@ import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIO.AprilTagVisionInputs;
 import frc.robot.util.GeomUtil;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import org.littletonrobotics.junction.Logger;
 
 public class AprilTagVision extends SubsystemBase {
   public record VisionObservation(

@@ -49,8 +49,8 @@ public class Intake extends SubsystemBase {
   }
 
   // Written by Elijah Chen
-  // Nasik Hobbs 
+  // Nasik Hobbs
   // William Lin
   // Completed intajes and kicker today vs
-  //shut up stupid faces you guys stink haha
+  // shut up stupid faces you guys stink haha
 }

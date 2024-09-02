@@ -69,10 +69,10 @@ public class RobotContainer {
 
   /** Configure the subsystems. */
   private void configureSubsystems() {
-    m_aprilTagVision = new AprilTagVision(
-      new AprilTagVisionIONorthstar("northstar_0", null),
-      new AprilTagVisionIONorthstar("northstar_1", null)
-    );
+    m_aprilTagVision =
+        new AprilTagVision(
+            new AprilTagVisionIONorthstar("northstar_0", null),
+            new AprilTagVisionIONorthstar("northstar_1", null));
 
     if (RobotBase.isReal()) {
       m_drive =

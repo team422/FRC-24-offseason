@@ -24,7 +24,8 @@ public class RobotState {
     m_aprilTagVision = aprilTagVision;
   }
 
-  public static void start(Drive drive, Intake intake, Kicker kicker, AprilTagVision aprilTagVision) {
+  public static void start(
+      Drive drive, Intake intake, Kicker kicker, AprilTagVision aprilTagVision) {
     m_instance = new RobotState(drive, intake, kicker, aprilTagVision);
   }
 

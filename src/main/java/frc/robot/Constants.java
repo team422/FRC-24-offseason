@@ -99,6 +99,22 @@ public final class Constants {
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
+  public static final class KickerConstants {
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("KickerIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kShootingVoltage =
+        new LoggedTunableNumber("KickerShootingVoltage", 7.0);
+    public static final LoggedTunableNumber kEjectingVoltage =
+        new LoggedTunableNumber("KickerEjectVoltage", -7.0);
+
+    // Simulation constants
+    public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
+    public static final double kSimGearing = 1.0;
+    public static final double kSimRadius = Units.inchesToMeters(3);
+    public static final double kSimMass = 0.85; // in kg
+    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
+  }
+
   public static final class ShooterConstants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
@@ -117,22 +133,6 @@ public final class Constants {
     public static final double kSimGearing = 0.3;
     public static final double kSimRadius = Units.inchesToMeters(4);
     public static final double kSimMass = 2 * Units.lbsToKilograms(0.23);
-    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
-  }
-
-  public static final class KickerConstants {
-    public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("KickerIdleVoltage", 0.0);
-    public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("KickerShootingVoltage", 7.0);
-    public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("KickerEjectVoltage", -7.0);
-
-    // Simulation constants
-    public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
-    public static final double kSimGearing = 1.0;
-    public static final double kSimRadius = Units.inchesToMeters(3);
-    public static final double kSimMass = 0.85; // in kg
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 

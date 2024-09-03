@@ -5,10 +5,10 @@ import org.littletonrobotics.junction.AutoLog;
 public interface FlywheelIO {
   @AutoLog
   public class FlywheelInputs {
-    public double topVelocityRPM;
+    public double topVelocityRPS;
     public double topVoltage;
     public double topCurrentAmps;
-    public double bottomVelocityRPM;
+    public double bottomVelocityRPS;
     public double bottomVoltage;
     public double bottomCurrentAmps;
   }

@@ -15,6 +15,7 @@ package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -101,17 +102,21 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
-    public static final LoggedTunableNumber kTopShootingVoltage =
-        new LoggedTunableNumber("TopShooterShootingVoltage", 100000000000000000000000000001.0);
-    public static final LoggedTunableNumber kBottomShootingVoltage =
-        new LoggedTunableNumber("BottomShooterShootingVoltage", 422);
-    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 40);
-    public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.1);
-    public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.1);
+    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 1.0);
+    public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.0);
+    public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.0);
+
+    public static final PIDController kTopController =
+        new PIDController(kP.get(), kI.get(), kD.get());
+    public static final PIDController kBottomController =
+        new PIDController(kP.get(), kI.get(), kD.get());
 
     // Simulation constants
-    public static final double kSimRadius = Units.inchesToMeters(3);
-    public static final double kSimMass = 0.85; // in kg
+    public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
+    public static final DCMotor kSimBottomGearbox = DCMotor.getNEO(1);
+    public static final double kSimGearing = 0.3;
+    public static final double kSimRadius = Units.inchesToMeters(4);
+    public static final double kSimMass = 2 * Units.lbsToKilograms(0.23);
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
@@ -150,6 +155,8 @@ public final class Constants {
 
     public static final int kIntakeNeo = 1;
     public static final int kKickerNeo = 2;
+    public static final int kTopFlywheel = 3;
+    public static final int kBottomFlywheel = 4;
   }
 
   public static final class FieldConstants {

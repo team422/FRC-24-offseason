@@ -25,10 +25,10 @@ public class FlywheelIONeo implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelInputs inputs) {
-    inputs.topVelocityRPM = m_topEncoder.getVelocity();
+    inputs.topVelocityRPS = m_topEncoder.getVelocity() / 60;
     inputs.topVoltage = m_topMotor.getBusVoltage() * m_topMotor.getAppliedOutput();
     inputs.topCurrentAmps = m_topMotor.getOutputCurrent();
-    inputs.bottomVelocityRPM = m_bottomEncoder.getVelocity();
+    inputs.bottomVelocityRPS = m_bottomEncoder.getVelocity() / 60;
     inputs.bottomVoltage = m_bottomMotor.getBusVoltage() * m_bottomMotor.getAppliedOutput();
     inputs.bottomCurrentAmps = m_bottomMotor.getOutputCurrent();
   }

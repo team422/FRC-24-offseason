@@ -16,4 +16,6 @@ public interface DriverControls {
   public Trigger runKicker();
 
   public Trigger ejectGamePiece();
+
+  public Trigger revShooter();
 }

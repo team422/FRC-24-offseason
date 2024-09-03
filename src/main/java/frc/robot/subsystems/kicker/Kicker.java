@@ -51,4 +51,5 @@ public class Kicker extends SubsystemBase {
   // Nikki P in the skibidi house!
   // Mr. Wood better than u - Aahil
   // I love God and Jesus - Patty lin
+  // James and Tommy better than you guys cause you're stinky and rotund like a clock
 }

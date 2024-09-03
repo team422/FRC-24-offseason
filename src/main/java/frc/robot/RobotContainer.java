@@ -19,9 +19,10 @@ import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Ports;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.DriveCommands;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsXbox;
+import frc.robot.oi.DriverControlsPS5;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.drive.Drive;
@@ -36,6 +37,10 @@ import frc.robot.subsystems.kicker.Kicker;
 import frc.robot.subsystems.kicker.Kicker.KickerState;
 import frc.robot.subsystems.kicker.KickerIONeo;
 import frc.robot.subsystems.kicker.KickerIOSim;
+import frc.robot.subsystems.shooter.FlywheelIONeo;
+import frc.robot.subsystems.shooter.FlywheelIOSim;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -49,10 +54,11 @@ public class RobotContainer {
   private Drive m_drive;
   private Intake m_intake;
   private Kicker m_kicker;
+  private Shooter m_shooter;
+  private AprilTagVision m_aprilTagVision;
 
   // Controller
   private DriverControls m_driverControls;
-  private AprilTagVision m_aprilTagVision;
 
   // Dashboard inputs
   private LoggedDashboardChooser<Command> m_autoChooser;
@@ -69,10 +75,10 @@ public class RobotContainer {
 
   /** Configure the subsystems. */
   private void configureSubsystems() {
-    m_aprilTagVision = new AprilTagVision(
-      new AprilTagVisionIONorthstar("northstar_0", null),
-      new AprilTagVisionIONorthstar("northstar_1", null)
-    );
+    m_aprilTagVision =
+        new AprilTagVision(
+            new AprilTagVisionIONorthstar("northstar_0", ""),
+            new AprilTagVisionIONorthstar("northstar_1", ""));
 
     if (RobotBase.isReal()) {
       m_drive =
@@ -86,6 +92,12 @@ public class RobotContainer {
       m_intake = new Intake(new IntakeIONeo(Ports.kIntakeNeo));
 
       m_kicker = new Kicker(new KickerIONeo(Ports.kKickerNeo));
+
+      m_shooter =
+          new Shooter(
+              new FlywheelIONeo(Ports.kTopFlywheel, Ports.kBottomFlywheel),
+              ShooterConstants.kTopController,
+              ShooterConstants.kBottomController);
     } else {
       m_drive =
           new Drive(
@@ -98,9 +110,15 @@ public class RobotContainer {
       m_intake = new Intake(new IntakeIOSim());
 
       m_kicker = new Kicker(new KickerIOSim());
+
+      m_shooter =
+          new Shooter(
+              new FlywheelIOSim(),
+              ShooterConstants.kTopController,
+              ShooterConstants.kBottomController);
     }
 
-    RobotState.start(m_drive, m_intake, m_kicker, m_aprilTagVision);
+    RobotState.start(m_drive, m_intake, m_kicker, m_shooter, m_aprilTagVision);
     m_robotState = RobotState.getInstance();
   }
 
@@ -113,8 +131,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    // m_driverControls = new DriverControlsPS5(0);
-    m_driverControls = new DriverControlsXbox(0);
+    m_driverControls = new DriverControlsPS5(0);
+    // m_driverControls = new DriverControlsXbox(0);
   }
 
   /** Configure the button bindings. */
@@ -174,6 +192,19 @@ public class RobotContainer {
                 () -> {
                   m_kicker.updateState(KickerState.kIdle);
                   m_intake.updateState(IntakeState.kIdle);
+                }));
+
+    m_driverControls
+        .revShooter()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_shooter.updateState(ShooterState.kRevving);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_shooter.updateState(ShooterState.kIdle);
                 }));
   }
 

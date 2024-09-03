@@ -15,6 +15,7 @@ package frc.robot;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -114,6 +115,27 @@ public final class Constants {
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
+  public static final class ShooterConstants {
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 1.0);
+    public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.0);
+    public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.0);
+
+    public static final PIDController kTopController =
+        new PIDController(kP.get(), kI.get(), kD.get());
+    public static final PIDController kBottomController =
+        new PIDController(kP.get(), kI.get(), kD.get());
+
+    // Simulation constants
+    public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
+    public static final DCMotor kSimBottomGearbox = DCMotor.getNEO(1);
+    public static final double kSimGearing = 0.3;
+    public static final double kSimRadius = Units.inchesToMeters(4);
+    public static final double kSimMass = 2 * Units.lbsToKilograms(0.23);
+    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
+  }
+
   public static final class Ports {
     public static final int kFrontLeftDrive = 0;
     public static final int kFrontLeftTurn = 1;
@@ -133,6 +155,8 @@ public final class Constants {
 
     public static final int kIntakeNeo = 1;
     public static final int kKickerNeo = 2;
+    public static final int kTopFlywheel = 3;
+    public static final int kBottomFlywheel = 4;
   }
 
   public static final class FieldConstants {

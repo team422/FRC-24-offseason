@@ -44,4 +44,9 @@ public class DriverControlsXbox implements DriverControls {
   public Trigger ejectGamePiece() {
     return m_controller.b();
   }
+
+  @Override
+  public Trigger revShooter() {
+    return m_controller.leftTrigger();
+  }
 }

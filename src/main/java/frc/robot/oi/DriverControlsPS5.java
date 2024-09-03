@@ -44,4 +44,9 @@ public class DriverControlsPS5 implements DriverControls {
   public Trigger ejectGamePiece() {
     return m_controller.cross();
   }
+
+  @Override
+  public Trigger revShooter() {
+    return m_controller.L2();
+  }
 }

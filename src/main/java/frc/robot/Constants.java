@@ -129,6 +129,15 @@ public final class Constants {
     public static final PIDController kBottomController =
         new PIDController(kP.get(), kI.get(), kD.get());
 
+    public static final LoggedTunableNumber kTopKS =
+        new LoggedTunableNumber("Top Flywheel kS", 0.0);
+    public static final LoggedTunableNumber kTopKV =
+        new LoggedTunableNumber("Top Flywheel kV", 0.0);
+    public static final LoggedTunableNumber kBottomKS =
+        new LoggedTunableNumber("Bottom Flywheel kS", 0.0);
+    public static final LoggedTunableNumber kBottomKV =
+        new LoggedTunableNumber("Bottom Flywheel kV", 0.0);
+
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
     public static final DCMotor kSimBottomGearbox = DCMotor.getNEO(1);

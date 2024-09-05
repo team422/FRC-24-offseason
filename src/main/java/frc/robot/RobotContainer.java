@@ -13,6 +13,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -96,7 +97,11 @@ public class RobotContainer {
           new Shooter(
               new FlywheelIONeo(Ports.kTopFlywheel, Ports.kBottomFlywheel),
               ShooterConstants.kTopController,
-              ShooterConstants.kBottomController);
+              ShooterConstants.kBottomController,
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kTopKS.get(), ShooterConstants.kTopKV.get()),
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kBottomKS.get(), ShooterConstants.kBottomKV.get()));
     } else {
       m_drive =
           new Drive(
@@ -114,7 +119,11 @@ public class RobotContainer {
           new Shooter(
               new FlywheelIOSim(),
               ShooterConstants.kTopController,
-              ShooterConstants.kBottomController);
+              ShooterConstants.kBottomController,
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kTopKS.get(), ShooterConstants.kTopKV.get()),
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kBottomKS.get(), ShooterConstants.kBottomKV.get()));
     }
 
     RobotState.start(m_drive, m_intake, m_kicker, m_shooter, m_aprilTagVision);

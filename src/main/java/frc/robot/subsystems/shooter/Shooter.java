@@ -1,6 +1,8 @@
 package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
@@ -14,6 +16,8 @@ public class Shooter extends SubsystemBase {
   private SubsystemProfiles m_profiles;
   private PIDController m_topController;
   private PIDController m_bottomController;
+  private SimpleMotorFeedforward m_topFeedforward;
+  private SimpleMotorFeedforward m_bottomFeedforward;
 
   public enum ShooterState {
     kIdle,
@@ -21,13 +25,20 @@ public class Shooter extends SubsystemBase {
     kEjecting
   }
 
-  /** Class to represent the position of the Shooter */
+  /** Class to represent a setpoint for the Shooter */
   public record ShooterPosition(double topVelocityRPS, double bottomVelocityRPS) {}
 
-  public Shooter(FlywheelIO io, PIDController topController, PIDController bottomController) {
+  public Shooter(
+      FlywheelIO io,
+      PIDController topController,
+      PIDController bottomController,
+      SimpleMotorFeedforward topFeedforward,
+      SimpleMotorFeedforward bottomFeedforward) {
     m_io = io;
     m_topController = topController;
     m_bottomController = bottomController;
+    m_topFeedforward = topFeedforward;
+    m_bottomFeedforward = bottomFeedforward;
 
     m_inputs = new FlywheelInputsAutoLogged();
 
@@ -83,13 +94,50 @@ public class Shooter extends SubsystemBase {
         ShooterConstants.kI,
         ShooterConstants.kD);
 
-    double topPidVoltage = m_topController.calculate(m_inputs.topVelocityRPS);
-    double bottomPidVoltage = m_bottomController.calculate(m_inputs.bottomVelocityRPS);
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          m_topFeedforward =
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kTopKS.get(), ShooterConstants.kTopKV.get());
+        },
+        ShooterConstants.kTopKS,
+        ShooterConstants.kTopKV);
 
-    m_io.setVoltage(topPidVoltage, bottomPidVoltage);
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          m_bottomFeedforward =
+              new SimpleMotorFeedforward(
+                  ShooterConstants.kBottomKS.get(), ShooterConstants.kBottomKV.get());
+        },
+        ShooterConstants.kBottomKS,
+        ShooterConstants.kBottomKV);
 
-    Logger.recordOutput("Shooter/TopSetVoltage", topPidVoltage);
-    Logger.recordOutput("Shooter/BottomSetVoltage", bottomPidVoltage);
+    double topSetVoltage = m_topController.calculate(m_inputs.topVelocityRPS);
+    double bottomSetVoltage = m_bottomController.calculate(m_inputs.bottomVelocityRPS);
+
+    if (RobotBase.isReal()) {
+      // don't use feedforward in sim
+      double topFeedforwardVoltage = m_topFeedforward.calculate(m_topController.getSetpoint());
+      double bottomFeedforwardVoltage =
+          m_bottomFeedforward.calculate(m_bottomController.getSetpoint());
+
+      // in sim the set voltage is pid voltage so no need to log
+      // in real we log both
+      Logger.recordOutput("Shooter/TopFeedforwardVoltage", topFeedforwardVoltage);
+      Logger.recordOutput("Shooter/BottomFeedforwardVoltage", bottomFeedforwardVoltage);
+      Logger.recordOutput("Shooter/TopPIDVoltage", topSetVoltage);
+      Logger.recordOutput("Shooter/BottomPIDVoltage", bottomSetVoltage);
+
+      topSetVoltage += topFeedforwardVoltage;
+      bottomSetVoltage += bottomFeedforwardVoltage;
+    }
+
+    m_io.setVoltage(topSetVoltage, bottomSetVoltage);
+
+    Logger.recordOutput("Shooter/TopSetVoltage", topSetVoltage);
+    Logger.recordOutput("Shooter/BottomSetVoltage", bottomSetVoltage);
     Logger.recordOutput("Shooter/CurrentTopVelocity", m_inputs.topVelocityRPS);
     Logger.recordOutput("Shooter/CurrentBottomVelocity", m_inputs.bottomVelocityRPS);
     Logger.recordOutput("Shooter/DesiredTopVelocity", m_topController.getSetpoint());
@@ -97,15 +145,6 @@ public class Shooter extends SubsystemBase {
   }
 
   public void updateState(ShooterState state) {
-    switch (state) {
-      case kIdle:
-        m_io.setVoltage(0.0, 0.0);
-        break;
-      case kRevving:
-        break;
-      case kEjecting:
-        break;
-    }
     m_profiles.setCurrentProfile(state);
   }
 

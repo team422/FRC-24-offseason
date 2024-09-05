@@ -17,8 +17,12 @@ public class Shooter extends SubsystemBase {
 
   public enum ShooterState {
     kIdle,
-    kRevving
+    kRevving,
+    kEjecting
   }
+
+  /** Class to represent the position of the Shooter */
+  public record ShooterPosition(double topVelocityRPS, double bottomVelocityRPS) {}
 
   public Shooter(FlywheelIO io, PIDController topController, PIDController bottomController) {
     m_io = io;
@@ -46,8 +50,20 @@ public class Shooter extends SubsystemBase {
   public void idlePeriodic() {
     m_io.setVoltage(ShooterConstants.kIdleVoltage.get(), ShooterConstants.kIdleVoltage.get());
 
-    Logger.recordOutput("Shooter/TopPidVoltage", 0.0);
-    Logger.recordOutput("Shooter/BottomPidVoltage", 0.0);
+    Logger.recordOutput("Shooter/TopSetVoltage", ShooterConstants.kIdleVoltage.get());
+    Logger.recordOutput("Shooter/BottomSetVoltage", ShooterConstants.kIdleVoltage.get());
+    Logger.recordOutput("Shooter/CurrentTopVelocity", m_inputs.topVelocityRPS);
+    Logger.recordOutput("Shooter/CurrentBottomVelocity", m_inputs.bottomVelocityRPS);
+    Logger.recordOutput("Shooter/DesiredTopVelocity", m_topController.getSetpoint());
+    Logger.recordOutput("Shooter/DesiredBottomVelocity", m_bottomController.getSetpoint());
+  }
+
+  public void ejectingPeriodic() {
+    m_io.setVoltage(
+        ShooterConstants.kEjectingVoltage.get(), ShooterConstants.kEjectingVoltage.get());
+
+    Logger.recordOutput("Shooter/TopSetVoltage", ShooterConstants.kEjectingVoltage.get());
+    Logger.recordOutput("Shooter/BottomSetVoltage", ShooterConstants.kEjectingVoltage.get());
     Logger.recordOutput("Shooter/CurrentTopVelocity", m_inputs.topVelocityRPS);
     Logger.recordOutput("Shooter/CurrentBottomVelocity", m_inputs.bottomVelocityRPS);
     Logger.recordOutput("Shooter/DesiredTopVelocity", m_topController.getSetpoint());
@@ -72,8 +88,8 @@ public class Shooter extends SubsystemBase {
 
     m_io.setVoltage(topPidVoltage, bottomPidVoltage);
 
-    Logger.recordOutput("Shooter/TopPidVoltage", topPidVoltage);
-    Logger.recordOutput("Shooter/BottomPidVoltage", bottomPidVoltage);
+    Logger.recordOutput("Shooter/TopSetVoltage", topPidVoltage);
+    Logger.recordOutput("Shooter/BottomSetVoltage", bottomPidVoltage);
     Logger.recordOutput("Shooter/CurrentTopVelocity", m_inputs.topVelocityRPS);
     Logger.recordOutput("Shooter/CurrentBottomVelocity", m_inputs.bottomVelocityRPS);
     Logger.recordOutput("Shooter/DesiredTopVelocity", m_topController.getSetpoint());
@@ -81,11 +97,25 @@ public class Shooter extends SubsystemBase {
   }
 
   public void updateState(ShooterState state) {
+    switch (state) {
+      case kIdle:
+        m_io.setVoltage(0.0, 0.0);
+        break;
+      case kRevving:
+        break;
+      case kEjecting:
+        break;
+    }
     m_profiles.setCurrentProfile(state);
   }
 
   public void setDesiredVelocity(double topVelocityRPS, double bottomVelocityRPS) {
     m_topController.setSetpoint(topVelocityRPS);
     m_bottomController.setSetpoint(bottomVelocityRPS);
+  }
+
+  public void setDesiredVelocity(ShooterPosition position) {
+    m_topController.setSetpoint(position.topVelocityRPS());
+    m_bottomController.setSetpoint(position.bottomVelocityRPS());
   }
 }

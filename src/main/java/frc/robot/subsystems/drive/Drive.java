@@ -20,6 +20,7 @@ import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -36,6 +37,8 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.SubsystemProfiles;
+import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -47,6 +50,18 @@ public class Drive extends SubsystemBase {
   public final GyroIOInputsAutoLogged m_gyroInputs = new GyroIOInputsAutoLogged();
   private final Module[] m_modules = new Module[4]; // FL, FR, BL, BR
   private final SysIdRoutine m_sysId;
+
+  public enum DriveProfiles {
+    kDefault,
+    kAutoAlign
+  }
+
+  private SubsystemProfiles m_profiles;
+
+  private ChassisSpeeds m_desiredChassisSpeeds = new ChassisSpeeds();
+
+  private Rotation2d m_desiredHeading = new Rotation2d();
+  private PIDController m_headingController = new PIDController(3.5, 0, 0.09);
 
   private Rotation2d m_rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] m_lastModulePositions = // For delta tracking
@@ -117,6 +132,14 @@ public class Drive extends SubsystemBase {
                 },
                 null,
                 this));
+
+    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    periodicHash.put(DriveProfiles.kDefault, this::defaultPeriodic);
+    periodicHash.put(DriveProfiles.kAutoAlign, this::autoAlignPeriodic);
+
+    m_profiles = new SubsystemProfiles(DriveProfiles.class, periodicHash, DriveProfiles.kDefault);
+
+    m_headingController.enableContinuousInput(-Math.PI, Math.PI);
   }
 
   public void periodic() {
@@ -126,6 +149,9 @@ public class Drive extends SubsystemBase {
       module.updateInputs();
     }
     m_odometryLock.unlock();
+
+    m_profiles.getPeriodicFunction().run();
+
     Logger.processInputs("Drive/Gyro", m_gyroInputs);
     for (var module : m_modules) {
       module.periodic();
@@ -176,6 +202,29 @@ public class Drive extends SubsystemBase {
     }
   }
 
+  public void defaultPeriodic() {
+    runVelocity(m_desiredChassisSpeeds);
+
+    Logger.recordOutput("Drive/DesiredHeading", m_desiredHeading.getDegrees());
+    Logger.recordOutput("Drive/DesiredSpeeds", m_desiredChassisSpeeds);
+  }
+
+  public void autoAlignPeriodic() {
+    m_desiredChassisSpeeds = calculateAutoAlignSpeeds();
+
+    defaultPeriodic();
+  }
+
+  public ChassisSpeeds calculateAutoAlignSpeeds() {
+    if (m_desiredHeading != null) {
+      m_desiredChassisSpeeds.omegaRadiansPerSecond =
+          m_headingController.calculate(
+              getPose().getRotation().getRadians(), m_desiredHeading.getRadians());
+    }
+
+    return m_desiredChassisSpeeds;
+  }
+
   /**
    * Runs the drive at the desired velocity.
    *
@@ -198,6 +247,14 @@ public class Drive extends SubsystemBase {
     // Log setpoint states
     Logger.recordOutput("SwerveStates/Setpoints", setpointStates);
     Logger.recordOutput("SwerveStates/SetpointsOptimized", optimizedSetpointStates);
+  }
+
+  public void setDesiredChassisSpeeds(ChassisSpeeds speeds) {
+    m_desiredChassisSpeeds = speeds;
+  }
+
+  public void setDesiredHeading(Rotation2d heading) {
+    m_desiredHeading = heading;
   }
 
   /** Stops the drive. */
@@ -280,5 +337,9 @@ public class Drive extends SubsystemBase {
    */
   public void addVisionObservation(VisionObservation observation) {
     addVisionMeasurement(observation.visionPose(), observation.timestamp());
+  }
+
+  public void updateProfile(DriveProfiles newProfile) {
+    m_profiles.setCurrentProfile(newProfile);
   }
 }

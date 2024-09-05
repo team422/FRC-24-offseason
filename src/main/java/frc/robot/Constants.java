@@ -118,6 +118,8 @@ public final class Constants {
   public static final class ShooterConstants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
+    public static final LoggedTunableNumber kEjectingVoltage =
+        new LoggedTunableNumber("ShooterEjectingVoltage", 7.0);
     public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 1.0);
     public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.0);
     public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.0);

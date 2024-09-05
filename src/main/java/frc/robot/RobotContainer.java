@@ -20,9 +20,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.drive.Drive;
@@ -30,7 +31,6 @@ import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeIONeo;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.kicker.Kicker;
@@ -40,7 +40,6 @@ import frc.robot.subsystems.kicker.KickerIOSim;
 import frc.robot.subsystems.shooter.FlywheelIONeo;
 import frc.robot.subsystems.shooter.FlywheelIOSim;
 import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -131,8 +130,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
   }
 
   /** Configure the button bindings. */
@@ -158,12 +157,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_intake.updateState(IntakeState.kIntaking);
+                  m_robotState.updateRobotAction(RobotAction.kIntake);
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_intake.updateState(IntakeState.kIdle);
+                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
                 }));
 
     m_driverControls
@@ -184,14 +183,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_kicker.updateState(KickerState.kEjecting);
-                  m_intake.updateState(IntakeState.kOuttaking);
+                  m_robotState.updateRobotAction(RobotAction.kEjecting);
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_kicker.updateState(KickerState.kIdle);
-                  m_intake.updateState(IntakeState.kIdle);
+                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
                 }));
 
     m_driverControls
@@ -199,12 +196,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_shooter.updateState(ShooterState.kRevving);
+                  m_robotState.updateRobotAction(RobotAction.kRevAndAlign);
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_shooter.updateState(ShooterState.kIdle);
+                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
                 }));
   }
 

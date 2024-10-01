@@ -29,6 +29,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,7 +54,8 @@ public class Drive extends SubsystemBase {
 
   public enum DriveProfiles {
     kDefault,
-    kAutoAlign
+    kAutoAlign,
+    kAmpLineup
   }
 
   private SubsystemProfiles m_profiles;
@@ -74,6 +76,8 @@ public class Drive extends SubsystemBase {
   private SwerveDrivePoseEstimator m_poseEstimator =
       new SwerveDrivePoseEstimator(
           DriveConstants.kDriveKinematics, m_rawGyroRotation, m_lastModulePositions, new Pose2d());
+
+  private int m_withinToleranceFrames = 0;
 
   public Drive(
       GyroIO gyroIO,
@@ -136,6 +140,7 @@ public class Drive extends SubsystemBase {
     HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(DriveProfiles.kDefault, this::defaultPeriodic);
     periodicHash.put(DriveProfiles.kAutoAlign, this::autoAlignPeriodic);
+    periodicHash.put(DriveProfiles.kAmpLineup, this::ampLineupPeriodic);
 
     m_profiles = new SubsystemProfiles(DriveProfiles.class, periodicHash, DriveProfiles.kDefault);
 
@@ -215,6 +220,21 @@ public class Drive extends SubsystemBase {
     defaultPeriodic();
   }
 
+  public void ampLineupPeriodic() {
+    m_desiredChassisSpeeds = calculateAutoAlignSpeeds();
+    if (Math.abs(m_headingController.getPositionError()) < Units.degreesToRadians(5)) {
+      m_withinToleranceFrames++;
+      if (m_withinToleranceFrames > 10) {
+        // if we reach the setpoint switch back to default
+        updateProfile(DriveProfiles.kDefault);
+        m_desiredChassisSpeeds.omegaRadiansPerSecond = 0;
+      }
+    } else {
+      m_withinToleranceFrames = 0;
+    }
+    defaultPeriodic();
+  }
+
   public ChassisSpeeds calculateAutoAlignSpeeds() {
     if (m_desiredHeading != null) {
       m_desiredChassisSpeeds.omegaRadiansPerSecond =
@@ -251,6 +271,10 @@ public class Drive extends SubsystemBase {
 
   public void setDesiredChassisSpeeds(ChassisSpeeds speeds) {
     m_desiredChassisSpeeds = speeds;
+  }
+
+  public ChassisSpeeds getDesiredChassisSpeeds() {
+    return m_desiredChassisSpeeds;
   }
 
   public void setDesiredHeading(Rotation2d heading) {

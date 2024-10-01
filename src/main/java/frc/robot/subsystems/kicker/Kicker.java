@@ -1,5 +1,6 @@
 package frc.robot.subsystems.kicker;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.KickerConstants;
 import frc.robot.util.SubsystemProfiles;
@@ -11,25 +12,39 @@ public class Kicker extends SubsystemBase {
   public final KickerInputsAutoLogged m_inputs;
   private SubsystemProfiles m_profiles;
 
+  private Timer m_shootTimeout = new Timer();
+
   public enum KickerState {
     kIdle,
     kShooting,
-    kEjecting
+    kVomitting
   }
 
   public Kicker(KickerIO io) {
     m_io = io;
     m_inputs = new KickerInputsAutoLogged();
 
-    m_profiles = new SubsystemProfiles(KickerState.class, new HashMap<>(), KickerState.kIdle);
+    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    periodicHash.put(KickerState.kIdle, () -> {});
+    periodicHash.put(KickerState.kShooting, this::shootingPeriodic);
+    periodicHash.put(KickerState.kVomitting, () -> {});
+    m_profiles = new SubsystemProfiles(KickerState.class, periodicHash, KickerState.kIdle);
   }
 
   @Override
   public void periodic() {
     m_io.updateInputs(m_inputs);
 
+    m_profiles.getPeriodicFunction().run();
+
     Logger.processInputs("Kicker", m_inputs);
     Logger.recordOutput("Kicker/State", (KickerState) m_profiles.getCurrentProfile());
+  }
+
+  private void shootingPeriodic() {
+    if (m_shootTimeout.hasElapsed(KickerConstants.kShootingTimeout.get())) {
+      updateState(KickerState.kIdle);
+    }
   }
 
   public void updateState(KickerState state) {
@@ -39,8 +54,9 @@ public class Kicker extends SubsystemBase {
         break;
       case kShooting:
         m_io.setVoltage(KickerConstants.kShootingVoltage.get());
+        m_shootTimeout.restart();
         break;
-      case kEjecting:
+      case kVomitting:
         m_io.setVoltage(KickerConstants.kEjectingVoltage.get());
         break;
     }

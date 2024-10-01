@@ -7,11 +7,13 @@ public class SubsystemProfiles {
   public Enum<?> currentProfile;
   public HashMap<Enum<?>, Runnable> profilePeriodicFunctions;
   public Enum<?> lastProfile;
+  public Class<?> ProfileEnum;
 
   public SubsystemProfiles(
       Class<? extends Enum<?>> ProfileEnum,
       HashMap<Enum<?>, Runnable> profilePeriodicFunctions,
       Enum<?> defaultProfile) {
+    this.ProfileEnum = ProfileEnum;
     profileInstances = ProfileEnum.getEnumConstants();
     currentProfile = defaultProfile;
     this.profilePeriodicFunctions = profilePeriodicFunctions;
@@ -19,7 +21,14 @@ public class SubsystemProfiles {
   }
 
   public Runnable getPeriodicFunction() {
-    return profilePeriodicFunctions.get(currentProfile);
+    return profilePeriodicFunctions.getOrDefault(
+        currentProfile,
+        () -> {
+          System.out.println(
+              String.format(
+                  "WARNING: No periodic function for profile %s::%s",
+                  ProfileEnum.getSimpleName(), currentProfile.toString()));
+        });
   }
 
   public void setCurrentProfile(Enum<?> profile) {

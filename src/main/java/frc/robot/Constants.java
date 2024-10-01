@@ -107,6 +107,9 @@ public final class Constants {
     public static final LoggedTunableNumber kEjectingVoltage =
         new LoggedTunableNumber("KickerEjectVoltage", -7.0);
 
+    public static final LoggedTunableNumber kShootingTimeout =
+        new LoggedTunableNumber("KickerShootingTimeout", 1.0);
+
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
     public static final double kSimGearing = 1.0;
@@ -137,6 +140,11 @@ public final class Constants {
         new LoggedTunableNumber("Bottom Flywheel kS", 0.0);
     public static final LoggedTunableNumber kBottomKV =
         new LoggedTunableNumber("Bottom Flywheel kV", 0.0);
+
+    public static final LoggedTunableNumber kAmpTopVelocity =
+        new LoggedTunableNumber("AmpTopVelocity", 5.0);
+    public static final LoggedTunableNumber kAmpBottomVelocity =
+        new LoggedTunableNumber("AmpBottomVelocity", 7.0);
 
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);

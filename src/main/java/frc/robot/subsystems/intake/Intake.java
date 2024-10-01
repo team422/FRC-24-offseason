@@ -14,7 +14,7 @@ public class Intake extends SubsystemBase {
   public enum IntakeState {
     kIdle,
     kIntaking,
-    kOuttaking
+    kVomitting
   }
 
   public Intake(IntakeIO io) {
@@ -40,7 +40,7 @@ public class Intake extends SubsystemBase {
       case kIntaking:
         m_io.setVoltage(IntakeConstants.kIntakeVoltage.get());
         break;
-      case kOuttaking:
+      case kVomitting:
         m_io.setVoltage(IntakeConstants.kOuttakeVoltage.get());
         break;
     }

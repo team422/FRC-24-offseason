@@ -19,19 +19,25 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.KickerConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
+import frc.robot.commands.auto.AutoFactory;
 import frc.robot.oi.DriverControls;
 import frc.robot.oi.DriverControlsXbox;
+import frc.robot.oi.OperatorControls;
+import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIONorthstar;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.subsystems.drive.Drive.DriveProfiles;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
 import frc.robot.subsystems.intake.Intake;
+import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeIONeo;
 import frc.robot.subsystems.intake.IntakeIOSim;
 import frc.robot.subsystems.kicker.Kicker;
@@ -41,6 +47,9 @@ import frc.robot.subsystems.kicker.KickerIOSim;
 import frc.robot.subsystems.shooter.FlywheelIONeo;
 import frc.robot.subsystems.shooter.FlywheelIOSim;
 import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.Shooter.ShooterState;
+import frc.robot.util.PathPlannerUtil;
+import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -59,11 +68,16 @@ public class RobotContainer {
 
   // Controller
   private DriverControls m_driverControls;
+  private OperatorControls m_operatorControls;
 
   // Dashboard inputs
   private LoggedDashboardChooser<Command> m_autoChooser;
 
   private RobotState m_robotState;
+
+  private AutoFactory m_autoFactory;
+
+  private boolean m_ampToggle; // toggle for amp controls
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -133,14 +147,22 @@ public class RobotContainer {
   /** Configure the commands. */
   private void configureCommands() {
     m_autoChooser = new LoggedDashboardChooser<>("AutoChooser");
+    m_autoFactory = new AutoFactory(m_drive);
 
     // Configure autos here
+    m_autoChooser.addOption("Do Nothing", Commands.none());
+    List<String> paths = PathPlannerUtil.getExistingPaths();
+    System.out.println("Paths: " + paths);
+    for (String path : paths) {
+      m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
+    }
   }
 
   /** Configure the controllers. */
   private void configureControllers() {
     // m_driverControls = new DriverControlsPS5(0);
     m_driverControls = new DriverControlsXbox(0);
+    m_operatorControls = new OperatorControlsXbox(5);
   }
 
   /** Configure the button bindings. */
@@ -151,6 +173,7 @@ public class RobotContainer {
             m_driverControls::getForward,
             m_driverControls::getStrafe,
             m_driverControls::getTurn));
+
     m_driverControls
         .resetOdometry()
         .onTrue(
@@ -171,7 +194,7 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
+                  m_robotState.setDefaultAction();
                 }));
 
     m_driverControls
@@ -180,11 +203,19 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_kicker.updateState(KickerState.kShooting);
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_kicker.updateState(KickerState.kIdle);
+
+                  // if in amp cancel after done shooting
+                  if (m_robotState.getRobotAction() == RobotAction.kAmpLineup) {
+                    Commands.waitSeconds(KickerConstants.kShootingTimeout.get())
+                        .andThen(
+                            Commands.runOnce(
+                                () -> {
+                                  m_robotState.setDefaultAction();
+                                  m_drive.updateProfile(DriveProfiles.kDefault);
+                                  m_ampToggle = false;
+                                }))
+                        .schedule();
+                  }
                 }));
 
     m_driverControls
@@ -192,12 +223,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kEjecting);
+                  m_robotState.updateRobotAction(RobotAction.kVomitting);
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
+                  m_robotState.setDefaultAction();
                 }));
 
     m_driverControls
@@ -210,7 +241,136 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kTeleopDefault);
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_driverControls
+        .hockeyPuck()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kFeeding);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_driverControls
+        .amp()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_ampToggle = !m_ampToggle;
+                  if (m_ampToggle) {
+                    m_robotState.updateRobotAction(RobotAction.kAmpLineup);
+                  } else {
+                    m_robotState.setDefaultAction();
+                  }
+                }));
+
+    m_driverControls
+        .cancelAmpLineup()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  if (m_robotState.getRobotAction() == RobotAction.kAmpLineup) {
+                    m_drive.updateProfile(DriveProfiles.kDefault);
+                  }
+                }));
+
+    m_operatorControls
+        .runIntake()
+        .whileTrue(
+            Commands.run(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kIntake);
+                }));
+
+    m_operatorControls
+        .runKicker()
+        .whileTrue(Commands.run(() -> m_kicker.updateState(KickerState.kShooting)));
+
+    m_operatorControls
+        .ejectGamePiece()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kVomitting);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_operatorControls
+        .revAndAlign()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kRevAndAlign);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_operatorControls
+        .revAndShoot()
+        .onTrue(Commands.runOnce(() -> m_robotState.updateRobotAction(RobotAction.kAutoShoot)));
+
+    m_operatorControls
+        .revNoAlign()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kRevNoAlign);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_operatorControls
+        .revAndShoot()
+        .onTrue(Commands.runOnce(() -> m_robotState.updateRobotAction(RobotAction.kAutoShoot)))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
+                }));
+
+    m_operatorControls
+        .runKicker()
+        .whileTrue(Commands.run(() -> m_kicker.updateState(KickerState.kShooting)));
+
+    // manual override to set to idle in case of emergency
+    m_operatorControls
+        .setIdle()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_intake.updateState(IntakeState.kIdle);
+                  m_kicker.updateState(KickerState.kIdle);
+                  m_shooter.updateState(ShooterState.kIdle);
+                  m_drive.updateProfile(DriveProfiles.kDefault);
+                }));
+
+    m_operatorControls
+        .amp()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_ampToggle = !m_ampToggle;
+                  if (m_ampToggle) {
+                    m_robotState.updateRobotAction(RobotAction.kAmpLineup);
+                  } else {
+                    m_robotState.setDefaultAction();
+                  }
                 }));
   }
 

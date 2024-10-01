@@ -22,7 +22,7 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public double getTurn() {
-    return m_controller.getRightX();
+    return -m_controller.getRightX();
   }
 
   @Override
@@ -48,5 +48,20 @@ public class DriverControlsXbox implements DriverControls {
   @Override
   public Trigger revShooter() {
     return m_controller.leftTrigger();
+  }
+
+  @Override
+  public Trigger hockeyPuck() {
+    return m_controller.leftBumper();
+  }
+
+  @Override
+  public Trigger amp() {
+    return m_controller.y();
+  }
+
+  @Override
+  public Trigger cancelAmpLineup() {
+    return new Trigger(() -> Math.abs(m_controller.getRightX()) > 0.3);
   }
 }

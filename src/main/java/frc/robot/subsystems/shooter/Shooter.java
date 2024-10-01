@@ -22,7 +22,8 @@ public class Shooter extends SubsystemBase {
   public enum ShooterState {
     kIdle,
     kRevving,
-    kEjecting
+    kEjecting,
+    kAmp
   }
 
   /** Class to represent a setpoint for the Shooter */
@@ -45,6 +46,8 @@ public class Shooter extends SubsystemBase {
     HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(ShooterState.kIdle, this::idlePeriodic);
     periodicHash.put(ShooterState.kRevving, this::revvingPeriodic);
+    periodicHash.put(ShooterState.kEjecting, this::ejectingPeriodic);
+    periodicHash.put(ShooterState.kAmp, this::ampPeriodic);
     m_profiles = new SubsystemProfiles(ShooterState.class, periodicHash, ShooterState.kIdle);
   }
 
@@ -144,6 +147,12 @@ public class Shooter extends SubsystemBase {
     Logger.recordOutput("Shooter/DesiredBottomVelocity", m_bottomController.getSetpoint());
   }
 
+  public void ampPeriodic() {
+    setDesiredVelocity(
+        ShooterConstants.kAmpTopVelocity.get(), ShooterConstants.kAmpBottomVelocity.get());
+    revvingPeriodic();
+  }
+
   public void updateState(ShooterState state) {
     m_profiles.setCurrentProfile(state);
   }
@@ -156,5 +165,9 @@ public class Shooter extends SubsystemBase {
   public void setDesiredVelocity(ShooterPosition position) {
     m_topController.setSetpoint(position.topVelocityRPS());
     m_bottomController.setSetpoint(position.bottomVelocityRPS());
+  }
+
+  public ShooterPosition getVelocity() {
+    return new ShooterPosition(m_inputs.topVelocityRPS, m_inputs.bottomVelocityRPS);
   }
 }

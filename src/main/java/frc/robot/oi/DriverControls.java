@@ -18,4 +18,12 @@ public interface DriverControls {
   public Trigger ejectGamePiece();
 
   public Trigger revShooter();
+
+  // this is the feeding command
+  // named it hockey puck to let the legacy live on
+  public Trigger hockeyPuck();
+
+  public Trigger amp();
+
+  public Trigger cancelAmpLineup();
 }

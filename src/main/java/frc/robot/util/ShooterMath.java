@@ -22,13 +22,13 @@ public class ShooterMath {
     m_speakerTopMap.put(0.0, 5.0);
     m_speakerTopMap.put(1.0, 10.0);
     m_speakerTopMap.put(2.0, 15.0);
-    m_speakerTopMap.put(3.0, 20.0);
+    m_speakerTopMap.put(3.0, 40.0);
 
     // Data for bottom flywheel speaker
     m_speakerBottomMap.put(0.0, 5.0);
     m_speakerBottomMap.put(1.0, 10.0);
     m_speakerBottomMap.put(2.0, 15.0);
-    m_speakerBottomMap.put(3.0, 20.0);
+    m_speakerBottomMap.put(3.0, 30.0);
 
     // Data for top flywheel feeding
     m_feedingTopMap.put(0.0, 10.0);

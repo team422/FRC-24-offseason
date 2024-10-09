@@ -33,8 +33,8 @@ public class FlywheelIOSim implements FlywheelIO {
 
   @Override
   public void updateInputs(FlywheelInputs inputs) {
-    m_topFlywheel.update(.02);
-    m_bottomFlywheel.update(.02);
+    m_topFlywheel.update(0.02);
+    m_bottomFlywheel.update(0.02);
 
     inputs.topVelocityRPS = m_topFlywheel.getAngularVelocityRPM() / 60;
     inputs.topVoltage = m_topVoltage;

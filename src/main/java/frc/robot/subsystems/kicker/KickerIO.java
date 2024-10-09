@@ -8,9 +8,13 @@ public interface KickerIO {
     public double angularVelocityRPM;
     public double voltage;
     public double current;
+    public boolean beamBreakOne;
+    public boolean beamBreakTwo;
   }
 
   public void updateInputs(KickerInputs inputs);
 
   public void setVoltage(double voltage);
+
+  public boolean hasGamePiece();
 }

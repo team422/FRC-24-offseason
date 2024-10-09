@@ -179,7 +179,7 @@ public class RobotState {
 
       case kIntake:
         m_intake.updateState(IntakeState.kIntaking);
-        m_kicker.updateState(KickerState.kIdle);
+        m_kicker.updateState(KickerState.kIntaking);
         m_shooter.updateState(ShooterState.kIdle);
         m_drive.updateProfile(DriveProfiles.kDefault);
 
@@ -257,5 +257,9 @@ public class RobotState {
 
   public void setShooter(ShooterState state) {
     m_shooter.updateState(state);
+  }
+
+  public void onEnabled() {
+    m_shooter.resetPID();
   }
 }

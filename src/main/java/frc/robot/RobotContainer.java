@@ -105,7 +105,8 @@ public class RobotContainer {
 
       m_intake = new Intake(new IntakeIONeo(Ports.kIntakeNeo));
 
-      m_kicker = new Kicker(new KickerIONeo(Ports.kKickerNeo));
+      m_kicker =
+          new Kicker(new KickerIONeo(Ports.kKickerNeo, Ports.kBeamBreakOne, Ports.kBeamBreakTwo));
 
       m_shooter =
           new Shooter(
@@ -282,10 +283,15 @@ public class RobotContainer {
 
     m_operatorControls
         .runIntake()
-        .whileTrue(
-            Commands.run(
+        .onTrue(
+            Commands.runOnce(
                 () -> {
                   m_robotState.updateRobotAction(RobotAction.kIntake);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
                 }));
 
     m_operatorControls
@@ -343,10 +349,6 @@ public class RobotContainer {
                 () -> {
                   m_robotState.setDefaultAction();
                 }));
-
-    m_operatorControls
-        .runKicker()
-        .whileTrue(Commands.run(() -> m_kicker.updateState(KickerState.kShooting)));
 
     // manual override to set to idle in case of emergency
     m_operatorControls

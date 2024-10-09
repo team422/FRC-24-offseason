@@ -205,6 +205,8 @@ public class Drive extends SubsystemBase {
       // Apply update
       m_poseEstimator.updateWithTime(sampleTimestamps[i], m_rawGyroRotation, modulePositions);
     }
+
+    Logger.recordOutput("Drive/Profile", (DriveProfiles) m_profiles.getCurrentProfile());
   }
 
   public void defaultPeriodic() {

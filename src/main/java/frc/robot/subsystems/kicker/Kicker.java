@@ -16,6 +16,7 @@ public class Kicker extends SubsystemBase {
 
   public enum KickerState {
     kIdle,
+    kIntaking,
     kShooting,
     kVomitting
   }
@@ -26,6 +27,7 @@ public class Kicker extends SubsystemBase {
 
     HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(KickerState.kIdle, () -> {});
+    periodicHash.put(KickerState.kIntaking, this::intakingPeriodic);
     periodicHash.put(KickerState.kShooting, this::shootingPeriodic);
     periodicHash.put(KickerState.kVomitting, () -> {});
     m_profiles = new SubsystemProfiles(KickerState.class, periodicHash, KickerState.kIdle);
@@ -41,6 +43,12 @@ public class Kicker extends SubsystemBase {
     Logger.recordOutput("Kicker/State", (KickerState) m_profiles.getCurrentProfile());
   }
 
+  private void intakingPeriodic() {
+    if (m_io.hasGamePiece()) {
+      updateState(KickerState.kIdle);
+    }
+  }
+
   private void shootingPeriodic() {
     if (m_shootTimeout.hasElapsed(KickerConstants.kShootingTimeout.get())) {
       updateState(KickerState.kIdle);
@@ -51,6 +59,9 @@ public class Kicker extends SubsystemBase {
     switch (state) {
       case kIdle:
         m_io.setVoltage(KickerConstants.kIdleVoltage.get());
+        break;
+      case kIntaking:
+        m_io.setVoltage(KickerConstants.kIntakingVoltage.get());
         break;
       case kShooting:
         m_io.setVoltage(KickerConstants.kShootingVoltage.get());

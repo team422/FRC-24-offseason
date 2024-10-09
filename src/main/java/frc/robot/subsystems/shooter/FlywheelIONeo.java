@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -12,9 +13,13 @@ public class FlywheelIONeo implements FlywheelIO {
 
   public FlywheelIONeo(int topPort, int bottomPort) {
     m_topMotor = new CANSparkMax(topPort, MotorType.kBrushless);
+    m_topMotor.setIdleMode(IdleMode.kCoast);
     m_topEncoder = m_topMotor.getEncoder();
+
     m_bottomMotor = new CANSparkMax(bottomPort, MotorType.kBrushless);
+    m_bottomMotor.setIdleMode(IdleMode.kCoast);
     m_bottomEncoder = m_bottomMotor.getEncoder();
+    m_bottomMotor.setInverted(true); // bottom is inverted so that positive velocity is outward
   }
 
   @Override

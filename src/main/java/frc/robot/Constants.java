@@ -85,11 +85,11 @@ public final class Constants {
 
   public static final class IntakeConstants {
     public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("IntakeIdleVoltage", 0.0);
+        new LoggedTunableNumber("Intake Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakeVoltage =
-        new LoggedTunableNumber("IntakeVoltage", 7.0);
+        new LoggedTunableNumber("Intake Voltage", -7.0);
     public static final LoggedTunableNumber kOuttakeVoltage =
-        new LoggedTunableNumber("OuttakeVoltage", -7.0);
+        new LoggedTunableNumber("Outtake Voltage", 7.0);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -101,14 +101,16 @@ public final class Constants {
 
   public static final class KickerConstants {
     public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("KickerIdleVoltage", 0.0);
+        new LoggedTunableNumber("Kicker Idle Voltage", 0.0);
+    public static final LoggedTunableNumber kIntakingVoltage =
+        new LoggedTunableNumber("Kicker Intake Voltage", -7.0);
     public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("KickerShootingVoltage", 7.0);
+        new LoggedTunableNumber("Kicker Shooting Voltage", -7.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("KickerEjectVoltage", -7.0);
+        new LoggedTunableNumber("Kicker Eject Voltage", 7.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
-        new LoggedTunableNumber("KickerShootingTimeout", 1.0);
+        new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -120,10 +122,10 @@ public final class Constants {
 
   public static final class ShooterConstants {
     public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("ShooterIdleVoltage", 0.0);
+        new LoggedTunableNumber("Shooter Idle Voltage", 0.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("ShooterEjectingVoltage", 7.0);
-    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 1.0);
+        new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
+    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 0.03);
     public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.0);
     public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.0);
 
@@ -133,18 +135,18 @@ public final class Constants {
         new PIDController(kP.get(), kI.get(), kD.get());
 
     public static final LoggedTunableNumber kTopKS =
-        new LoggedTunableNumber("Top Flywheel kS", 0.0);
+        new LoggedTunableNumber("Top Flywheel kS", 0.12);
     public static final LoggedTunableNumber kTopKV =
-        new LoggedTunableNumber("Top Flywheel kV", 0.0);
+        new LoggedTunableNumber("Top Flywheel kV", 0.125);
     public static final LoggedTunableNumber kBottomKS =
-        new LoggedTunableNumber("Bottom Flywheel kS", 0.0);
+        new LoggedTunableNumber("Bottom Flywheel kS", 0.14);
     public static final LoggedTunableNumber kBottomKV =
-        new LoggedTunableNumber("Bottom Flywheel kV", 0.0);
+        new LoggedTunableNumber("Bottom Flywheel kV", 0.13);
 
     public static final LoggedTunableNumber kAmpTopVelocity =
-        new LoggedTunableNumber("AmpTopVelocity", 5.0);
+        new LoggedTunableNumber("Amp Top Velocity", 5.0);
     public static final LoggedTunableNumber kAmpBottomVelocity =
-        new LoggedTunableNumber("AmpBottomVelocity", 7.0);
+        new LoggedTunableNumber("Amp Bottom Velocity", 7.0);
 
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
@@ -172,10 +174,17 @@ public final class Constants {
     public static final int kBackRightTurn = 10;
     public static final int kBackRightCancoder = 11;
 
-    public static final int kIntakeNeo = 1;
-    public static final int kKickerNeo = 2;
-    public static final int kTopFlywheel = 3;
-    public static final int kBottomFlywheel = 4;
+    public static final int kPigeon = 22;
+
+    public static final String kCanivoreName = "Drivetrain";
+
+    public static final int kIntakeNeo = 3;
+    public static final int kKickerNeo = 4;
+    public static final int kTopFlywheel = 5;
+    public static final int kBottomFlywheel = 6;
+
+    public static final int kBeamBreakOne = 8;
+    public static final int kBeamBreakTwo = 9;
   }
 
   public static final class FieldConstants {

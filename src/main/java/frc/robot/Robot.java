@@ -106,6 +106,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during autonomous. */
@@ -122,6 +124,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during operator control. */
@@ -133,6 +137,8 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during test mode. */

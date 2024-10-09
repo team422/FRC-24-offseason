@@ -154,6 +154,16 @@ public class Shooter extends SubsystemBase {
   }
 
   public void updateState(ShooterState state) {
+    switch (state) {
+      case kIdle:
+      case kEjecting:
+        setDesiredVelocity(0, 0);
+        break;
+
+      case kAmp:
+      case kRevving:
+        break;
+    }
     m_profiles.setCurrentProfile(state);
   }
 
@@ -169,5 +179,10 @@ public class Shooter extends SubsystemBase {
 
   public ShooterPosition getVelocity() {
     return new ShooterPosition(m_inputs.topVelocityRPS, m_inputs.bottomVelocityRPS);
+  }
+
+  public void resetPID() {
+    m_topController.reset();
+    m_bottomController.reset();
   }
 }

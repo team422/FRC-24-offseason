@@ -22,12 +22,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Ports;
 import java.util.OptionalDouble;
 import java.util.Queue;
 
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 m_pigeon = new Pigeon2(20);
+  private final Pigeon2 m_pigeon = new Pigeon2(Ports.kPigeon, Ports.kCanivoreName);
   private final StatusSignal<Double> m_yaw = m_pigeon.getYaw();
   private final StatusSignal<Double> m_pitch = m_pigeon.getPitch();
   private final StatusSignal<Double> m_roll = m_pigeon.getRoll();

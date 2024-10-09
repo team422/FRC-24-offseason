@@ -171,7 +171,6 @@ public class RobotState {
       case kTeleopDefault:
       case kAutoDefault:
         m_intake.updateState(IntakeState.kIdle);
-        m_kicker.updateState(KickerState.kIdle);
         m_shooter.updateState(ShooterState.kIdle);
         m_drive.updateProfile(DriveProfiles.kDefault);
 
@@ -189,7 +188,6 @@ public class RobotState {
       case kAutoShoot:
       case kFeeding:
         m_intake.updateState(IntakeState.kIdle);
-        m_kicker.updateState(KickerState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
         m_drive.updateProfile(DriveProfiles.kAutoAlign);
 
@@ -197,7 +195,6 @@ public class RobotState {
 
       case kRevNoAlign:
         m_intake.updateState(IntakeState.kIdle);
-        m_kicker.updateState(KickerState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
 
         break;
@@ -212,7 +209,6 @@ public class RobotState {
 
       case kAmpLineup:
         m_intake.updateState(IntakeState.kIdle);
-        m_kicker.updateState(KickerState.kIdle);
         m_shooter.updateState(ShooterState.kAmp);
         m_drive.updateProfile(DriveProfiles.kAmpLineup);
         m_drive.setDesiredHeading(AllianceFlipUtil.apply(Rotation2d.fromDegrees(90)));

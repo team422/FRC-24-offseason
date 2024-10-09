@@ -13,6 +13,7 @@ public class Kicker extends SubsystemBase {
   private SubsystemProfiles m_profiles;
 
   private Timer m_shootTimeout = new Timer();
+  private Timer m_intakeTimeout = new Timer();
 
   public enum KickerState {
     kIdle,
@@ -26,10 +27,10 @@ public class Kicker extends SubsystemBase {
     m_inputs = new KickerInputsAutoLogged();
 
     HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
-    periodicHash.put(KickerState.kIdle, () -> {});
+    periodicHash.put(KickerState.kIdle, this::idlePeriodic);
     periodicHash.put(KickerState.kIntaking, this::intakingPeriodic);
     periodicHash.put(KickerState.kShooting, this::shootingPeriodic);
-    periodicHash.put(KickerState.kVomitting, () -> {});
+    periodicHash.put(KickerState.kVomitting, this::vomittingPeriodic);
     m_profiles = new SubsystemProfiles(KickerState.class, periodicHash, KickerState.kIdle);
   }
 
@@ -43,32 +44,43 @@ public class Kicker extends SubsystemBase {
     Logger.recordOutput("Kicker/State", (KickerState) m_profiles.getCurrentProfile());
   }
 
+  private void idlePeriodic() {
+    m_io.setVoltage(KickerConstants.kIdleVoltage.get());
+  }
+
   private void intakingPeriodic() {
-    if (m_io.hasGamePiece()) {
+    m_io.setVoltage(KickerConstants.kIntakingVoltage.get());
+
+    if (m_io.hasGamePiece() || m_intakeTimeout.hasElapsed(KickerConstants.kIntakeTimeout.get())) {
       updateState(KickerState.kIdle);
+      m_io.setVoltage(KickerConstants.kIdleVoltage.get());
     }
   }
 
   private void shootingPeriodic() {
+    m_io.setVoltage(KickerConstants.kShootingVoltage.get());
+
     if (m_shootTimeout.hasElapsed(KickerConstants.kShootingTimeout.get())) {
       updateState(KickerState.kIdle);
+      m_io.setVoltage(KickerConstants.kIdleVoltage.get());
     }
+  }
+
+  private void vomittingPeriodic() {
+    m_io.setVoltage(KickerConstants.kEjectingVoltage.get());
   }
 
   public void updateState(KickerState state) {
     switch (state) {
       case kIdle:
-        m_io.setVoltage(KickerConstants.kIdleVoltage.get());
         break;
       case kIntaking:
-        m_io.setVoltage(KickerConstants.kIntakingVoltage.get());
+        m_intakeTimeout.restart();
         break;
       case kShooting:
-        m_io.setVoltage(KickerConstants.kShootingVoltage.get());
         m_shootTimeout.restart();
         break;
       case kVomitting:
-        m_io.setVoltage(KickerConstants.kEjectingVoltage.get());
         break;
     }
 

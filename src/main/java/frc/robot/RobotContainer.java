@@ -92,7 +92,9 @@ public class RobotContainer {
     m_aprilTagVision =
         new AprilTagVision(
             new AprilTagVisionIONorthstar("northstar_0", ""),
-            new AprilTagVisionIONorthstar("northstar_1", ""));
+            new AprilTagVisionIONorthstar("northstar_1", ""),
+            new AprilTagVisionIONorthstar("northstar_2", ""),
+            new AprilTagVisionIONorthstar("northstar_3", ""));
 
     if (RobotBase.isReal()) {
       m_drive =
@@ -230,6 +232,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_robotState.setDefaultAction();
+                  m_kicker.updateState(KickerState.kIdle);
                 }));
 
     m_driverControls
@@ -283,8 +286,8 @@ public class RobotContainer {
 
     m_operatorControls
         .runIntake()
-        .onTrue(
-            Commands.runOnce(
+        .whileTrue(
+            Commands.run(
                 () -> {
                   m_robotState.updateRobotAction(RobotAction.kIntake);
                 }))
@@ -309,6 +312,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_robotState.setDefaultAction();
+                  m_kicker.updateState(KickerState.kIdle);
                 }));
 
     m_operatorControls

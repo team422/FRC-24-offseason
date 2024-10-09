@@ -17,7 +17,6 @@ import frc.robot.Constants.AprilTagVisionConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIO.AprilTagVisionInputs;
-import frc.robot.util.GeomUtil;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -113,8 +112,7 @@ public class AprilTagVision extends SubsystemBase {
 
             robotPose3d =
                 cameraPose.transformBy(
-                    GeomUtil.toTransform3d(AprilTagVisionConstants.kCameraPoses[instanceIndex])
-                        .inverse());
+                    AprilTagVisionConstants.kCameraTransforms[instanceIndex].inverse());
 
             useVisionRotation = true;
             break;
@@ -152,12 +150,10 @@ public class AprilTagVision extends SubsystemBase {
 
             Pose3d robotPose3d1 =
                 cameraPose1.transformBy(
-                    GeomUtil.toTransform3d(AprilTagVisionConstants.kCameraPoses[instanceIndex])
-                        .inverse());
+                    AprilTagVisionConstants.kCameraTransforms[instanceIndex].inverse());
             Pose3d robotPose3d2 =
                 cameraPose2.transformBy(
-                    GeomUtil.toTransform3d(AprilTagVisionConstants.kCameraPoses[instanceIndex])
-                        .inverse());
+                    AprilTagVisionConstants.kCameraTransforms[instanceIndex].inverse());
 
             double error1 = values[1];
             double error2 = values[9];
@@ -182,7 +178,7 @@ public class AprilTagVision extends SubsystemBase {
             }
 
             useVisionRotation =
-                false; // yes i know this is technically unnecessary but i like to be explicit
+                false; // since there are two possible poses we shouldn't rely on the rotation
 
             break;
         }

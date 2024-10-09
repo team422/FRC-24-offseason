@@ -21,15 +21,33 @@ public class Intake extends SubsystemBase {
     m_io = io;
     m_inputs = new IntakeInputsAutoLogged();
 
-    m_profiles = new SubsystemProfiles(IntakeState.class, new HashMap<>(), IntakeState.kIdle);
+    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    periodicHash.put(IntakeState.kIdle, this::idlePeriodic);
+    periodicHash.put(IntakeState.kIntaking, this::intakingPeriodic);
+    periodicHash.put(IntakeState.kVomitting, this::vomittingPeriodic);
+    m_profiles = new SubsystemProfiles(IntakeState.class, periodicHash, IntakeState.kIdle);
   }
 
   @Override
   public void periodic() {
     m_io.updateInputs(m_inputs);
 
+    m_profiles.getPeriodicFunction().run();
+
     Logger.processInputs("Intake", m_inputs);
     Logger.recordOutput("Intake/CurrentState", (IntakeState) m_profiles.getCurrentProfile());
+  }
+
+  private void idlePeriodic() {
+    m_io.setVoltage(IntakeConstants.kIdleVoltage.get());
+  }
+
+  private void intakingPeriodic() {
+    m_io.setVoltage(IntakeConstants.kIntakeVoltage.get());
+  }
+
+  private void vomittingPeriodic() {
+    m_io.setVoltage(IntakeConstants.kOuttakeVoltage.get());
   }
 
   public void updateState(IntakeState state) {

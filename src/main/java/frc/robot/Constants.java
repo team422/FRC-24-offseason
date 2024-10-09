@@ -17,9 +17,9 @@ import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -40,8 +40,8 @@ public final class Constants {
 
   public static final class DriveConstants {
     public static final double kMaxLinearSpeed = 6.0; // meters per second
-    public static final double kTrackWidthX = Units.inchesToMeters(21.5);
-    public static final double kTrackWidthY = Units.inchesToMeters(20.5);
+    public static final double kTrackWidthX = Units.inchesToMeters(15.25);
+    public static final double kTrackWidthY = Units.inchesToMeters(16.25);
     public static final double kDriveBaseRadius =
         Math.hypot(kTrackWidthX / 2.0, kTrackWidthY / 2.0);
     public static final double kMaxAngularSpeed = kMaxLinearSpeed / kDriveBaseRadius;
@@ -60,7 +60,8 @@ public final class Constants {
     public static final double kWheelRadius = Units.inchesToMeters(2.0);
     public static final double kOdometryFrequency = 250.0;
 
-    public static final double kDriveGearRatio = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
+    public static final double kDriveGearRatio =
+        (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0); // L3 ratio
     public static final double kTurnGearRatio = 150.0 / 7.0;
   }
 
@@ -73,13 +74,42 @@ public final class Constants {
         new LoggedTunableNumber("xyStandardDeviationCoefficient", 0.005, "Cameras");
     public static final LoggedTunableNumber kThetaStandardDeviationCoefficient =
         new LoggedTunableNumber("thetaStandardDeviationCoefficient", 0.01, "Cameras");
-    ;
 
-    // TODO: Update these values
-    public static final Pose3d[] kCameraPoses =
-        new Pose3d[] {
-          new Pose3d(new Translation3d(), new Rotation3d()),
-          new Pose3d(new Translation3d(), new Rotation3d())
+    // transform from center of robot to camera
+    public static final Transform3d[] kCameraTransforms =
+        new Transform3d[] {
+          // front left (shooter)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(5.410),
+                  Units.inchesToMeters(-9.454),
+                  Units.inchesToMeters(7.766)),
+              new Rotation3d(
+                  0.0, Units.degreesToRadians(55.000015), Units.degreesToRadians(-9.971306))),
+
+          // front right (shooter)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(5.410),
+                  Units.inchesToMeters(9.454),
+                  Units.inchesToMeters(7.766)),
+              new Rotation3d(0.0, Units.degreesToRadians(55), Units.degreesToRadians(9.971306))),
+
+          // back left (intake)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(-4.673),
+                  Units.inchesToMeters(-14.620),
+                  Units.inchesToMeters(8.585)),
+              new Rotation3d(0.0, Units.degreesToRadians(60), Units.degreesToRadians(180 + 10))),
+
+          // back right (intake)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(-4.673),
+                  Units.inchesToMeters(14.620),
+                  Units.inchesToMeters(8.585)),
+              new Rotation3d(0.0, Units.degreesToRadians(60), Units.degreesToRadians(180 - 10)))
         };
   }
 
@@ -110,6 +140,8 @@ public final class Constants {
         new LoggedTunableNumber("Kicker Eject Voltage", 7.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
+        new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
+    public static final LoggedTunableNumber kIntakeTimeout =
         new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
 
     // Simulation constants

@@ -64,4 +64,9 @@ public class DriverControlsXbox implements DriverControls {
   public Trigger cancelAmpLineup() {
     return new Trigger(() -> Math.abs(m_controller.getRightX()) > 0.3);
   }
+
+  @Override
+  public Trigger subwooferShot() {
+    return m_controller.a();
+  }
 }

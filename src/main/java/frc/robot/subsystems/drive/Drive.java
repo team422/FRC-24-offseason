@@ -63,7 +63,7 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds m_desiredChassisSpeeds = new ChassisSpeeds();
 
   private Rotation2d m_desiredHeading = new Rotation2d();
-  private PIDController m_headingController = new PIDController(3.5, 0, 0.09);
+  private PIDController m_headingController = new PIDController(0.1, 0, 0.09);
 
   private Rotation2d m_rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] m_lastModulePositions = // For delta tracking

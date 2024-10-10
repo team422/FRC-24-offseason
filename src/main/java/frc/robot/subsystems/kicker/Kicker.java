@@ -14,10 +14,14 @@ public class Kicker extends SubsystemBase {
 
   private Timer m_shootTimeout = new Timer();
   private Timer m_intakeTimeout = new Timer();
+  private Timer m_indexTimeout = new Timer();
+  private Timer m_reverseTimeout = new Timer();
 
   public enum KickerState {
     kIdle,
     kIntaking,
+    kIndexing,
+    kReversing,
     kShooting,
     kVomitting
   }
@@ -29,6 +33,8 @@ public class Kicker extends SubsystemBase {
     HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(KickerState.kIdle, this::idlePeriodic);
     periodicHash.put(KickerState.kIntaking, this::intakingPeriodic);
+    periodicHash.put(KickerState.kIndexing, this::indexingPeriodic);
+    periodicHash.put(KickerState.kReversing, this::reversingPeriodic);
     periodicHash.put(KickerState.kShooting, this::shootingPeriodic);
     periodicHash.put(KickerState.kVomitting, this::vomittingPeriodic);
     m_profiles = new SubsystemProfiles(KickerState.class, periodicHash, KickerState.kIdle);
@@ -53,7 +59,25 @@ public class Kicker extends SubsystemBase {
 
     if (m_io.hasGamePiece() || m_intakeTimeout.hasElapsed(KickerConstants.kIntakeTimeout.get())) {
       updateState(KickerState.kIdle);
-      m_io.setVoltage(KickerConstants.kIdleVoltage.get());
+      idlePeriodic();
+    }
+  }
+
+  private void indexingPeriodic() {
+    m_io.setVoltage(KickerConstants.kIndexingVoltage.get());
+
+    if (m_io.hasGamePiece() || m_indexTimeout.hasElapsed(KickerConstants.kIndexingVoltage.get())) {
+      updateState(KickerState.kReversing);
+      reversingPeriodic();
+    }
+  }
+
+  private void reversingPeriodic() {
+    m_io.setVoltage(KickerConstants.kReversingVoltage.get());
+
+    if (m_reverseTimeout.hasElapsed(KickerConstants.kReverseTimeout.get())) {
+      updateState(KickerState.kIdle);
+      idlePeriodic();
     }
   }
 
@@ -77,6 +101,12 @@ public class Kicker extends SubsystemBase {
       case kIntaking:
         m_intakeTimeout.restart();
         break;
+      case kIndexing:
+        m_indexTimeout.restart();
+        break;
+      case kReversing:
+        m_reverseTimeout.restart();
+        break;
       case kShooting:
         m_shootTimeout.restart();
         break;
@@ -91,4 +121,5 @@ public class Kicker extends SubsystemBase {
   // Mr. Wood better than u - Aahil
   // I love God and Jesus - Patty lin
   // James and Tommy better than you guys cause you're stinky and rotund like a clock
+  // Ya'll need to get a life :) - also add a v8 with a turbo and a supercharger
 }

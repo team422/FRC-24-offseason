@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.KickerConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.subsystems.drive.Drive;
@@ -40,6 +41,7 @@ public class RobotState {
     kIntake,
     kRevAndAlign,
     kRevNoAlign,
+    kSubwooferShot,
     kVomitting,
     kFeeding,
     kAmpLineup,
@@ -66,6 +68,7 @@ public class RobotState {
     periodicHash.put(RobotAction.kVomitting, () -> {});
     periodicHash.put(RobotAction.kRevAndAlign, this::revAndAlignPeriodic);
     periodicHash.put(RobotAction.kRevNoAlign, this::revNoAlignPeriodic);
+    periodicHash.put(RobotAction.kSubwooferShot, this::subwooferShotPeriodic);
     periodicHash.put(RobotAction.kFeeding, this::feedingPeriodic);
     periodicHash.put(RobotAction.kAmpLineup, this::ampLineupPeriodic);
 
@@ -155,6 +158,12 @@ public class RobotState {
     }
   }
 
+  public void subwooferShotPeriodic() {
+    m_shooter.setDesiredVelocity(
+        ShooterConstants.kSubwooferTopVelocity.get(),
+        ShooterConstants.kSubwooferBottomVelocity.get());
+  }
+
   public void feedingPeriodic() {
     Pose2d currPose = getEstimatedPose();
     ShooterPosition position = m_shooterMath.calculateFeedingShooter(currPose);
@@ -193,6 +202,7 @@ public class RobotState {
 
         break;
 
+      case kSubwooferShot:
       case kRevNoAlign:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);

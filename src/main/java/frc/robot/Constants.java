@@ -117,7 +117,7 @@ public final class Constants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("Intake Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakeVoltage =
-        new LoggedTunableNumber("Intake Voltage", -7.0);
+        new LoggedTunableNumber("Intake Voltage", -10.0);
     public static final LoggedTunableNumber kOuttakeVoltage =
         new LoggedTunableNumber("Outtake Voltage", 7.0);
 
@@ -133,16 +133,24 @@ public final class Constants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("Kicker Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakingVoltage =
-        new LoggedTunableNumber("Kicker Intake Voltage", -7.0);
+        new LoggedTunableNumber("Kicker Intake Voltage", -8.0);
+    public static final LoggedTunableNumber kIndexingVoltage =
+        new LoggedTunableNumber("Kicker Intake Voltage", -8.0);
+    public static final LoggedTunableNumber kReversingVoltage =
+        new LoggedTunableNumber("Kicker Reverse Voltage", 8.0);
     public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("Kicker Shooting Voltage", -7.0);
+        new LoggedTunableNumber("Kicker Shooting Voltage", -10.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("Kicker Eject Voltage", 7.0);
+        new LoggedTunableNumber("Kicker Eject Voltage", 8.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
         new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
     public static final LoggedTunableNumber kIntakeTimeout =
         new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
+    public static final LoggedTunableNumber kIndexingTimeout =
+        new LoggedTunableNumber("Kicker Indexing Timeout", 0.1);
+    public static final LoggedTunableNumber kReverseTimeout =
+        new LoggedTunableNumber("Kicker Reverse Timeout", 0.5);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -179,6 +187,17 @@ public final class Constants {
         new LoggedTunableNumber("Amp Top Velocity", 5.0);
     public static final LoggedTunableNumber kAmpBottomVelocity =
         new LoggedTunableNumber("Amp Bottom Velocity", 7.0);
+
+    public static final LoggedTunableNumber kSubwooferTopVelocity =
+        new LoggedTunableNumber("Subwoofer Top Velocity", 60.0);
+    public static final LoggedTunableNumber kSubwooferBottomVelocity =
+        new LoggedTunableNumber("Subwoofer Bottom Velocity", 40.0);
+
+    public static final boolean kManualControl = false;
+    public static final LoggedTunableNumber kManualTopVelocity =
+        new LoggedTunableNumber("Manual Top Velocity", 0.0);
+    public static final LoggedTunableNumber kManualBottomVelocity =
+        new LoggedTunableNumber("Manual Bottom Velocity", 0.0);
 
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);

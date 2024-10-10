@@ -53,6 +53,12 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    if (ShooterConstants.kManualControl) {
+      updateState(ShooterState.kRevving);
+      setDesiredVelocity(
+          ShooterConstants.kManualTopVelocity.get(), ShooterConstants.kManualBottomVelocity.get());
+    }
+
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();

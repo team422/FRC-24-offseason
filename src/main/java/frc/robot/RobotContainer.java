@@ -26,7 +26,7 @@ import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsXbox;
+import frc.robot.oi.DriverControlsPS5;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -163,8 +163,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    // m_driverControls = new DriverControlsPS5(0);
-    m_driverControls = new DriverControlsXbox(0);
+    m_driverControls = new DriverControlsPS5(0);
+    // m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 
@@ -189,8 +189,8 @@ public class RobotContainer {
 
     m_driverControls
         .runIntake()
-        .onTrue(
-            Commands.runOnce(
+        .whileTrue(
+            Commands.run(
                 () -> {
                   m_robotState.updateRobotAction(RobotAction.kIntake);
                 }))
@@ -282,6 +282,19 @@ public class RobotContainer {
                   if (m_robotState.getRobotAction() == RobotAction.kAmpLineup) {
                     m_drive.updateProfile(DriveProfiles.kDefault);
                   }
+                }));
+
+    m_driverControls
+        .subwooferShot()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.updateRobotAction(RobotAction.kSubwooferShot);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
                 }));
 
     m_operatorControls

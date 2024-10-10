@@ -70,25 +70,25 @@ public class ModuleIOTalonFX implements ModuleIO {
         m_driveTalon = new TalonFX(Ports.kFrontLeftDrive, Ports.kCanivoreName);
         m_turnTalon = new TalonFX(Ports.kFrontLeftTurn, Ports.kCanivoreName);
         m_cancoder = new CANcoder(Ports.kFrontLeftCancoder, Ports.kCanivoreName);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(1.617); // MUST BE CALIBRATED
         break;
       case 1:
         m_driveTalon = new TalonFX(Ports.kFrontRightDrive, Ports.kCanivoreName);
         m_turnTalon = new TalonFX(Ports.kFrontRightTurn, Ports.kCanivoreName);
         m_cancoder = new CANcoder(Ports.kFrontRightCancoder, Ports.kCanivoreName);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(2.750); // MUST BE CALIBRATED
         break;
       case 2:
         m_driveTalon = new TalonFX(Ports.kBackLeftDrive, Ports.kCanivoreName);
         m_turnTalon = new TalonFX(Ports.kBackLeftTurn, Ports.kCanivoreName);
         m_cancoder = new CANcoder(Ports.kBackLeftCancoder, Ports.kCanivoreName);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(-0.948); // MUST BE CALIBRATED
         break;
       case 3:
         m_driveTalon = new TalonFX(Ports.kBackRightDrive, Ports.kCanivoreName);
         m_turnTalon = new TalonFX(Ports.kBackRightTurn, Ports.kCanivoreName);
         m_cancoder = new CANcoder(Ports.kBackRightCancoder, Ports.kCanivoreName);
-        absoluteEncoderOffset = new Rotation2d(0.0); // MUST BE CALIBRATED
+        absoluteEncoderOffset = new Rotation2d(2.049); // MUST BE CALIBRATED
         break;
       default:
         throw new RuntimeException("Invalid module index");

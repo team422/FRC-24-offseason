@@ -22,7 +22,7 @@ public class DriverControlsPS5 implements DriverControls {
 
   @Override
   public double getTurn() {
-    return -m_controller.getRightX();
+    return m_controller.getRightX();
   }
 
   @Override
@@ -63,5 +63,10 @@ public class DriverControlsPS5 implements DriverControls {
   @Override
   public Trigger cancelAmpLineup() {
     return new Trigger(() -> Math.abs(m_controller.getRightX()) > 0.3);
+  }
+
+  @Override
+  public Trigger subwooferShot() {
+    return m_controller.cross();
   }
 }

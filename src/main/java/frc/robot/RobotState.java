@@ -4,16 +4,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.KickerConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveProfiles;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
-import frc.robot.subsystems.kicker.Kicker;
-import frc.robot.subsystems.kicker.Kicker.KickerState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterPosition;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
@@ -30,7 +30,7 @@ public class RobotState {
   // Subsystems
   private Drive m_drive;
   private Intake m_intake;
-  private Kicker m_kicker;
+  private Indexer m_indexer;
   private Shooter m_shooter;
   private AprilTagVision m_aprilTagVision;
 
@@ -53,10 +53,10 @@ public class RobotState {
   private SubsystemProfiles m_profiles;
 
   private RobotState(
-      Drive drive, Intake intake, Kicker kicker, Shooter shooter, AprilTagVision aprilTagVision) {
+      Drive drive, Intake intake, Indexer indexer, Shooter shooter, AprilTagVision aprilTagVision) {
     m_drive = drive;
     m_intake = intake;
-    m_kicker = kicker;
+    m_indexer = indexer;
     m_shooter = shooter;
     m_aprilTagVision = aprilTagVision;
 
@@ -78,8 +78,8 @@ public class RobotState {
   }
 
   public static void start(
-      Drive drive, Intake intake, Kicker kicker, Shooter shooter, AprilTagVision aprilTagVision) {
-    m_instance = new RobotState(drive, intake, kicker, shooter, aprilTagVision);
+      Drive drive, Intake intake, Indexer indexer, Shooter shooter, AprilTagVision aprilTagVision) {
+    m_instance = new RobotState(drive, intake, indexer, shooter, aprilTagVision);
   }
 
   public static RobotState getInstance() {
@@ -144,11 +144,11 @@ public class RobotState {
         "ReadyToShoot/BottomVelocityWithinTolerance", bottomVelocityWithinTolerance);
 
     if (headingWithinTolerance && topVelocityWithinTolerance && bottomVelocityWithinTolerance) {
-      m_kicker.updateState(KickerState.kShooting);
+      m_indexer.updateState(IndexerState.kShooting);
 
       // wait for shooting timer to expire before resetting
       // if button is released it'll still reset so timer is just a backup
-      Commands.waitSeconds(KickerConstants.kShootingTimeout.get())
+      Commands.waitSeconds(IndexerConstants.kShootingTimeout.get())
           .andThen(
               Commands.runOnce(
                   () -> {
@@ -187,7 +187,7 @@ public class RobotState {
 
       case kIntake:
         m_intake.updateState(IntakeState.kIntaking);
-        m_kicker.updateState(KickerState.kIntaking);
+        m_indexer.updateState(IndexerState.kIntaking);
         m_shooter.updateState(ShooterState.kIdle);
         m_drive.updateProfile(DriveProfiles.kDefault);
 
@@ -211,7 +211,7 @@ public class RobotState {
 
       case kVomitting:
         m_intake.updateState(IntakeState.kVomitting);
-        m_kicker.updateState(KickerState.kVomitting);
+        m_indexer.updateState(IndexerState.kVomitting);
         m_shooter.updateState(ShooterState.kEjecting);
         m_drive.updateProfile(DriveProfiles.kDefault);
 
@@ -257,8 +257,8 @@ public class RobotState {
     m_intake.updateState(state);
   }
 
-  public void setKicker(KickerState state) {
-    m_kicker.updateState(state);
+  public void setIndexer(IndexerState state) {
+    m_indexer.updateState(state);
   }
 
   public void setShooter(ShooterState state) {

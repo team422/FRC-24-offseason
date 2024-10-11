@@ -4,7 +4,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotState;
 import frc.robot.RobotState.RobotAction;
-import frc.robot.subsystems.kicker.Kicker.KickerState;
+import frc.robot.subsystems.indexer.Indexer.IndexerState;
 
 public class AutoShoot extends Command {
   private Timer m_timer = new Timer();
@@ -19,7 +19,7 @@ public class AutoShoot extends Command {
   @Override
   public boolean isFinished() {
     if (m_timer.get() > 2) {
-      RobotState.getInstance().setKicker(KickerState.kShooting);
+      RobotState.getInstance().setIndexer(IndexerState.kShooting);
       RobotState.getInstance().setDefaultAction();
       return true;
     }

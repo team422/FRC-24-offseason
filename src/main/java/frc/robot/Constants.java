@@ -45,6 +45,8 @@ public final class Constants {
     public static final double kDriveBaseRadius =
         Math.hypot(kTrackWidthX / 2.0, kTrackWidthY / 2.0);
     public static final double kMaxAngularSpeed = kMaxLinearSpeed / kDriveBaseRadius;
+    public static final LoggedTunableNumber kTeleopRotationSpeed =
+        new LoggedTunableNumber("Teleop Rotation Speed", kMaxAngularSpeed);
 
     public static final Translation2d[] kModuleTranslations =
         new Translation2d[] {
@@ -129,28 +131,28 @@ public final class Constants {
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
   }
 
-  public static final class KickerConstants {
+  public static final class IndexerConstants {
     public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("Kicker Idle Voltage", 0.0);
+        new LoggedTunableNumber("Indexer Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakingVoltage =
-        new LoggedTunableNumber("Kicker Intake Voltage", -8.0);
+        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
     public static final LoggedTunableNumber kIndexingVoltage =
-        new LoggedTunableNumber("Kicker Intake Voltage", -8.0);
+        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
     public static final LoggedTunableNumber kReversingVoltage =
-        new LoggedTunableNumber("Kicker Reverse Voltage", 8.0);
+        new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
     public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("Kicker Shooting Voltage", -10.0);
+        new LoggedTunableNumber("Indexer Shooting Voltage", -10.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("Kicker Eject Voltage", 8.0);
+        new LoggedTunableNumber("Indexer Eject Voltage", 8.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
-        new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
+        new LoggedTunableNumber("Indexer Shooting Timeout", 1.0);
     public static final LoggedTunableNumber kIntakeTimeout =
-        new LoggedTunableNumber("Kicker Shooting Timeout", 1.0);
+        new LoggedTunableNumber("Indexer Shooting Timeout", 1.0);
     public static final LoggedTunableNumber kIndexingTimeout =
-        new LoggedTunableNumber("Kicker Indexing Timeout", 0.1);
+        new LoggedTunableNumber("Indexer Indexing Timeout", 0.1);
     public static final LoggedTunableNumber kReverseTimeout =
-        new LoggedTunableNumber("Kicker Reverse Timeout", 0.5);
+        new LoggedTunableNumber("Indexer Reverse Timeout", 0.5);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -230,12 +232,12 @@ public final class Constants {
     public static final String kCanivoreName = "Drivetrain";
 
     public static final int kIntakeNeo = 3;
-    public static final int kKickerNeo = 4;
+    public static final int kIndexerNeo = 4;
     public static final int kTopFlywheel = 5;
     public static final int kBottomFlywheel = 6;
 
-    public static final int kBeamBreakOne = 8;
-    public static final int kBeamBreakTwo = 9;
+    public static final int kPhotoElectricOne = 8;
+    public static final int kPhotoElectricTwo = 9;
   }
 
   public static final class FieldConstants {

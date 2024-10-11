@@ -13,7 +13,7 @@ public interface OperatorControls {
 
   public Trigger revAndShoot();
 
-  public Trigger runKicker();
+  public Trigger runIndexer();
 
   public Trigger setIdle();
 

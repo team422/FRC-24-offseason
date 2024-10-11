@@ -13,7 +13,7 @@ public interface DriverControls {
 
   public Trigger runIntake();
 
-  public Trigger runKicker();
+  public Trigger runIndexer();
 
   public Trigger ejectGamePiece();
 

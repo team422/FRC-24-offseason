@@ -19,7 +19,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.KickerConstants;
+import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.RobotState.RobotAction;
@@ -36,14 +36,14 @@ import frc.robot.subsystems.drive.Drive.DriveProfiles;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
 import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.indexer.Indexer;
+import frc.robot.subsystems.indexer.Indexer.IndexerState;
+import frc.robot.subsystems.indexer.IndexerIONeo;
+import frc.robot.subsystems.indexer.IndexerIOSim;
 import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.intake.IntakeIONeo;
 import frc.robot.subsystems.intake.IntakeIOSim;
-import frc.robot.subsystems.kicker.Kicker;
-import frc.robot.subsystems.kicker.Kicker.KickerState;
-import frc.robot.subsystems.kicker.KickerIONeo;
-import frc.robot.subsystems.kicker.KickerIOSim;
 import frc.robot.subsystems.shooter.FlywheelIONeo;
 import frc.robot.subsystems.shooter.FlywheelIOSim;
 import frc.robot.subsystems.shooter.Shooter;
@@ -62,7 +62,7 @@ public class RobotContainer {
   // Subsystems
   private Drive m_drive;
   private Intake m_intake;
-  private Kicker m_kicker;
+  private Indexer m_indexer;
   private Shooter m_shooter;
   private AprilTagVision m_aprilTagVision;
 
@@ -107,8 +107,10 @@ public class RobotContainer {
 
       m_intake = new Intake(new IntakeIONeo(Ports.kIntakeNeo));
 
-      m_kicker =
-          new Kicker(new KickerIONeo(Ports.kKickerNeo, Ports.kBeamBreakOne, Ports.kBeamBreakTwo));
+      m_indexer =
+          new Indexer(
+              new IndexerIONeo(
+                  Ports.kIndexerNeo, Ports.kPhotoElectricOne, Ports.kPhotoElectricTwo));
 
       m_shooter =
           new Shooter(
@@ -130,7 +132,7 @@ public class RobotContainer {
 
       m_intake = new Intake(new IntakeIOSim());
 
-      m_kicker = new Kicker(new KickerIOSim());
+      m_indexer = new Indexer(new IndexerIOSim());
 
       m_shooter =
           new Shooter(
@@ -143,7 +145,7 @@ public class RobotContainer {
                   ShooterConstants.kBottomKS.get(), ShooterConstants.kBottomKV.get()));
     }
 
-    RobotState.start(m_drive, m_intake, m_kicker, m_shooter, m_aprilTagVision);
+    RobotState.start(m_drive, m_intake, m_indexer, m_shooter, m_aprilTagVision);
     m_robotState = RobotState.getInstance();
   }
 
@@ -201,15 +203,15 @@ public class RobotContainer {
                 }));
 
     m_driverControls
-        .runKicker()
+        .runIndexer()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_kicker.updateState(KickerState.kShooting);
+                  m_indexer.updateState(IndexerState.kShooting);
 
                   // if in amp cancel after done shooting
                   if (m_robotState.getRobotAction() == RobotAction.kAmpLineup) {
-                    Commands.waitSeconds(KickerConstants.kShootingTimeout.get())
+                    Commands.waitSeconds(IndexerConstants.kShootingTimeout.get())
                         .andThen(
                             Commands.runOnce(
                                 () -> {
@@ -232,7 +234,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_robotState.setDefaultAction();
-                  m_kicker.updateState(KickerState.kIdle);
+                  m_indexer.updateState(IndexerState.kIdle);
                 }));
 
     m_driverControls
@@ -311,8 +313,8 @@ public class RobotContainer {
                 }));
 
     m_operatorControls
-        .runKicker()
-        .whileTrue(Commands.run(() -> m_kicker.updateState(KickerState.kShooting)));
+        .runIndexer()
+        .whileTrue(Commands.run(() -> m_indexer.updateState(IndexerState.kShooting)));
 
     m_operatorControls
         .ejectGamePiece()
@@ -325,7 +327,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_robotState.setDefaultAction();
-                  m_kicker.updateState(KickerState.kIdle);
+                  m_indexer.updateState(IndexerState.kIdle);
                 }));
 
     m_operatorControls
@@ -374,7 +376,7 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_intake.updateState(IntakeState.kIdle);
-                  m_kicker.updateState(KickerState.kIdle);
+                  m_indexer.updateState(IndexerState.kIdle);
                   m_shooter.updateState(ShooterState.kIdle);
                   m_drive.updateProfile(DriveProfiles.kDefault);
                 }));

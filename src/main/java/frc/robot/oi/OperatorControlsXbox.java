@@ -36,7 +36,7 @@ public class OperatorControlsXbox implements OperatorControls {
   }
 
   @Override
-  public Trigger runKicker() {
+  public Trigger runIndexer() {
     return m_controller.a();
   }
 

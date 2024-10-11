@@ -69,7 +69,7 @@ public class DriveCommands {
               ChassisSpeeds.fromFieldRelativeSpeeds(
                   linearVelocity.getX() * DriveConstants.kMaxLinearSpeed,
                   linearVelocity.getY() * DriveConstants.kMaxLinearSpeed,
-                  omega * DriveConstants.kMaxAngularSpeed,
+                  omega * DriveConstants.kTeleopRotationSpeed.get(),
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));

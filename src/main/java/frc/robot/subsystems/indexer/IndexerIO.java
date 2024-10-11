@@ -1,18 +1,18 @@
-package frc.robot.subsystems.kicker;
+package frc.robot.subsystems.indexer;
 
 import org.littletonrobotics.junction.AutoLog;
 
-public interface KickerIO {
+public interface IndexerIO {
   @AutoLog
-  public static class KickerInputs {
+  public static class IndexerInputs {
     public double angularVelocityRPM;
     public double voltage;
     public double current;
-    public boolean beamBreakOne;
-    public boolean beamBreakTwo;
+    public boolean photoElectricOne;
+    public boolean photoElectricTwo;
   }
 
-  public void updateInputs(KickerInputs inputs);
+  public void updateInputs(IndexerInputs inputs);
 
   public void setVoltage(double voltage);
 

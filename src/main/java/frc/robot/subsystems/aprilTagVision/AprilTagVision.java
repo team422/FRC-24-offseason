@@ -60,6 +60,8 @@ public class AprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    var start = Timer.getFPGATimestamp();
+
     for (int i = 0; i < m_ios.length; i++) {
       m_ios[i].updateInputs(m_inputs[i]);
 
@@ -215,14 +217,14 @@ public class AprilTagVision extends SubsystemBase {
 
         // Get tag poses and update last detection times
         List<Pose3d> tagPoses = new ArrayList<>();
-        int start;
+        int startIndex;
         // Depending on the tag count the poses start at different indices
         if (tagCount == 1) {
-          start = 10;
+          startIndex = 10;
         } else {
-          start = 18;
+          startIndex = 18;
         }
-        for (int i = start; i < values.length; i++) {
+        for (int i = startIndex; i < values.length; i++) {
           int tagId = (int) values[i];
           m_lastTagDetectionTimes.put(tagId, Timer.getFPGATimestamp());
           Optional<Pose3d> tagPose = FieldConstants.kAprilTagLayout.getTagPose(tagId);
@@ -308,5 +310,7 @@ public class AprilTagVision extends SubsystemBase {
     allVisionObservations.stream()
         .sorted(Comparator.comparingDouble(VisionObservation::timestamp))
         .forEach(RobotState.getInstance()::addVisionObservation);
+
+    Logger.recordOutput("PeriodicTime/AprilTagVision", Timer.getFPGATimestamp() - start);
   }
 }

@@ -191,8 +191,9 @@ public class RobotContainer {
 
     m_driverControls
         .runIntake()
-        .whileTrue(
-            Commands.run(
+        .or(m_operatorControls.runIntake())
+        .onTrue(
+            Commands.runOnce(
                 () -> {
                   m_robotState.updateRobotAction(RobotAction.kIntake);
                 }))
@@ -200,10 +201,17 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_robotState.setDefaultAction();
+
+                  // advance to indexing if still intaking
+                  // otherwise it's moved on alr so no need to change state
+                  if (m_indexer.getState() == IndexerState.kIntaking) {
+                    m_indexer.updateState(IndexerState.kIndexing);
+                  }
                 }));
 
     m_driverControls
         .runIndexer()
+        .or(m_operatorControls.runIndexer())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -225,6 +233,7 @@ public class RobotContainer {
 
     m_driverControls
         .ejectGamePiece()
+        .or(m_operatorControls.ejectGamePiece())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -239,6 +248,7 @@ public class RobotContainer {
 
     m_driverControls
         .revShooter()
+        .or(m_operatorControls.revAndAlign())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -265,6 +275,7 @@ public class RobotContainer {
 
     m_driverControls
         .amp()
+        .or(m_operatorControls.amp())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -300,54 +311,6 @@ public class RobotContainer {
                 }));
 
     m_operatorControls
-        .runIntake()
-        .whileTrue(
-            Commands.run(
-                () -> {
-                  m_robotState.updateRobotAction(RobotAction.kIntake);
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.setDefaultAction();
-                }));
-
-    m_operatorControls
-        .runIndexer()
-        .whileTrue(Commands.run(() -> m_indexer.updateState(IndexerState.kShooting)));
-
-    m_operatorControls
-        .ejectGamePiece()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.updateRobotAction(RobotAction.kVomitting);
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.setDefaultAction();
-                  m_indexer.updateState(IndexerState.kIdle);
-                }));
-
-    m_operatorControls
-        .revAndAlign()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.updateRobotAction(RobotAction.kRevAndAlign);
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.setDefaultAction();
-                }));
-
-    m_operatorControls
-        .revAndShoot()
-        .onTrue(Commands.runOnce(() -> m_robotState.updateRobotAction(RobotAction.kAutoShoot)));
-
-    m_operatorControls
         .revNoAlign()
         .onTrue(
             Commands.runOnce(
@@ -379,19 +342,6 @@ public class RobotContainer {
                   m_indexer.updateState(IndexerState.kIdle);
                   m_shooter.updateState(ShooterState.kIdle);
                   m_drive.updateProfile(DriveProfiles.kDefault);
-                }));
-
-    m_operatorControls
-        .amp()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  m_ampToggle = !m_ampToggle;
-                  if (m_ampToggle) {
-                    m_robotState.updateRobotAction(RobotAction.kAmpLineup);
-                  } else {
-                    m_robotState.setDefaultAction();
-                  }
                 }));
   }
 

@@ -13,7 +13,6 @@ public class Indexer extends SubsystemBase {
   private SubsystemProfiles m_profiles;
 
   private Timer m_shootTimeout = new Timer();
-  private Timer m_intakeTimeout = new Timer();
   private Timer m_indexTimeout = new Timer();
   private Timer m_reverseTimeout = new Timer();
 
@@ -42,56 +41,64 @@ public class Indexer extends SubsystemBase {
 
   @Override
   public void periodic() {
+    var start = Timer.getFPGATimestamp();
+
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Indexer", m_inputs);
     Logger.recordOutput("Indexer/State", (IndexerState) m_profiles.getCurrentProfile());
+
+    Logger.recordOutput("PeriodicTime/Indexer", Timer.getFPGATimestamp() - start);
   }
 
   private void idlePeriodic() {
-    m_io.setVoltage(IndexerConstants.kIdleVoltage.get());
+    m_io.setNeutral();
   }
 
   private void intakingPeriodic() {
-    m_io.setVoltage(IndexerConstants.kIntakingVoltage.get());
-
-    if (m_io.hasGamePiece() || m_intakeTimeout.hasElapsed(IndexerConstants.kIntakeTimeout.get())) {
-      updateState(IndexerState.kIdle);
-      idlePeriodic();
+    if (m_io.hasGamePiece()) {
+      updateState(IndexerState.kIndexing);
+      indexingPeriodic();
+      return;
     }
+
+    m_io.setDesiredVelocity(IndexerConstants.kIntakingVelocity.get());
   }
 
   private void indexingPeriodic() {
-    m_io.setVoltage(IndexerConstants.kIndexingVoltage.get());
-
-    if (m_io.hasGamePiece() || m_indexTimeout.hasElapsed(IndexerConstants.kIndexingVoltage.get())) {
+    if (m_indexTimeout.hasElapsed(IndexerConstants.kIndexingTimeout.get())) {
       updateState(IndexerState.kReversing);
       reversingPeriodic();
+      return;
     }
+
+    m_io.setDesiredVelocity(IndexerConstants.kIndexingVelocity.get());
   }
 
   private void reversingPeriodic() {
-    m_io.setVoltage(IndexerConstants.kReversingVoltage.get());
-
     if (m_reverseTimeout.hasElapsed(IndexerConstants.kReverseTimeout.get())) {
       updateState(IndexerState.kIdle);
       idlePeriodic();
+      return;
     }
+
+    m_io.setDesiredVelocity(IndexerConstants.kReversingVelocity.get());
   }
 
   private void shootingPeriodic() {
-    m_io.setVoltage(IndexerConstants.kShootingVoltage.get());
-
     if (m_shootTimeout.hasElapsed(IndexerConstants.kShootingTimeout.get())) {
       updateState(IndexerState.kIdle);
-      m_io.setVoltage(IndexerConstants.kIdleVoltage.get());
+      idlePeriodic();
+      return;
     }
+
+    m_io.setDesiredVelocity(IndexerConstants.kShootingVelocity.get());
   }
 
   private void vomittingPeriodic() {
-    m_io.setVoltage(IndexerConstants.kEjectingVoltage.get());
+    m_io.setDesiredVelocity(IndexerConstants.kEjectingVelocity.get());
   }
 
   public void updateState(IndexerState state) {
@@ -99,7 +106,6 @@ public class Indexer extends SubsystemBase {
       case kIdle:
         break;
       case kIntaking:
-        m_intakeTimeout.restart();
         break;
       case kIndexing:
         m_indexTimeout.restart();
@@ -115,6 +121,10 @@ public class Indexer extends SubsystemBase {
     }
 
     m_profiles.setCurrentProfile(state);
+  }
+
+  public IndexerState getState() {
+    return (IndexerState) m_profiles.getCurrentProfile();
   }
 
   // Nikki P in the skibidi house!

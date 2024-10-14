@@ -3,6 +3,7 @@ package frc.robot.subsystems.shooter;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
@@ -53,6 +54,8 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    var start = Timer.getFPGATimestamp();
+
     if (ShooterConstants.kManualControl) {
       updateState(ShooterState.kRevving);
       setDesiredVelocity(
@@ -65,6 +68,8 @@ public class Shooter extends SubsystemBase {
 
     Logger.processInputs("Shooter", m_inputs);
     Logger.recordOutput("Shooter/State", (ShooterState) m_profiles.getCurrentProfile());
+
+    Logger.recordOutput("PeriodicTime/Shooter", Timer.getFPGATimestamp() - start);
   }
 
   public void idlePeriodic() {
@@ -95,13 +100,17 @@ public class Shooter extends SubsystemBase {
         hashCode(),
         () -> {
           m_topController.setPID(
-              ShooterConstants.kP.get(), ShooterConstants.kI.get(), ShooterConstants.kD.get());
+              ShooterConstants.kFlywheelP.get(),
+              ShooterConstants.kFlywheelI.get(),
+              ShooterConstants.kFlywheelD.get());
           m_bottomController.setPID(
-              ShooterConstants.kP.get(), ShooterConstants.kI.get(), ShooterConstants.kD.get());
+              ShooterConstants.kFlywheelP.get(),
+              ShooterConstants.kFlywheelI.get(),
+              ShooterConstants.kFlywheelD.get());
         },
-        ShooterConstants.kP,
-        ShooterConstants.kI,
-        ShooterConstants.kD);
+        ShooterConstants.kFlywheelP,
+        ShooterConstants.kFlywheelI,
+        ShooterConstants.kFlywheelD);
 
     LoggedTunableNumber.ifChanged(
         hashCode(),
@@ -171,6 +180,10 @@ public class Shooter extends SubsystemBase {
         break;
     }
     m_profiles.setCurrentProfile(state);
+  }
+
+  public ShooterState getState() {
+    return (ShooterState) m_profiles.getCurrentProfile();
   }
 
   public void setDesiredVelocity(double topVelocityRPS, double bottomVelocityRPS) {

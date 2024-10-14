@@ -32,6 +32,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -148,6 +149,8 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
+    var start = Timer.getFPGATimestamp();
+
     m_odometryLock.lock(); // Prevents odometry updates while reading data
     m_gyroIO.updateInputs(m_gyroInputs);
     for (var module : m_modules) {
@@ -207,6 +210,8 @@ public class Drive extends SubsystemBase {
     }
 
     Logger.recordOutput("Drive/Profile", (DriveProfiles) m_profiles.getCurrentProfile());
+
+    Logger.recordOutput("PeriodicTime/Drive", Timer.getFPGATimestamp() - start);
   }
 
   public void defaultPeriodic() {

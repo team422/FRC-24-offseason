@@ -132,27 +132,27 @@ public final class Constants {
   }
 
   public static final class IndexerConstants {
-    public static final LoggedTunableNumber kIdleVoltage =
-        new LoggedTunableNumber("Indexer Idle Voltage", 0.0);
-    public static final LoggedTunableNumber kIntakingVoltage =
-        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
-    public static final LoggedTunableNumber kIndexingVoltage =
-        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
-    public static final LoggedTunableNumber kReversingVoltage =
-        new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
-    public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("Indexer Shooting Voltage", -10.0);
-    public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("Indexer Eject Voltage", 8.0);
+    public static final LoggedTunableNumber kIntakingVelocity =
+        new LoggedTunableNumber("Indexer Intake Velocity", -8.0);
+    public static final LoggedTunableNumber kIndexingVelocity =
+        new LoggedTunableNumber("Indexer Indexing Velocity", -8.0);
+    public static final LoggedTunableNumber kReversingVelocity =
+        new LoggedTunableNumber("Indexer Reverse Velocity", 8.0);
+    public static final LoggedTunableNumber kShootingVelocity =
+        new LoggedTunableNumber("Indexer Shooting Velocity", -10.0);
+    public static final LoggedTunableNumber kEjectingVelocity =
+        new LoggedTunableNumber("Indexer Eject Velocity", 8.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
-        new LoggedTunableNumber("Indexer Shooting Timeout", 1.0);
-    public static final LoggedTunableNumber kIntakeTimeout =
         new LoggedTunableNumber("Indexer Shooting Timeout", 1.0);
     public static final LoggedTunableNumber kIndexingTimeout =
         new LoggedTunableNumber("Indexer Indexing Timeout", 0.1);
     public static final LoggedTunableNumber kReverseTimeout =
         new LoggedTunableNumber("Indexer Reverse Timeout", 0.5);
+
+    public static final LoggedTunableNumber kIndexerP = new LoggedTunableNumber("Indexer P", 0.4);
+    public static final LoggedTunableNumber kIndexerI = new LoggedTunableNumber("Indexer I", 0.0);
+    public static final LoggedTunableNumber kIndexerD = new LoggedTunableNumber("Indexer D", 0.0);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -167,14 +167,15 @@ public final class Constants {
         new LoggedTunableNumber("Shooter Idle Voltage", 0.0);
     public static final LoggedTunableNumber kEjectingVoltage =
         new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
-    public static final LoggedTunableNumber kP = new LoggedTunableNumber("Flywheel P", 0.03);
-    public static final LoggedTunableNumber kI = new LoggedTunableNumber("Flywheel I", 0.0);
-    public static final LoggedTunableNumber kD = new LoggedTunableNumber("Flywheel D", 0.0);
+    public static final LoggedTunableNumber kFlywheelP =
+        new LoggedTunableNumber("Flywheel P", 0.03);
+    public static final LoggedTunableNumber kFlywheelI = new LoggedTunableNumber("Flywheel I", 0.0);
+    public static final LoggedTunableNumber kFlywheelD = new LoggedTunableNumber("Flywheel D", 0.0);
 
     public static final PIDController kTopController =
-        new PIDController(kP.get(), kI.get(), kD.get());
+        new PIDController(kFlywheelP.get(), kFlywheelI.get(), kFlywheelD.get());
     public static final PIDController kBottomController =
-        new PIDController(kP.get(), kI.get(), kD.get());
+        new PIDController(kFlywheelP.get(), kFlywheelI.get(), kFlywheelD.get());
 
     public static final LoggedTunableNumber kTopKS =
         new LoggedTunableNumber("Top Flywheel kS", 0.12);

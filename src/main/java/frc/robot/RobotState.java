@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
@@ -90,6 +91,8 @@ public class RobotState {
   }
 
   public void updateRobotState() {
+    var start = Timer.getFPGATimestamp();
+
     m_profiles.getPeriodicFunction().run();
 
     Logger.recordOutput("RobotState/CurrentAction", (RobotAction) m_profiles.getCurrentProfile());
@@ -98,6 +101,8 @@ public class RobotState {
         DriverStation.getAlliance().isPresent()
             ? DriverStation.getAlliance().get().toString()
             : "Unknown");
+
+    Logger.recordOutput("PeriodicTime/RobotState", Timer.getFPGATimestamp() - start);
   }
 
   public void revAndAlignPeriodic() {

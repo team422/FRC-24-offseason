@@ -1,5 +1,6 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.SubsystemProfiles;
@@ -30,12 +31,16 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
+    var start = Timer.getFPGATimestamp();
+
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Intake", m_inputs);
     Logger.recordOutput("Intake/CurrentState", (IntakeState) m_profiles.getCurrentProfile());
+
+    Logger.recordOutput("PeriodicTime/Intake", Timer.getFPGATimestamp() - start);
   }
 
   private void idlePeriodic() {
@@ -64,6 +69,10 @@ public class Intake extends SubsystemBase {
     }
 
     m_profiles.setCurrentProfile(state);
+  }
+
+  public IntakeState getCurrentState() {
+    return (IntakeState) m_profiles.getCurrentProfile();
   }
 
   // Written by Ronith Kollipara

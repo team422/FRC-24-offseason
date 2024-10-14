@@ -60,7 +60,7 @@ public class AprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var start = Timer.getFPGATimestamp();
+    double start = Timer.getFPGATimestamp();
 
     for (int i = 0; i < m_ios.length; i++) {
       m_ios[i].updateInputs(m_inputs[i]);

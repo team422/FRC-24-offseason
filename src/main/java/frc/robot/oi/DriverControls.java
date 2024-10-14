@@ -28,4 +28,6 @@ public interface DriverControls {
   public Trigger cancelAmpLineup();
 
   public Trigger subwooferShot();
+
+  public Trigger resetPoseAuto();
 }

@@ -39,6 +39,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.util.LocalADStarAK;
+import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
@@ -64,7 +65,11 @@ public class Drive extends SubsystemBase {
   private ChassisSpeeds m_desiredChassisSpeeds = new ChassisSpeeds();
 
   private Rotation2d m_desiredHeading = new Rotation2d();
-  private PIDController m_headingController = new PIDController(0.1, 0, 0.09);
+  private PIDController m_headingController =
+      new PIDController(
+          DriveConstants.kHeadingP.get(),
+          DriveConstants.kHeadingI.get(),
+          DriveConstants.kHeadingD.get());
 
   private Rotation2d m_rawGyroRotation = new Rotation2d();
   private SwerveModulePosition[] m_lastModulePositions = // For delta tracking
@@ -149,7 +154,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    var start = Timer.getFPGATimestamp();
+    double start = Timer.getFPGATimestamp();
 
     m_odometryLock.lock(); // Prevents odometry updates while reading data
     m_gyroIO.updateInputs(m_gyroInputs);
@@ -157,6 +162,17 @@ public class Drive extends SubsystemBase {
       module.updateInputs();
     }
     m_odometryLock.unlock();
+
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          m_headingController.setP(DriveConstants.kHeadingP.get());
+          m_headingController.setI(DriveConstants.kHeadingI.get());
+          m_headingController.setD(DriveConstants.kHeadingD.get());
+        },
+        DriveConstants.kHeadingP,
+        DriveConstants.kHeadingI,
+        DriveConstants.kHeadingD);
 
     m_profiles.getPeriodicFunction().run();
 
@@ -218,6 +234,7 @@ public class Drive extends SubsystemBase {
     runVelocity(m_desiredChassisSpeeds);
 
     Logger.recordOutput("Drive/DesiredHeading", m_desiredHeading.getDegrees());
+    Logger.recordOutput("Drive/CurrentHeading", getPose().getRotation().getDegrees());
     Logger.recordOutput("Drive/DesiredSpeeds", m_desiredChassisSpeeds);
   }
 
@@ -247,6 +264,9 @@ public class Drive extends SubsystemBase {
       m_desiredChassisSpeeds.omegaRadiansPerSecond =
           m_headingController.calculate(
               getPose().getRotation().getRadians(), m_desiredHeading.getRadians());
+      Logger.recordOutput("AutoAlign/Curr", getPose().getRotation().getRadians());
+      Logger.recordOutput("AutoAlign/Des", m_desiredHeading.getRadians());
+      Logger.recordOutput("AutoAlign/Out", m_desiredChassisSpeeds.omegaRadiansPerSecond);
     }
 
     return m_desiredChassisSpeeds;

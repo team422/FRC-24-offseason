@@ -5,8 +5,7 @@ import org.littletonrobotics.junction.AutoLog;
 public interface IndexerIO {
   @AutoLog
   public static class IndexerInputs {
-    public double angularVelocityRPS;
-    public double desiredVelocityRPS;
+    public double angularVelocityRPM;
     public double voltage;
     public double current;
     public boolean photoElectricOne;
@@ -16,9 +15,7 @@ public interface IndexerIO {
 
   public void updateInputs(IndexerInputs inputs);
 
-  public void setDesiredVelocity(double velocityRPS);
-
-  public void setNeutral();
+  public void setVoltage(double velocity);
 
   public boolean hasGamePiece();
 }

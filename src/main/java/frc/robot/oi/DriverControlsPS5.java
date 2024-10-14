@@ -69,4 +69,9 @@ public class DriverControlsPS5 implements DriverControls {
   public Trigger subwooferShot() {
     return m_controller.cross();
   }
+
+  @Override
+  public Trigger resetPoseAuto() {
+    return m_controller.square();
+  }
 }

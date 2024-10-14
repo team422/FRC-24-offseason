@@ -41,7 +41,7 @@ public class Indexer extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var start = Timer.getFPGATimestamp();
+    double start = Timer.getFPGATimestamp();
 
     m_io.updateInputs(m_inputs);
 
@@ -54,7 +54,7 @@ public class Indexer extends SubsystemBase {
   }
 
   private void idlePeriodic() {
-    m_io.setNeutral();
+    m_io.setVoltage(IndexerConstants.kIdleVoltage.get());
   }
 
   private void intakingPeriodic() {
@@ -64,7 +64,7 @@ public class Indexer extends SubsystemBase {
       return;
     }
 
-    m_io.setDesiredVelocity(IndexerConstants.kIntakingVelocity.get());
+    m_io.setVoltage(IndexerConstants.kIntakingVoltage.get());
   }
 
   private void indexingPeriodic() {
@@ -74,7 +74,7 @@ public class Indexer extends SubsystemBase {
       return;
     }
 
-    m_io.setDesiredVelocity(IndexerConstants.kIndexingVelocity.get());
+    m_io.setVoltage(IndexerConstants.kIndexingVoltage.get());
   }
 
   private void reversingPeriodic() {
@@ -84,21 +84,25 @@ public class Indexer extends SubsystemBase {
       return;
     }
 
-    m_io.setDesiredVelocity(IndexerConstants.kReversingVelocity.get());
+    m_io.setVoltage(IndexerConstants.kReversingVoltage.get());
   }
 
   private void shootingPeriodic() {
-    if (m_shootTimeout.hasElapsed(IndexerConstants.kShootingTimeout.get())) {
-      updateState(IndexerState.kIdle);
-      idlePeriodic();
-      return;
+    if (!m_io.hasGamePiece()) {
+      if (m_shootTimeout.hasElapsed(IndexerConstants.kShootingTimeout.get())) {
+        updateState(IndexerState.kIdle);
+        idlePeriodic();
+        return;
+      } else {
+        m_shootTimeout.start();
+      }
     }
 
-    m_io.setDesiredVelocity(IndexerConstants.kShootingVelocity.get());
+    m_io.setVoltage(IndexerConstants.kShootingVoltage.get());
   }
 
   private void vomittingPeriodic() {
-    m_io.setDesiredVelocity(IndexerConstants.kEjectingVelocity.get());
+    m_io.setVoltage(IndexerConstants.kEjectingVoltage.get());
   }
 
   public void updateState(IndexerState state) {
@@ -114,7 +118,7 @@ public class Indexer extends SubsystemBase {
         m_reverseTimeout.restart();
         break;
       case kShooting:
-        m_shootTimeout.restart();
+        m_shootTimeout.reset();
         break;
       case kVomitting:
         break;

@@ -31,14 +31,14 @@ public class Intake extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var start = Timer.getFPGATimestamp();
+    double start = Timer.getFPGATimestamp();
 
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Intake", m_inputs);
-    Logger.recordOutput("Intake/CurrentState", (IntakeState) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Intake/State", (IntakeState) m_profiles.getCurrentProfile());
 
     Logger.recordOutput("PeriodicTime/Intake", Timer.getFPGATimestamp() - start);
   }
@@ -71,7 +71,7 @@ public class Intake extends SubsystemBase {
     m_profiles.setCurrentProfile(state);
   }
 
-  public IntakeState getCurrentState() {
+  public IntakeState getState() {
     return (IntakeState) m_profiles.getCurrentProfile();
   }
 

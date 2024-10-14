@@ -151,7 +151,7 @@ public class RobotContainer {
 
   /** Configure the commands. */
   private void configureCommands() {
-    m_autoChooser = new LoggedDashboardChooser<>("AutoChooser");
+    m_autoChooser = new LoggedDashboardChooser<>("Auto Chooser");
     m_autoFactory = new AutoFactory(m_drive);
 
     // Configure autos here
@@ -342,6 +342,14 @@ public class RobotContainer {
                   m_indexer.updateState(IndexerState.kIdle);
                   m_shooter.updateState(ShooterState.kIdle);
                   m_drive.updateProfile(DriveProfiles.kDefault);
+                }));
+
+    m_driverControls
+        .resetPoseAuto()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.setPose(new Pose2d(14.764, 5.594, new Rotation2d(Math.PI)));
                 }));
   }
 

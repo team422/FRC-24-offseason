@@ -46,7 +46,7 @@ public final class Constants {
         Math.hypot(kTrackWidthX / 2.0, kTrackWidthY / 2.0);
     public static final double kMaxAngularSpeed = kMaxLinearSpeed / kDriveBaseRadius;
     public static final LoggedTunableNumber kTeleopRotationSpeed =
-        new LoggedTunableNumber("Teleop Rotation Speed", kMaxAngularSpeed);
+        new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
     public static final Translation2d[] kModuleTranslations =
         new Translation2d[] {
@@ -65,6 +65,14 @@ public final class Constants {
     public static final double kDriveGearRatio =
         (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0); // L3 ratio
     public static final double kTurnGearRatio = 150.0 / 7.0;
+
+    // everything is backwards dont flame me for having negative p
+    public static final LoggedTunableNumber kHeadingP =
+        new LoggedTunableNumber("Drive Heading P", -4.0);
+    public static final LoggedTunableNumber kHeadingI =
+        new LoggedTunableNumber("Drive Heading I", 0.0);
+    public static final LoggedTunableNumber kHeadingD =
+        new LoggedTunableNumber("Drive Heading D", 0.05);
   }
 
   public static final class AprilTagVisionConstants {
@@ -132,27 +140,25 @@ public final class Constants {
   }
 
   public static final class IndexerConstants {
-    public static final LoggedTunableNumber kIntakingVelocity =
-        new LoggedTunableNumber("Indexer Intake Velocity", -8.0);
-    public static final LoggedTunableNumber kIndexingVelocity =
-        new LoggedTunableNumber("Indexer Indexing Velocity", -8.0);
-    public static final LoggedTunableNumber kReversingVelocity =
-        new LoggedTunableNumber("Indexer Reverse Velocity", 8.0);
-    public static final LoggedTunableNumber kShootingVelocity =
-        new LoggedTunableNumber("Indexer Shooting Velocity", -10.0);
-    public static final LoggedTunableNumber kEjectingVelocity =
-        new LoggedTunableNumber("Indexer Eject Velocity", 8.0);
+    public static final LoggedTunableNumber kIdleVoltage =
+        new LoggedTunableNumber("Indexer Idle Voltage", 0.0);
+    public static final LoggedTunableNumber kIntakingVoltage =
+        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
+    public static final LoggedTunableNumber kIndexingVoltage =
+        new LoggedTunableNumber("Indexer Indexing Voltage", -8.0);
+    public static final LoggedTunableNumber kReversingVoltage =
+        new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
+    public static final LoggedTunableNumber kShootingVoltage =
+        new LoggedTunableNumber("Indexer Shooting Voltage", -12.0);
+    public static final LoggedTunableNumber kEjectingVoltage =
+        new LoggedTunableNumber("Indexer Eject Voltage", 8.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
-        new LoggedTunableNumber("Indexer Shooting Timeout", 1.0);
+        new LoggedTunableNumber("Indexer Shooting Timeout", 1.5);
     public static final LoggedTunableNumber kIndexingTimeout =
         new LoggedTunableNumber("Indexer Indexing Timeout", 0.1);
     public static final LoggedTunableNumber kReverseTimeout =
-        new LoggedTunableNumber("Indexer Reverse Timeout", 0.5);
-
-    public static final LoggedTunableNumber kIndexerP = new LoggedTunableNumber("Indexer P", 0.4);
-    public static final LoggedTunableNumber kIndexerI = new LoggedTunableNumber("Indexer I", 0.0);
-    public static final LoggedTunableNumber kIndexerD = new LoggedTunableNumber("Indexer D", 0.0);
+        new LoggedTunableNumber("Indexer Reverse Timeout", 0.2);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);
@@ -187,9 +193,9 @@ public final class Constants {
         new LoggedTunableNumber("Bottom Flywheel kV", 0.13);
 
     public static final LoggedTunableNumber kAmpTopVelocity =
-        new LoggedTunableNumber("Amp Top Velocity", 5.0);
+        new LoggedTunableNumber("Amp Top Velocity", -3.5);
     public static final LoggedTunableNumber kAmpBottomVelocity =
-        new LoggedTunableNumber("Amp Bottom Velocity", 7.0);
+        new LoggedTunableNumber("Amp Bottom Velocity", 58.0);
 
     public static final LoggedTunableNumber kSubwooferTopVelocity =
         new LoggedTunableNumber("Subwoofer Top Velocity", 60.0);

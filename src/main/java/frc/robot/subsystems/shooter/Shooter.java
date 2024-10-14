@@ -54,7 +54,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    var start = Timer.getFPGATimestamp();
+    double start = Timer.getFPGATimestamp();
 
     if (ShooterConstants.kManualControl) {
       updateState(ShooterState.kRevving);

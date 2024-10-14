@@ -69,4 +69,9 @@ public class DriverControlsXbox implements DriverControls {
   public Trigger subwooferShot() {
     return m_controller.a();
   }
+
+  @Override
+  public Trigger resetPoseAuto() {
+    return m_controller.x();
+  }
 }

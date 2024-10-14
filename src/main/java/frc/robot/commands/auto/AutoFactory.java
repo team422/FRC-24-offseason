@@ -15,7 +15,7 @@ import frc.robot.subsystems.drive.Drive;
 
 public class AutoFactory extends Command {
   public static final PIDConstants kLinearPID = new PIDConstants(2.5, 0.0, 0.0);
-  public static final PIDConstants kAngularPID = new PIDConstants(4, 1.6, 0.0);
+  public static final PIDConstants kAngularPID = new PIDConstants(1.2, 0.0, 0.0);
 
   private final Drive m_drive;
 

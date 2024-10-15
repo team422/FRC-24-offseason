@@ -261,12 +261,10 @@ public class Drive extends SubsystemBase {
 
   public ChassisSpeeds calculateAutoAlignSpeeds() {
     if (m_desiredHeading != null) {
+      // dont ask me why the output is backwards
       m_desiredChassisSpeeds.omegaRadiansPerSecond =
-          m_headingController.calculate(
+          -m_headingController.calculate(
               getPose().getRotation().getRadians(), m_desiredHeading.getRadians());
-      Logger.recordOutput("AutoAlign/Curr", getPose().getRotation().getRadians());
-      Logger.recordOutput("AutoAlign/Des", m_desiredHeading.getRadians());
-      Logger.recordOutput("AutoAlign/Out", m_desiredChassisSpeeds.omegaRadiansPerSecond);
     }
 
     return m_desiredChassisSpeeds;

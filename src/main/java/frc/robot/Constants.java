@@ -66,9 +66,8 @@ public final class Constants {
         (50.0 / 14.0) * (16.0 / 28.0) * (45.0 / 15.0); // L3 ratio
     public static final double kTurnGearRatio = 150.0 / 7.0;
 
-    // everything is backwards dont flame me for having negative p
     public static final LoggedTunableNumber kHeadingP =
-        new LoggedTunableNumber("Drive Heading P", -4.0);
+        new LoggedTunableNumber("Drive Heading P", 4.0);
     public static final LoggedTunableNumber kHeadingI =
         new LoggedTunableNumber("Drive Heading I", 0.0);
     public static final LoggedTunableNumber kHeadingD =

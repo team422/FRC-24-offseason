@@ -351,6 +351,14 @@ public class RobotContainer {
                 () -> {
                   m_drive.setPose(new Pose2d(14.764, 5.594, new Rotation2d(Math.PI)));
                 }));
+
+    m_driverControls
+        .resetPoseFeeding()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.setPose(new Pose2d(8.329, 7.535, new Rotation2d(Math.PI)));
+                }));
   }
 
   /**

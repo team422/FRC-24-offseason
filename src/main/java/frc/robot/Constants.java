@@ -214,6 +214,8 @@ public final class Constants {
     public static final double kSimRadius = Units.inchesToMeters(4);
     public static final double kSimMass = 2 * Units.lbsToKilograms(0.23);
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
+    // bottom 94
+    // top 95
   }
 
   public static final class Ports {

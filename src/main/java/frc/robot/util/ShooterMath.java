@@ -4,8 +4,10 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
+import edu.wpi.first.math.util.Units;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.subsystems.shooter.Shooter.ShooterPosition;
+import org.littletonrobotics.junction.Logger;
 
 /** Uses a lookup table to calculate velocity for the Shooter */
 public class ShooterMath {
@@ -30,28 +32,44 @@ public class ShooterMath {
     m_speakerBottomMap.put(2.0, 15.0);
     m_speakerBottomMap.put(3.0, 30.0);
 
+    // distance from measured 0 when tuning to the feeding spot
+    double feedingDistance = Units.feetToMeters(27);
     // Data for top flywheel feeding
-    m_feedingTopMap.put(0.0, 10.0);
-    m_feedingTopMap.put(1.0, 15.0);
-    m_feedingTopMap.put(2.0, 20.0);
-    m_feedingTopMap.put(3.0, 25.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(-72), 53.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(-48), 59.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(-24), 45.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(0), 53.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(24), 60.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(48), 64.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(72), 65.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(96), 70.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(120), 72.0);
+    m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(144), 78.0);
 
     // Data for bottom flywheel feeding
-    m_feedingBottomMap.put(0.0, 10.0);
-    m_feedingBottomMap.put(1.0, 15.0);
-    m_feedingBottomMap.put(2.0, 20.0);
-    m_feedingBottomMap.put(3.0, 25.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-72), 12.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-48), 16.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-24), 38.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(0), 35.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(24), 30.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(48), 31.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(72), 29.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(96), 28.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(120), 29.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(144), 38.0);
   }
 
   public double getSpeakerDistance(Pose2d robotPose) {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d speakerFlipped = AllianceFlipUtil.apply(kSpeaker);
+    Logger.recordOutput("ShooterMath/SpeakerTarget", speakerFlipped);
     return speakerFlipped.getDistance(robotTranslation);
   }
 
   public double getCornerDistance(Pose2d robotPose) {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d cornerFlipped = AllianceFlipUtil.apply(kCorner);
+    Logger.recordOutput("ShooterMath/FeederTarget", cornerFlipped);
     return cornerFlipped.getDistance(robotTranslation);
   }
 

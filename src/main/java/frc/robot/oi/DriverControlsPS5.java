@@ -74,4 +74,9 @@ public class DriverControlsPS5 implements DriverControls {
   public Trigger resetPoseAuto() {
     return m_controller.square();
   }
+
+  @Override
+  public Trigger resetPoseFeeding() {
+    return m_controller.povLeft();
+  }
 }

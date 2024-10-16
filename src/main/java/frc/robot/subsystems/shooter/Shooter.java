@@ -24,7 +24,8 @@ public class Shooter extends SubsystemBase {
     kIdle,
     kRevving,
     kEjecting,
-    kAmp
+    kAmp,
+    kManualControl,
   }
 
   /** Class to represent a setpoint for the Shooter */
@@ -49,6 +50,7 @@ public class Shooter extends SubsystemBase {
     periodicHash.put(ShooterState.kRevving, this::revvingPeriodic);
     periodicHash.put(ShooterState.kEjecting, this::ejectingPeriodic);
     periodicHash.put(ShooterState.kAmp, this::ampPeriodic);
+    periodicHash.put(ShooterState.kManualControl, this::manualControlPeriodic);
     m_profiles = new SubsystemProfiles(ShooterState.class, periodicHash, ShooterState.kIdle);
   }
 
@@ -57,9 +59,7 @@ public class Shooter extends SubsystemBase {
     double start = Timer.getFPGATimestamp();
 
     if (ShooterConstants.kManualControl) {
-      updateState(ShooterState.kRevving);
-      setDesiredVelocity(
-          ShooterConstants.kManualTopVelocity.get(), ShooterConstants.kManualBottomVelocity.get());
+      updateState(ShooterState.kManualControl);
     }
 
     m_io.updateInputs(m_inputs);
@@ -168,6 +168,12 @@ public class Shooter extends SubsystemBase {
     revvingPeriodic();
   }
 
+  public void manualControlPeriodic() {
+    setDesiredVelocity(
+        ShooterConstants.kManualTopVelocity.get(), ShooterConstants.kManualBottomVelocity.get());
+    revvingPeriodic();
+  }
+
   public void updateState(ShooterState state) {
     switch (state) {
       case kIdle:
@@ -177,6 +183,7 @@ public class Shooter extends SubsystemBase {
 
       case kAmp:
       case kRevving:
+      case kManualControl:
         break;
     }
     m_profiles.setCurrentProfile(state);

@@ -20,17 +20,34 @@ public class ShooterMath {
   private final Translation2d kCorner = FieldConstants.kFeederAim;
 
   public ShooterMath() {
+    double speakerDistance = Units.feetToMeters(3);
     // Data for top flywheel speaker
-    m_speakerTopMap.put(0.0, 5.0);
-    m_speakerTopMap.put(1.0, 10.0);
-    m_speakerTopMap.put(2.0, 15.0);
-    m_speakerTopMap.put(3.0, 40.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(0), 28.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(6), 40.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(12), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(18), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(24), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(30), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(36), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(42), 48.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(48), 47.5);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(54), 46.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(60), 46.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(66), 47.0);
 
     // Data for bottom flywheel speaker
-    m_speakerBottomMap.put(0.0, 5.0);
-    m_speakerBottomMap.put(1.0, 10.0);
-    m_speakerBottomMap.put(2.0, 15.0);
-    m_speakerBottomMap.put(3.0, 30.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(0), 75.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(6), 72.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(12), 50.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(18), 45.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(24), 41.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(30), 35.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(36), 35.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(42), 31.5);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(48), 30.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(54), 28.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(60), 27.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(66), 27.0);
 
     // distance from measured 0 when tuning to the feeding spot
     double feedingDistance = Units.feetToMeters(27);

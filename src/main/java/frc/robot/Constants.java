@@ -25,6 +25,7 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.util.LoggedTunableNumber;
 
 /**
@@ -90,35 +91,34 @@ public final class Constants {
           // front left (shooter)
           new Transform3d(
               new Translation3d(
-                  Units.inchesToMeters(5.410),
-                  Units.inchesToMeters(-9.454),
-                  Units.inchesToMeters(7.766)),
-              new Rotation3d(
-                  0.0, Units.degreesToRadians(55.000015), Units.degreesToRadians(-9.971306))),
-
-          // front right (shooter)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(5.410),
                   Units.inchesToMeters(9.454),
+                  Units.inchesToMeters(5.410),
                   Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(55), Units.degreesToRadians(9.971306))),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(10))),
 
           // back left (intake)
           new Transform3d(
               new Translation3d(
-                  Units.inchesToMeters(-4.673),
                   Units.inchesToMeters(-14.620),
+                  Units.inchesToMeters(4.673),
                   Units.inchesToMeters(8.585)),
-              new Rotation3d(0.0, Units.degreesToRadians(60), Units.degreesToRadians(180 + 10))),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+
+          // front right (shooter)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(9.454),
+                  Units.inchesToMeters(-5.410),
+                  Units.inchesToMeters(7.766)),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
 
           // back right (intake)
           new Transform3d(
               new Translation3d(
-                  Units.inchesToMeters(-4.673),
-                  Units.inchesToMeters(14.620),
+                  Units.inchesToMeters(-14.620),
+                  Units.inchesToMeters(4.673),
                   Units.inchesToMeters(8.585)),
-              new Rotation3d(0.0, Units.degreesToRadians(60), Units.degreesToRadians(180 - 10)))
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
         };
   }
 
@@ -155,7 +155,7 @@ public final class Constants {
     public static final LoggedTunableNumber kShootingTimeout =
         new LoggedTunableNumber("Indexer Shooting Timeout", 1.5);
     public static final LoggedTunableNumber kIndexingTimeout =
-        new LoggedTunableNumber("Indexer Indexing Timeout", 0.1);
+        new LoggedTunableNumber("Indexer Indexing Timeout", 0.0);
     public static final LoggedTunableNumber kReverseTimeout =
         new LoggedTunableNumber("Indexer Reverse Timeout", 0.2);
 
@@ -172,10 +172,18 @@ public final class Constants {
         new LoggedTunableNumber("Shooter Idle Voltage", 0.0);
     public static final LoggedTunableNumber kEjectingVoltage =
         new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
+
+    // use diff pid for sim because no feedforward
+    public static final double kSimP = 0.1;
+    public static final double kSimI = 0.0;
+    public static final double kSimD = 0.0;
+
     public static final LoggedTunableNumber kFlywheelP =
-        new LoggedTunableNumber("Flywheel P", 0.03);
-    public static final LoggedTunableNumber kFlywheelI = new LoggedTunableNumber("Flywheel I", 0.0);
-    public static final LoggedTunableNumber kFlywheelD = new LoggedTunableNumber("Flywheel D", 0.0);
+        new LoggedTunableNumber("Flywheel P", RobotBase.isReal() ? 0.05 : kSimP);
+    public static final LoggedTunableNumber kFlywheelI =
+        new LoggedTunableNumber("Flywheel I", RobotBase.isReal() ? 0.0 : kSimI);
+    public static final LoggedTunableNumber kFlywheelD =
+        new LoggedTunableNumber("Flywheel D", RobotBase.isReal() ? 0.0 : kSimD);
 
     public static final PIDController kTopController =
         new PIDController(kFlywheelP.get(), kFlywheelI.get(), kFlywheelD.get());
@@ -197,9 +205,9 @@ public final class Constants {
         new LoggedTunableNumber("Amp Bottom Velocity", 58.0);
 
     public static final LoggedTunableNumber kSubwooferTopVelocity =
-        new LoggedTunableNumber("Subwoofer Top Velocity", 60.0);
+        new LoggedTunableNumber("Subwoofer Top Velocity", 75.0);
     public static final LoggedTunableNumber kSubwooferBottomVelocity =
-        new LoggedTunableNumber("Subwoofer Bottom Velocity", 40.0);
+        new LoggedTunableNumber("Subwoofer Bottom Velocity", 28.0);
 
     public static final boolean kManualControl = false;
     public static final LoggedTunableNumber kManualTopVelocity =
@@ -210,12 +218,10 @@ public final class Constants {
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
     public static final DCMotor kSimBottomGearbox = DCMotor.getNEO(1);
-    public static final double kSimGearing = 0.3;
+    public static final double kSimGearing = 1.02;
     public static final double kSimRadius = Units.inchesToMeters(4);
-    public static final double kSimMass = 2 * Units.lbsToKilograms(0.23);
+    public static final double kSimMass = 0.2;
     public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
-    // bottom 94
-    // top 95
   }
 
   public static final class Ports {

@@ -28,7 +28,7 @@ public class IndexerIOSim implements IndexerIO {
     m_sim.update(0.02);
 
     inputs.current = m_sim.getCurrentDrawAmps();
-    inputs.angularVelocityRPM = m_sim.getAngularVelocityRPM() / 60;
+    inputs.angularVelocityRPM = m_sim.getAngularVelocityRPM();
 
     inputs.voltage = m_voltage;
 

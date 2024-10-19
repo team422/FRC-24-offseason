@@ -26,7 +26,7 @@ import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -165,8 +165,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 

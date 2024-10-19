@@ -111,6 +111,8 @@ public class RobotState {
 
     m_shooter.setDesiredVelocity(position);
     m_drive.setDesiredHeading(heading);
+
+    Logger.recordOutput("ShootDistance", m_shooterMath.getSpeakerDistance(currPose));
   }
 
   public void revNoAlignPeriodic() {
@@ -118,6 +120,8 @@ public class RobotState {
     ShooterPosition position = m_shooterMath.calculateSpeakerShooter(currPose);
 
     m_shooter.setDesiredVelocity(position);
+
+    Logger.recordOutput("ShootDistance", m_shooterMath.getSpeakerDistance(currPose));
   }
 
   public void autoShootPeriodic() {
@@ -141,7 +145,7 @@ public class RobotState {
     boolean topVelocityWithinTolerance = Math.abs(topVelocityError) < 1.0;
     boolean bottomVelocityWithinTolerance = Math.abs(bottomVelocityError) < 1.0;
 
-    Logger.recordOutput("ReadyToShoot/Distance", m_shooterMath.getSpeakerDistance(currPose));
+    Logger.recordOutput("ShootDistance", m_shooterMath.getSpeakerDistance(currPose));
     Logger.recordOutput("ReadyToShoot/HeadingWithinTolerance", headingWithinTolerance);
     Logger.recordOutput("ReadyToShoot/TopVelocityWithinTolerance", topVelocityWithinTolerance);
     Logger.recordOutput(

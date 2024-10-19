@@ -261,6 +261,11 @@ public class AprilTagVision extends SubsystemBase {
         } else {
           thetaStandardDeviation = Double.POSITIVE_INFINITY;
         }
+
+        Logger.recordOutput(
+            "AprilTagVision/Inst" + instanceIndex + "/Transform",
+            AprilTagVisionConstants.kCameraTransforms[instanceIndex]);
+
         Logger.recordOutput(
             "AprilTagVision/Inst" + instanceIndex + "/StandardDeviationXY", xyStandardDeviation);
         Logger.recordOutput(

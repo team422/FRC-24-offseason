@@ -2,8 +2,10 @@ package frc.robot.commands.auto;
 
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.pathfinding.Pathfinding;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -12,6 +14,8 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.RobotState;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LocalADStarAK;
+import org.littletonrobotics.junction.Logger;
 
 public class AutoFactory extends Command {
   public static final PIDConstants kLinearPID = new PIDConstants(2.5, 0.0, 0.0);
@@ -74,6 +78,17 @@ public class AutoFactory extends Command {
         },
         m_drive // The subsystem that will be used to follow the path
         );
+
+    Pathfinding.setPathfinder(new LocalADStarAK());
+    PathPlannerLogging.setLogActivePathCallback(
+        (activePath) -> {
+          Logger.recordOutput(
+              "Odometry/Trajectory", activePath.toArray(new Pose2d[activePath.size()]));
+        });
+    PathPlannerLogging.setLogTargetPoseCallback(
+        (targetPose) -> {
+          Logger.recordOutput("Odometry/TrajectorySetpoint", targetPose);
+        });
   }
 
   public Command getAutoCommand(String name) {

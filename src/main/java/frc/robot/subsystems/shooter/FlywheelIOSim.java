@@ -1,5 +1,6 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.simulation.FlywheelSim;
 import frc.robot.Constants.ShooterConstants;
 
@@ -13,17 +14,20 @@ public class FlywheelIOSim implements FlywheelIO {
     m_topFlywheel =
         new FlywheelSim(
             ShooterConstants.kSimTopGearbox,
-            ShooterConstants.kSimGearing,
-            ShooterConstants.kSimMOI);
+            ShooterConstants.kSimTopGearing,
+            ShooterConstants.kSimTopMOI);
     m_bottomFlywheel =
         new FlywheelSim(
             ShooterConstants.kSimBottomGearbox,
-            ShooterConstants.kSimGearing,
-            ShooterConstants.kSimMOI);
+            ShooterConstants.kSimBottomGearing,
+            ShooterConstants.kSimBottomMOI);
   }
 
   @Override
   public void setVoltage(double topVoltage, double bottomVoltage) {
+    topVoltage = MathUtil.clamp(topVoltage, -12, 12);
+    bottomVoltage = MathUtil.clamp(bottomVoltage, -12, 12);
+
     m_topFlywheel.setInputVoltage(topVoltage);
     m_bottomFlywheel.setInputVoltage(bottomVoltage);
 

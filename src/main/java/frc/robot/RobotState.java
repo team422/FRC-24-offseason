@@ -18,6 +18,7 @@ import frc.robot.subsystems.intake.Intake.IntakeState;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterPosition;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterMath;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
@@ -229,7 +230,7 @@ public class RobotState {
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kAmp);
         m_drive.updateProfile(DriveProfiles.kDefault);
-        // m_drive.setDesiredHeading(AllianceFlipUtil.apply(Rotation2d.fromDegrees(90)));
+        m_drive.setDesiredHeading(AllianceFlipUtil.apply(Rotation2d.fromDegrees(90)));
 
         break;
     }

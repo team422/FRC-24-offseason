@@ -26,6 +26,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -229,10 +230,11 @@ public class Drive extends SubsystemBase {
 
   public ChassisSpeeds calculateAutoAlignSpeeds() {
     if (m_desiredHeading != null) {
-      // dont ask me why the output is backwards
-      m_desiredChassisSpeeds.omegaRadiansPerSecond =
-          -m_headingController.calculate(
+      // dont ask me why the output is backwards in real life
+      double output =
+          m_headingController.calculate(
               getPose().getRotation().getRadians(), m_desiredHeading.getRadians());
+      m_desiredChassisSpeeds.omegaRadiansPerSecond = RobotBase.isReal() ? -output : output;
     }
 
     return m_desiredChassisSpeeds;

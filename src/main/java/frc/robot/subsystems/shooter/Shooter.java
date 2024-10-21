@@ -2,7 +2,6 @@ package frc.robot.subsystems.shooter;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
@@ -135,22 +134,17 @@ public class Shooter extends SubsystemBase {
     double topSetVoltage = m_topController.calculate(m_inputs.topVelocityRPS);
     double bottomSetVoltage = m_bottomController.calculate(m_inputs.bottomVelocityRPS);
 
-    if (RobotBase.isReal()) {
-      // don't use feedforward in sim
-      double topFeedforwardVoltage = m_topFeedforward.calculate(m_topController.getSetpoint());
-      double bottomFeedforwardVoltage =
-          m_bottomFeedforward.calculate(m_bottomController.getSetpoint());
+    double topFeedforwardVoltage = m_topFeedforward.calculate(m_topController.getSetpoint());
+    double bottomFeedforwardVoltage =
+        m_bottomFeedforward.calculate(m_bottomController.getSetpoint());
 
-      // in sim the set voltage is pid voltage so no need to log
-      // in real we log both
-      Logger.recordOutput("Shooter/TopFeedforwardVoltage", topFeedforwardVoltage);
-      Logger.recordOutput("Shooter/BottomFeedforwardVoltage", bottomFeedforwardVoltage);
-      Logger.recordOutput("Shooter/TopPIDVoltage", topSetVoltage);
-      Logger.recordOutput("Shooter/BottomPIDVoltage", bottomSetVoltage);
+    Logger.recordOutput("Shooter/TopFeedforwardVoltage", topFeedforwardVoltage);
+    Logger.recordOutput("Shooter/BottomFeedforwardVoltage", bottomFeedforwardVoltage);
+    Logger.recordOutput("Shooter/TopPIDVoltage", topSetVoltage);
+    Logger.recordOutput("Shooter/BottomPIDVoltage", bottomSetVoltage);
 
-      topSetVoltage += topFeedforwardVoltage;
-      bottomSetVoltage += bottomFeedforwardVoltage;
-    }
+    topSetVoltage += topFeedforwardVoltage;
+    bottomSetVoltage += bottomFeedforwardVoltage;
 
     m_io.setVoltage(topSetVoltage, bottomSetVoltage);
 

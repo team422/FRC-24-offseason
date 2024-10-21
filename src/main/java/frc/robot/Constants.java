@@ -25,7 +25,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.util.LoggedTunableNumber;
 
 /**
@@ -173,17 +172,9 @@ public final class Constants {
     public static final LoggedTunableNumber kEjectingVoltage =
         new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
 
-    // use diff pid for sim because no feedforward
-    public static final double kSimP = 0.1;
-    public static final double kSimI = 0.0;
-    public static final double kSimD = 0.0;
-
-    public static final LoggedTunableNumber kFlywheelP =
-        new LoggedTunableNumber("Flywheel P", RobotBase.isReal() ? 0.05 : kSimP);
-    public static final LoggedTunableNumber kFlywheelI =
-        new LoggedTunableNumber("Flywheel I", RobotBase.isReal() ? 0.0 : kSimI);
-    public static final LoggedTunableNumber kFlywheelD =
-        new LoggedTunableNumber("Flywheel D", RobotBase.isReal() ? 0.0 : kSimD);
+    public static final LoggedTunableNumber kFlywheelP = new LoggedTunableNumber("Flywheel P", 0.3);
+    public static final LoggedTunableNumber kFlywheelI = new LoggedTunableNumber("Flywheel I", 0.0);
+    public static final LoggedTunableNumber kFlywheelD = new LoggedTunableNumber("Flywheel D", 0.0);
 
     public static final PIDController kTopController =
         new PIDController(kFlywheelP.get(), kFlywheelI.get(), kFlywheelD.get());
@@ -218,10 +209,10 @@ public final class Constants {
     // Simulation constants
     public static final DCMotor kSimTopGearbox = DCMotor.getNEO(1);
     public static final DCMotor kSimBottomGearbox = DCMotor.getNEO(1);
-    public static final double kSimGearing = 1.02;
-    public static final double kSimRadius = Units.inchesToMeters(4);
-    public static final double kSimMass = 0.2;
-    public static final double kSimMOI = 0.5 * kSimMass * kSimRadius * kSimRadius;
+    public static final double kSimTopGearing = 1.02;
+    public static final double kSimBottomGearing = 1.1;
+    public static final double kSimTopMOI = 0.001;
+    public static final double kSimBottomMOI = 0.001;
   }
 
   public static final class Ports {

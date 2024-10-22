@@ -284,5 +284,8 @@ public final class Constants {
     public static final Translation2d kCorner = new Translation2d(0, 7.82);
     public static final Translation2d kFeederAim = new Translation2d(1, 6.82);
     public static final Translation2d kSourceMidShot = new Translation2d(8.04, 2);
+
+    // halfway between midline and wing
+    public static final Translation2d kFeedingSetpoint = new Translation2d(7.137, 0.872);
   }
 }

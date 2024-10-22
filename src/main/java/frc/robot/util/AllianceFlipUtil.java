@@ -14,7 +14,6 @@ import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import frc.robot.Constants.FieldConstants;
-import org.littletonrobotics.junction.AutoLogOutput;
 
 /** Utility functions for flipping from the blue to red alliance. */
 public class AllianceFlipUtil {
@@ -27,7 +26,6 @@ public class AllianceFlipUtil {
     }
   }
 
-  @AutoLogOutput(key = "AllianceFlipUtil.apply")
   /** Flips a translation to the correct side of the field based on the current alliance color. */
   public static Translation2d apply(Translation2d translation) {
     if (shouldFlip()) {

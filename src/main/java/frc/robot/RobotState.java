@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -45,6 +46,8 @@ public class RobotState {
     kSubwooferShot,
     kVomitting,
     kFeeding,
+    kMidlineFeeding,
+    kSetpointFeeding,
     kAmpLineup,
 
     kAutoDefault,
@@ -71,6 +74,8 @@ public class RobotState {
     periodicHash.put(RobotAction.kRevNoAlign, this::revNoAlignPeriodic);
     periodicHash.put(RobotAction.kSubwooferShot, this::subwooferShotPeriodic);
     periodicHash.put(RobotAction.kFeeding, this::feedingPeriodic);
+    periodicHash.put(RobotAction.kMidlineFeeding, this::midlineFeedingPeriodic);
+    periodicHash.put(RobotAction.kSetpointFeeding, this::setpointFeedingPeriodic);
     periodicHash.put(RobotAction.kAmpLineup, this::ampLineupPeriodic);
 
     periodicHash.put(RobotAction.kAutoDefault, () -> {});
@@ -182,6 +187,23 @@ public class RobotState {
     m_drive.setDesiredHeading(heading);
   }
 
+  public void midlineFeedingPeriodic() {
+    Pose2d currPose = getEstimatedPose();
+    ShooterPosition position = m_shooterMath.calculateSourceFeedingShooter(currPose);
+    Rotation2d heading = m_shooterMath.calculateSourceFeedingHeading(currPose);
+
+    m_shooter.setDesiredVelocity(position);
+    m_drive.setDesiredHeading(heading);
+  }
+
+  public void setpointFeedingPeriodic() {
+    Pose2d currPose = new Pose2d(FieldConstants.kFeedingSetpoint, new Rotation2d());
+    Logger.recordOutput("aa", currPose);
+    ShooterPosition position = m_shooterMath.calculateFeedingShooter(currPose);
+
+    m_shooter.setDesiredVelocity(position);
+  }
+
   public void ampLineupPeriodic() {}
 
   public void updateRobotAction(RobotAction newAction) {
@@ -205,6 +227,7 @@ public class RobotState {
       case kRevAndAlign:
       case kAutoShoot:
       case kFeeding:
+      case kMidlineFeeding:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
         m_drive.updateProfile(DriveProfiles.kAutoAlign);
@@ -213,6 +236,7 @@ public class RobotState {
 
       case kSubwooferShot:
       case kRevNoAlign:
+      case kSetpointFeeding:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
 

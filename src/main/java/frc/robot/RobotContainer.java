@@ -48,6 +48,7 @@ import frc.robot.subsystems.shooter.FlywheelIONeo;
 import frc.robot.subsystems.shooter.FlywheelIOSim;
 import frc.robot.subsystems.shooter.Shooter;
 import frc.robot.subsystems.shooter.Shooter.ShooterState;
+import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.PathPlannerUtil;
 import java.util.List;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
@@ -185,7 +186,9 @@ public class RobotContainer {
             Commands.runOnce(
                     () ->
                         m_drive.setPose(
-                            new Pose2d(m_drive.getPose().getTranslation(), new Rotation2d())),
+                            new Pose2d(
+                                m_drive.getPose().getTranslation(),
+                                AllianceFlipUtil.apply(Rotation2d.fromDegrees(180)))),
                     m_drive)
                 .ignoringDisable(true));
 
@@ -345,19 +348,29 @@ public class RobotContainer {
                 }));
 
     m_driverControls
-        .resetPoseAuto()
+        .midlineHockeyPuck()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_drive.setPose(new Pose2d(14.764, 5.594, new Rotation2d(Math.PI)));
+                  m_robotState.updateRobotAction(RobotAction.kMidlineFeeding);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
                 }));
 
     m_driverControls
-        .resetPoseFeeding()
+        .setpointHockeyPuck()
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_drive.setPose(new Pose2d(8.329, 7.535, new Rotation2d(Math.PI)));
+                  m_robotState.updateRobotAction(RobotAction.kSetpointFeeding);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
                 }));
   }
 

@@ -71,12 +71,12 @@ public class DriverControlsXbox implements DriverControls {
   }
 
   @Override
-  public Trigger resetPoseAuto() {
+  public Trigger midlineHockeyPuck() {
     return m_controller.x();
   }
 
   @Override
-  public Trigger resetPoseFeeding() {
+  public Trigger setpointHockeyPuck() {
     return m_controller.povLeft();
   }
 }

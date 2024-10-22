@@ -29,7 +29,7 @@ public interface DriverControls {
 
   public Trigger subwooferShot();
 
-  public Trigger resetPoseAuto();
+  public Trigger midlineHockeyPuck();
 
-  public Trigger resetPoseFeeding();
+  public Trigger setpointHockeyPuck();
 }

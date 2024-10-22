@@ -19,6 +19,8 @@ public class ShooterMath {
   private InterpolatingDoubleTreeMap m_feedingBottomMap = new InterpolatingDoubleTreeMap();
   private final Translation2d kCorner = FieldConstants.kFeederAim;
 
+  private final Translation2d kMidline = FieldConstants.kSourceMidShot;
+
   public ShooterMath() {
     double speakerDistance = Units.feetToMeters(3);
     // Data for top flywheel speaker
@@ -90,6 +92,27 @@ public class ShooterMath {
     return cornerFlipped.getDistance(robotTranslation);
   }
 
+  public double getMidlineDistance(Pose2d robotPose) {
+    Translation2d robotTranslation = robotPose.getTranslation();
+    Translation2d midlineFlipped = AllianceFlipUtil.apply(kMidline);
+    Logger.recordOutput("ShooterMath/MidlineTarget", midlineFlipped);
+    return midlineFlipped.getDistance(robotTranslation);
+  }
+
+  public Rotation2d calculateHeading(
+      Translation2d robotTranslation, Translation2d targetTranslation) {
+    // Use atan2 to calculate the yaw of the robot
+    // Basically just finds the distance between the points
+    // and calculates the angle from the origin to the new point
+    // which is the same as the angle we want to be at
+    Rotation2d robotYaw =
+        Rotation2d.fromRadians(
+            Math.atan2(
+                targetTranslation.getY() - robotTranslation.getY(),
+                targetTranslation.getX() - robotTranslation.getX()));
+    return robotYaw;
+  }
+
   public ShooterPosition calculateSpeakerShooter(Pose2d robotPose) {
     double distance = getSpeakerDistance(robotPose);
 
@@ -104,16 +127,7 @@ public class ShooterMath {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d speakerFlipped = AllianceFlipUtil.apply(kSpeaker);
 
-    // Use atan2 to calculate the yaw of the robot
-    // Basically just finds the distance between the points
-    // and calculates the angle from the origin to the new point
-    // which is the same as the angle we want to be at
-    Rotation2d robotYaw =
-        Rotation2d.fromRadians(
-            Math.atan2(
-                speakerFlipped.getY() - robotTranslation.getY(),
-                speakerFlipped.getX() - robotTranslation.getX()));
-    return robotYaw;
+    return calculateHeading(robotTranslation, speakerFlipped);
   }
 
   public ShooterPosition calculateFeedingShooter(Pose2d robotPose) {
@@ -130,15 +144,23 @@ public class ShooterMath {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d cornerFlipped = AllianceFlipUtil.apply(kCorner);
 
-    // Use atan2 to calculate the yaw of the robot
-    // Basically just finds the distance between the points
-    // and calculates the angle from the origin to the new point
-    // which is the same as the angle we want to be at
-    Rotation2d robotYaw =
-        Rotation2d.fromRadians(
-            Math.atan2(
-                cornerFlipped.getY() - robotTranslation.getY(),
-                cornerFlipped.getX() - robotTranslation.getX()));
-    return robotYaw;
+    return calculateHeading(robotTranslation, cornerFlipped);
+  }
+
+  public ShooterPosition calculateSourceFeedingShooter(Pose2d currPose) {
+    double distance = getMidlineDistance(currPose);
+
+    // Pull from lookup table
+    ShooterPosition res =
+        new ShooterPosition(m_feedingTopMap.get(distance), m_feedingBottomMap.get(distance));
+
+    return res;
+  }
+
+  public Rotation2d calculateSourceFeedingHeading(Pose2d currPose) {
+    Translation2d robotTranslation = currPose.getTranslation();
+    Translation2d midlineFlipped = AllianceFlipUtil.apply(kMidline);
+
+    return calculateHeading(robotTranslation, midlineFlipped);
   }
 }

@@ -198,7 +198,6 @@ public class RobotState {
 
   public void setpointFeedingPeriodic() {
     Pose2d currPose = new Pose2d(FieldConstants.kFeedingSetpoint, new Rotation2d());
-    Logger.recordOutput("aa", currPose);
     ShooterPosition position = m_shooterMath.calculateFeedingShooter(currPose);
 
     m_shooter.setDesiredVelocity(position);

@@ -12,27 +12,12 @@ public class OperatorControlsXbox implements OperatorControls {
 
   @Override
   public Trigger runIntake() {
-    return m_controller.rightTrigger();
-  }
-
-  @Override
-  public Trigger ejectGamePiece() {
-    return m_controller.b();
+    return m_controller.rightBumper();
   }
 
   @Override
   public Trigger revAndAlign() {
     return m_controller.leftTrigger();
-  }
-
-  @Override
-  public Trigger revNoAlign() {
-    return m_controller.y();
-  }
-
-  @Override
-  public Trigger revAndShoot() {
-    return m_controller.x();
   }
 
   @Override
@@ -48,5 +33,15 @@ public class OperatorControlsXbox implements OperatorControls {
   @Override
   public Trigger amp() {
     return m_controller.leftBumper();
+  }
+
+  @Override
+  public Trigger hockeyPuck() {
+    return m_controller.x();
+  }
+
+  @Override
+  public Trigger midlineHockeyPuck() {
+    return m_controller.y();
   }
 }

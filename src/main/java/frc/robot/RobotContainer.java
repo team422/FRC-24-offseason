@@ -19,14 +19,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsXbox;
+import frc.robot.oi.DriverControlsPS5;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -77,8 +76,6 @@ public class RobotContainer {
   private RobotState m_robotState;
 
   private AutoFactory m_autoFactory;
-
-  private boolean m_ampToggle; // toggle for amp controls
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
@@ -166,8 +163,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    // m_driverControls = new DriverControlsPS5(0);
-    m_driverControls = new DriverControlsXbox(0);
+    m_driverControls = new DriverControlsPS5(0);
+    // m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 
@@ -219,24 +216,10 @@ public class RobotContainer {
             Commands.runOnce(
                 () -> {
                   m_indexer.updateState(IndexerState.kShooting);
-
-                  // if in amp cancel after done shooting
-                  if (m_robotState.getRobotAction() == RobotAction.kAmpLineup) {
-                    Commands.waitSeconds(IndexerConstants.kShootingTimeout.get())
-                        .andThen(
-                            Commands.runOnce(
-                                () -> {
-                                  m_robotState.setDefaultAction();
-                                  m_drive.updateProfile(DriveProfiles.kDefault);
-                                  m_ampToggle = false;
-                                }))
-                        .schedule();
-                  }
                 }));
 
     m_driverControls
         .ejectGamePiece()
-        .or(m_operatorControls.ejectGamePiece())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -265,6 +248,7 @@ public class RobotContainer {
 
     m_driverControls
         .hockeyPuck()
+        .or(m_operatorControls.hockeyPuck())
         .onTrue(
             Commands.runOnce(
                 () -> {
@@ -282,12 +266,12 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_ampToggle = !m_ampToggle;
-                  if (m_ampToggle) {
-                    m_robotState.updateRobotAction(RobotAction.kAmpLineup);
-                  } else {
-                    m_robotState.setDefaultAction();
-                  }
+                  m_robotState.updateRobotAction(RobotAction.kAmpLineup);
+                }))
+        .onFalse(
+            Commands.runOnce(
+                () -> {
+                  m_robotState.setDefaultAction();
                 }));
 
     m_driverControls
@@ -313,28 +297,6 @@ public class RobotContainer {
                   m_robotState.setDefaultAction();
                 }));
 
-    m_operatorControls
-        .revNoAlign()
-        .onTrue(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.updateRobotAction(RobotAction.kRevNoAlign);
-                }))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.setDefaultAction();
-                }));
-
-    m_operatorControls
-        .revAndShoot()
-        .onTrue(Commands.runOnce(() -> m_robotState.updateRobotAction(RobotAction.kAutoShoot)))
-        .onFalse(
-            Commands.runOnce(
-                () -> {
-                  m_robotState.setDefaultAction();
-                }));
-
     // manual override to set to idle in case of emergency
     m_operatorControls
         .setIdle()
@@ -349,6 +311,7 @@ public class RobotContainer {
 
     m_driverControls
         .midlineHockeyPuck()
+        .or(m_operatorControls.midlineHockeyPuck())
         .onTrue(
             Commands.runOnce(
                 () -> {

@@ -272,6 +272,10 @@ public class Drive extends SubsystemBase {
     return m_desiredChassisSpeeds;
   }
 
+  public ChassisSpeeds getChassisSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(getModuleStates());
+  }
+
   public void setDesiredHeading(Rotation2d heading) {
     m_desiredHeading = heading;
   }

@@ -3,6 +3,7 @@ package frc.robot.subsystems.indexer;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.RobotState;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
 import org.littletonrobotics.junction.Logger;
@@ -59,6 +60,8 @@ public class Indexer extends SubsystemBase {
 
   private void intakingPeriodic() {
     if (m_io.hasGamePiece()) {
+      RobotState.getInstance().setDefaultAction();
+      ;
       updateState(IndexerState.kIndexing);
       indexingPeriodic();
       return;

@@ -103,14 +103,6 @@ public final class Constants {
                   Units.inchesToMeters(8.585)),
               new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
 
-          // front right (shooter)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(-5.410),
-                  Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
-
           // back right (intake)
           new Transform3d(
               new Translation3d(
@@ -118,6 +110,14 @@ public final class Constants {
                   Units.inchesToMeters(4.673),
                   Units.inchesToMeters(8.585)),
               new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+
+          // front right (shooter)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(9.454),
+                  Units.inchesToMeters(-5.410),
+                  Units.inchesToMeters(7.766)),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
         };
   }
 
@@ -172,7 +172,8 @@ public final class Constants {
     public static final LoggedTunableNumber kEjectingVoltage =
         new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
 
-    public static final LoggedTunableNumber kFlywheelP = new LoggedTunableNumber("Flywheel P", 0.3);
+    public static final LoggedTunableNumber kFlywheelP =
+        new LoggedTunableNumber("Flywheel P", 0.01);
     public static final LoggedTunableNumber kFlywheelI = new LoggedTunableNumber("Flywheel I", 0.0);
     public static final LoggedTunableNumber kFlywheelD = new LoggedTunableNumber("Flywheel D", 0.0);
 
@@ -283,7 +284,7 @@ public final class Constants {
     public static final Pose2d kDailedShot = new Pose2d(2.95, 4.08, new Rotation2d(145.00));
     public static final Translation2d kCorner = new Translation2d(0, 7.82);
     public static final Translation2d kFeederAim = new Translation2d(1, 6.82);
-    public static final Translation2d kSourceMidShot = new Translation2d(8.04, 2);
+    public static final Translation2d kSourceMidShot = new Translation2d(8.04, kFieldWidth - 2);
 
     // halfway between midline and wing
     public static final Translation2d kFeedingSetpoint = new Translation2d(7.137, 0.872);

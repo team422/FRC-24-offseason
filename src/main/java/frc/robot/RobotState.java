@@ -147,9 +147,9 @@ public class RobotState {
     double topVelocityError = position.topVelocityRPS() - topVelocity;
     double bottomVelocityError = position.bottomVelocityRPS() - bottomVelocity;
 
-    boolean headingWithinTolerance = Math.abs(headingError) < 1.0;
-    boolean topVelocityWithinTolerance = Math.abs(topVelocityError) < 1.0;
-    boolean bottomVelocityWithinTolerance = Math.abs(bottomVelocityError) < 1.0;
+    boolean headingWithinTolerance = Math.abs(headingError) < 3.0;
+    boolean topVelocityWithinTolerance = Math.abs(topVelocityError) < 1.5;
+    boolean bottomVelocityWithinTolerance = Math.abs(bottomVelocityError) < 1.5;
 
     Logger.recordOutput("ShootDistance", m_shooterMath.getSpeakerDistance(currPose));
     Logger.recordOutput("ReadyToShoot/HeadingWithinTolerance", headingWithinTolerance);
@@ -197,10 +197,12 @@ public class RobotState {
   }
 
   public void setpointFeedingPeriodic() {
-    Pose2d currPose = new Pose2d(FieldConstants.kFeedingSetpoint, new Rotation2d());
+    Pose2d currPose = new Pose2d(FieldConstants.kFeedingSetpoint, getEstimatedPose().getRotation());
     ShooterPosition position = m_shooterMath.calculateFeedingShooter(currPose);
+    Rotation2d heading = m_shooterMath.calculateFeedingHeading(currPose);
 
     m_shooter.setDesiredVelocity(position);
+    m_drive.setDesiredHeading(heading);
   }
 
   public void ampLineupPeriodic() {}
@@ -227,6 +229,7 @@ public class RobotState {
       case kAutoShoot:
       case kFeeding:
       case kMidlineFeeding:
+      case kSetpointFeeding:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
         m_drive.updateProfile(DriveProfiles.kAutoAlign);
@@ -235,7 +238,6 @@ public class RobotState {
 
       case kSubwooferShot:
       case kRevNoAlign:
-      case kSetpointFeeding:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
 

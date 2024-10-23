@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.DriveConstants;
 import frc.robot.RobotState;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.subsystems.drive.Drive;
@@ -18,8 +19,8 @@ import frc.robot.util.LocalADStarAK;
 import org.littletonrobotics.junction.Logger;
 
 public class AutoFactory extends Command {
-  public static final PIDConstants kLinearPID = new PIDConstants(2.5, 0.0, 0.0);
-  public static final PIDConstants kAngularPID = new PIDConstants(1.2, 0.0, 0.0);
+  public static final PIDConstants kLinearPID = new PIDConstants(3.0, 0.0, 0.0);
+  public static final PIDConstants kAngularPID = new PIDConstants(1.0, 0.0, 0.05);
 
   private final Drive m_drive;
 
@@ -52,15 +53,17 @@ public class AutoFactory extends Command {
     AutoBuilder.configureHolonomic(
         m_drive::getPose, // Robot pose supplier
         (Pose2d pose) -> {},
-        m_drive::getDesiredChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        m_drive::getChassisSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
         m_drive::setDesiredChassisSpeeds, // Method that will drive the robot given ROBOT RELATIVE
         // ChassisSpeeds
         new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in
             // your Constants class
-            kLinearPID, // Translation PID constants
-            kAngularPID, // Rotation PID constants
-            5.6, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            new PIDConstants(2.5, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(4, 1.6, 0.0), // Rotation PID constants
+            DriveConstants.kMaxLinearSpeed, // Max module speed, in m/s
+            DriveConstants
+                .kDriveBaseRadius, // Drive base radius in meters. Distance from robot center to
+            // furthest module.
             new ReplanningConfig(
                 true, true, 1.7,
                 1) // default path replanning config. See the API for the options here

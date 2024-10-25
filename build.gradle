@@ -199,7 +199,8 @@ task (commitOnDeploy, dependsOn: "spotlessApply") {
             'build.gradle',
             'logs',
             'gradle',
-            '.wpilib'
+            '.wpilib',
+            '.pathplanner'
         ])
         grgit.commit(message: "Automated commit on ${sdf.format(date)}")
     }

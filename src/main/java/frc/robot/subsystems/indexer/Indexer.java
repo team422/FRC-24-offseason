@@ -1,5 +1,6 @@
 package frc.robot.subsystems.indexer;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IndexerConstants;
@@ -81,13 +82,21 @@ public class Indexer extends SubsystemBase {
   }
 
   private void reversingPeriodic() {
-    if (m_reverseTimeout.hasElapsed(IndexerConstants.kReverseTimeout.get())) {
+    double timeout =
+        DriverStation.isTeleop()
+            ? IndexerConstants.kTeleopReverseTimeout.get()
+            : IndexerConstants.kAutoReverseTimeout.get();
+    if (m_reverseTimeout.hasElapsed(timeout)) {
       updateState(IndexerState.kIdle);
       idlePeriodic();
       return;
     }
 
-    m_io.setVoltage(IndexerConstants.kReversingVoltage.get());
+    double voltage =
+        DriverStation.isTeleop()
+            ? IndexerConstants.kReversingVoltage.get()
+            : IndexerConstants.kAutoReversingVoltage.get();
+    m_io.setVoltage(voltage);
   }
 
   private void shootingPeriodic() {
@@ -143,4 +152,5 @@ public class Indexer extends SubsystemBase {
   // I love God and Jesus - Patty lin
   // James and Tommy better than you guys cause you're stinky and rotund like a clock
   // Ya'll need to get a life :) - also add a v8 with a turbo and a supercharger
+  // Hello FRC 422 James Parker Bae is very very very very very very very FAT!!!!
 }

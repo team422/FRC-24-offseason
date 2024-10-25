@@ -344,5 +344,8 @@ public class RobotState {
     m_shooter.resetPID();
 
     m_drive.setBrake();
+
+    setDefaultAction();
+    m_indexer.updateState(IndexerState.kIdle);
   }
 }

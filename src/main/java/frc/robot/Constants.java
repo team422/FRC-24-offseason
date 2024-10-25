@@ -150,6 +150,8 @@ public final class Constants {
         new LoggedTunableNumber("Indexer Indexing Voltage", -8.0);
     public static final LoggedTunableNumber kReversingVoltage =
         new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
+    public static final LoggedTunableNumber kAutoReversingVoltage =
+        new LoggedTunableNumber("Indexer Auto Reverse Voltage", 2.0);
     public static final LoggedTunableNumber kShootingVoltage =
         new LoggedTunableNumber("Indexer Shooting Voltage", -12.0);
     public static final LoggedTunableNumber kEjectingVoltage =
@@ -159,8 +161,10 @@ public final class Constants {
         new LoggedTunableNumber("Indexer Shooting Timeout", 0.75);
     public static final LoggedTunableNumber kIndexingTimeout =
         new LoggedTunableNumber("Indexer Indexing Timeout", 0.0);
-    public static final LoggedTunableNumber kReverseTimeout =
-        new LoggedTunableNumber("Indexer Reverse Timeout", 0.2);
+    public static final LoggedTunableNumber kTeleopReverseTimeout =
+        new LoggedTunableNumber("Indexer Teleop Reverse Timeout", 0.1);
+    public static final LoggedTunableNumber kAutoReverseTimeout =
+        new LoggedTunableNumber("Indexer Auto Reverse Timeout", 0.02);
 
     // Simulation constants
     public static final DCMotor kSimGearbox = DCMotor.getNEO(1);

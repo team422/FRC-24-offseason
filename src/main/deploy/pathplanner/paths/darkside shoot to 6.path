@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8365076933716216,
-        "y": 4.417980133670191
+        "x": 2.1602840152245197,
+        "y": 3.7808718874435203
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.766059069013813,
-        "y": 1.0966617353082047
+        "x": 4.144719536258409,
+        "y": 1.2428833000159636
       },
       "isLocked": false,
-      "linkedName": "7 shoot"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.406033707741717,
+        "x": 8.197145758159202,
         "y": 4.532868505940574
       },
       "prevControl": {
-        "x": 7.3198163699126395,
+        "x": 7.110928420330125,
         "y": 0.720663426059677
       },
       "nextControl": null,
@@ -50,7 +50,7 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.25,
+    "maxVelocity": 5.5,
     "maxAcceleration": 5.75,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

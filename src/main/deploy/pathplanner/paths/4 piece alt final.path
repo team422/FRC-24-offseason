@@ -3,43 +3,37 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.93,
-        "y": 5.95
+        "x": 2.014062450516759,
+        "y": 5.45197548410364
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.194279365657968,
-        "y": 6.329304872350202
+        "x": 2.630281901785178,
+        "y": 6.235305295038071
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.88,
-        "y": 6.120416922767689
+        "x": 7.131817215288375,
+        "y": 6.663525591682228
       },
       "prevControl": {
-        "x": 7.222002958815078,
-        "y": 6.465082039578838
+        "x": 5.732267953085525,
+        "y": 6.538192821932718
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": null
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.5,
-      "rotationDegrees": 179.83898361904426,
-      "rotateFast": false
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Intake",
-      "waypointRelativePos": 0.6,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.45,
       "command": {
         "type": "parallel",
         "data": {
@@ -47,7 +41,7 @@
             {
               "type": "named",
               "data": {
-                "name": "Intake"
+                "name": "Coast"
               }
             }
           ]
@@ -56,21 +50,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.25,
-    "maxAcceleration": 5.75,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 143.46592940949694,
+    "rotation": -176.14936117608931,
     "rotateFast": false
   },
   "reversed": false,
   "folder": null,
   "previewStartingState": {
-    "rotation": 179.6368698540305,
+    "rotation": 176.02750405924928,
     "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

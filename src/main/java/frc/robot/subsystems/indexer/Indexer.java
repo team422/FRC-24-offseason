@@ -60,8 +60,8 @@ public class Indexer extends SubsystemBase {
 
   private void intakingPeriodic() {
     if (m_io.hasGamePiece()) {
+      Logger.recordOutput("Stow/Indexer", Timer.getFPGATimestamp());
       RobotState.getInstance().setDefaultAction();
-      ;
       updateState(IndexerState.kIndexing);
       indexingPeriodic();
       return;
@@ -132,6 +132,10 @@ public class Indexer extends SubsystemBase {
 
   public IndexerState getState() {
     return (IndexerState) m_profiles.getCurrentProfile();
+  }
+
+  public boolean hasGamePiece() {
+    return m_io.hasGamePiece();
   }
 
   // Nikki P in the skibidi house!

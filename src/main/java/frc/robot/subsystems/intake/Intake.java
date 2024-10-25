@@ -56,6 +56,7 @@ public class Intake extends SubsystemBase {
   }
 
   public void updateState(IntakeState state) {
+    Logger.recordOutput("Intake/Set", state.toString() + ": " + Timer.getFPGATimestamp());
     switch (state) {
       case kIdle:
         m_io.setVoltage(IntakeConstants.kIdleVoltage.get());

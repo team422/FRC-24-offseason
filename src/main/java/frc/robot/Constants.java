@@ -72,6 +72,10 @@ public final class Constants {
         new LoggedTunableNumber("Drive Heading I", 0.0);
     public static final LoggedTunableNumber kHeadingD =
         new LoggedTunableNumber("Drive Heading D", 0.05);
+
+    // on real everything in drive is backwards for some reason
+    public static final boolean kRealReversed = true;
+    public static final boolean kSimReversed = false;
   }
 
   public static final class AprilTagVisionConstants {
@@ -87,21 +91,13 @@ public final class Constants {
     // transform from center of robot to camera
     public static final Transform3d[] kCameraTransforms =
         new Transform3d[] {
-          // front left (shooter)
+          // front right (shooter)
           new Transform3d(
               new Translation3d(
                   Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(5.410),
+                  Units.inchesToMeters(-5.410),
                   Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(10))),
-
-          // back left (intake)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(-14.620),
-                  Units.inchesToMeters(4.673),
-                  Units.inchesToMeters(8.585)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
 
           // back right (intake)
           new Transform3d(
@@ -111,13 +107,21 @@ public final class Constants {
                   Units.inchesToMeters(8.585)),
               new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
 
-          // front right (shooter)
+          // back left (intake)
+          new Transform3d(
+              new Translation3d(
+                  Units.inchesToMeters(-14.620),
+                  Units.inchesToMeters(4.673),
+                  Units.inchesToMeters(8.585)),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+
+          // front left (shooter)
           new Transform3d(
               new Translation3d(
                   Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(-5.410),
+                  Units.inchesToMeters(5.410),
                   Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
+              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(10))),
         };
   }
 
@@ -152,7 +156,7 @@ public final class Constants {
         new LoggedTunableNumber("Indexer Eject Voltage", 8.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
-        new LoggedTunableNumber("Indexer Shooting Timeout", 1.5);
+        new LoggedTunableNumber("Indexer Shooting Timeout", 0.75);
     public static final LoggedTunableNumber kIndexingTimeout =
         new LoggedTunableNumber("Indexer Indexing Timeout", 0.0);
     public static final LoggedTunableNumber kReverseTimeout =
@@ -244,6 +248,12 @@ public final class Constants {
 
     public static final int kPhotoElectricOne = 8;
     public static final int kPhotoElectricTwo = 9;
+  }
+
+  public static final class ShooterMathConstants {
+    // if robot pose is within this distance of the target, we shoot to midline
+    public static final LoggedTunableNumber kMidpointTolerance =
+        new LoggedTunableNumber("Midpoint Feed Tolerance", 1.7);
   }
 
   public static final class FieldConstants {

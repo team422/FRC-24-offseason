@@ -230,11 +230,10 @@ public class Drive extends SubsystemBase {
 
   public ChassisSpeeds calculateAutoAlignSpeeds() {
     if (m_desiredHeading != null) {
-      // dont ask me why the output is backwards in real life
       double output =
           m_headingController.calculate(
               getPose().getRotation().getRadians(), m_desiredHeading.getRadians());
-      m_desiredChassisSpeeds.omegaRadiansPerSecond = RobotBase.isReal() ? -output : output;
+      m_desiredChassisSpeeds.omegaRadiansPerSecond = output;
     }
 
     return m_desiredChassisSpeeds;
@@ -245,9 +244,24 @@ public class Drive extends SubsystemBase {
    *
    * @param speeds Speeds in meters/sec
    */
+  @SuppressWarnings("unused")
   public void runVelocity(ChassisSpeeds speeds) {
     // Calculate module setpoints
     ChassisSpeeds discreteSpeeds = ChassisSpeeds.discretize(speeds, 0.02);
+
+    // in real everything is backwards
+    if (RobotBase.isReal() && DriveConstants.kRealReversed) {
+      if (DriverStation.isTeleopEnabled()) {
+        discreteSpeeds.vxMetersPerSecond = -discreteSpeeds.vxMetersPerSecond;
+        discreteSpeeds.vyMetersPerSecond = -discreteSpeeds.vyMetersPerSecond;
+      }
+      discreteSpeeds.omegaRadiansPerSecond = -discreteSpeeds.omegaRadiansPerSecond;
+    } else if (RobotBase.isSimulation() && DriveConstants.kSimReversed) {
+      discreteSpeeds.vxMetersPerSecond = -discreteSpeeds.vxMetersPerSecond;
+      discreteSpeeds.vyMetersPerSecond = -discreteSpeeds.vyMetersPerSecond;
+      discreteSpeeds.omegaRadiansPerSecond = -discreteSpeeds.omegaRadiansPerSecond;
+    }
+
     SwerveModuleState[] setpointStates =
         DriveConstants.kDriveKinematics.toSwerveModuleStates(discreteSpeeds);
     SwerveDriveKinematics.desaturateWheelSpeeds(setpointStates, DriveConstants.kMaxLinearSpeed);
@@ -283,6 +297,18 @@ public class Drive extends SubsystemBase {
   /** Stops the drive. */
   public void stop() {
     runVelocity(new ChassisSpeeds());
+  }
+
+  public void setCoast() {
+    for (int i = 0; i < m_modules.length; i++) {
+      m_modules[i].setBrakeMode(false);
+    }
+  }
+
+  public void setBrake() {
+    for (int i = 0; i < m_modules.length; i++) {
+      m_modules[i].setBrakeMode(true);
+    }
   }
 
   /**

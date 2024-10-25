@@ -7,12 +7,12 @@ import frc.robot.RobotState.RobotAction;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import org.littletonrobotics.junction.Logger;
 
-public class AutoShoot extends Command {
+public class AutoShootNoAlign extends Command {
   private Timer m_timer = new Timer();
 
   @Override
   public void initialize() {
-    RobotState.getInstance().updateRobotAction(RobotAction.kAutoShoot);
+    RobotState.getInstance().updateRobotAction(RobotAction.kAutoShootNoAlign);
     m_timer.restart();
   }
 
@@ -24,6 +24,6 @@ public class AutoShoot extends Command {
       RobotState.getInstance().setDefaultAction();
       return true;
     }
-    return RobotState.getInstance().getRobotAction() != RobotAction.kAutoShoot;
+    return RobotState.getInstance().getRobotAction() != RobotAction.kAutoShootNoAlign;
   }
 }

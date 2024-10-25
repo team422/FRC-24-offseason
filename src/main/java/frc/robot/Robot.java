@@ -85,13 +85,14 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+
+    robotContainer.updateRobotState();
+
     double start = Timer.getFPGATimestamp();
 
     CommandScheduler.getInstance().run();
 
     Logger.recordOutput("PeriodicTime/CommandScheduler", (double) Timer.getFPGATimestamp() - start);
-
-    robotContainer.updateRobotState();
   }
 
   /** This function is called once when the robot is disabled. */

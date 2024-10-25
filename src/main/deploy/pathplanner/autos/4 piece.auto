@@ -8,19 +8,13 @@
         {
           "type": "named",
           "data": {
-            "name": "AutoShootNoAlign"
+            "name": "AutoShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "dark side to 7"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "darkside 7 to shoot"
+            "pathName": "4 piece 1"
           }
         },
         {
@@ -32,13 +26,19 @@
         {
           "type": "path",
           "data": {
-            "pathName": "darkside shoot to 6"
+            "pathName": "4 piece 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "darkside 6 to shoot"
+            "pathName": "4 piece 3"
           }
         },
         {

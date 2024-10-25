@@ -82,6 +82,7 @@ public class ShooterMath {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d speakerFlipped = AllianceFlipUtil.apply(kSpeaker);
     Logger.recordOutput("ShooterMath/SpeakerTarget", speakerFlipped);
+    Logger.recordOutput("ShooterMath/CurrTarget", speakerFlipped);
     return speakerFlipped.getDistance(robotTranslation);
   }
 
@@ -89,6 +90,7 @@ public class ShooterMath {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d cornerFlipped = AllianceFlipUtil.apply(kCorner);
     Logger.recordOutput("ShooterMath/FeederTarget", cornerFlipped);
+    Logger.recordOutput("ShooterMath/CurrTarget", cornerFlipped);
     return cornerFlipped.getDistance(robotTranslation);
   }
 
@@ -96,6 +98,7 @@ public class ShooterMath {
     Translation2d robotTranslation = robotPose.getTranslation();
     Translation2d midlineFlipped = AllianceFlipUtil.apply(kMidline);
     Logger.recordOutput("ShooterMath/MidlineTarget", midlineFlipped);
+    Logger.recordOutput("ShooterMath/CurrTarget", midlineFlipped);
     return midlineFlipped.getDistance(robotTranslation);
   }
 

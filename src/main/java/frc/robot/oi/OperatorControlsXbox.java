@@ -37,7 +37,7 @@ public class OperatorControlsXbox implements OperatorControls {
 
   @Override
   public Trigger hockeyPuck() {
-    return m_controller.x();
+    return m_controller.rightTrigger();
   }
 
   @Override

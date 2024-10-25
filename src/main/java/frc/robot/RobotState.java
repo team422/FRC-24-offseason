@@ -52,6 +52,7 @@ public class RobotState {
 
     kAutoDefault,
     kAutoShoot,
+    kAutoShootNoAlign,
   }
 
   private SubsystemProfiles m_profiles;
@@ -80,6 +81,7 @@ public class RobotState {
 
     periodicHash.put(RobotAction.kAutoDefault, () -> {});
     periodicHash.put(RobotAction.kAutoShoot, this::autoShootPeriodic);
+    periodicHash.put(RobotAction.kAutoShootNoAlign, this::autoShootNoAlignPeriodic);
     m_profiles = new SubsystemProfiles(RobotAction.class, periodicHash, RobotAction.kTeleopDefault);
   }
 
@@ -166,6 +168,44 @@ public class RobotState {
           .andThen(
               Commands.runOnce(
                   () -> {
+                    Logger.recordOutput("Stow/AutoShoot", Timer.getFPGATimestamp());
+                    setDefaultAction();
+                  }))
+          .schedule();
+    }
+  }
+
+  public void autoShootNoAlignPeriodic() {
+    Pose2d currPose = getEstimatedPose();
+    ShooterPosition position = m_shooterMath.calculateSpeakerShooter(currPose);
+
+    m_shooter.setDesiredVelocity(position);
+
+    ShooterPosition actualPosition = m_shooter.getVelocity();
+    double topVelocity = actualPosition.topVelocityRPS();
+    double bottomVelocity = actualPosition.bottomVelocityRPS();
+
+    double topVelocityError = position.topVelocityRPS() - topVelocity;
+    double bottomVelocityError = position.bottomVelocityRPS() - bottomVelocity;
+
+    boolean topVelocityWithinTolerance = Math.abs(topVelocityError) < 1.5;
+    boolean bottomVelocityWithinTolerance = Math.abs(bottomVelocityError) < 1.5;
+
+    Logger.recordOutput("ShootDistance", m_shooterMath.getSpeakerDistance(currPose));
+    Logger.recordOutput("ReadyToShoot/TopVelocityWithinTolerance", topVelocityWithinTolerance);
+    Logger.recordOutput(
+        "ReadyToShoot/BottomVelocityWithinTolerance", bottomVelocityWithinTolerance);
+
+    if (topVelocityWithinTolerance && bottomVelocityWithinTolerance) {
+      m_indexer.updateState(IndexerState.kShooting);
+
+      // wait for shooting timer to expire before resetting
+      // if button is released it'll still reset so timer is just a backup
+      Commands.waitSeconds(IndexerConstants.kShootingTimeout.get())
+          .andThen(
+              Commands.runOnce(
+                  () -> {
+                    Logger.recordOutput("Stow/AutoShootNoAutoAlign", Timer.getFPGATimestamp());
                     setDefaultAction();
                   }))
           .schedule();
@@ -238,6 +278,7 @@ public class RobotState {
 
       case kSubwooferShot:
       case kRevNoAlign:
+      case kAutoShootNoAlign:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
 
@@ -301,5 +342,7 @@ public class RobotState {
 
   public void onEnabled() {
     m_shooter.resetPID();
+
+    m_drive.setBrake();
   }
 }

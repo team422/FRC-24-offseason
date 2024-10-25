@@ -16,16 +16,20 @@ package frc.robot;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.Constants.FieldConstants;
 import frc.robot.Constants.Ports;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.Constants.ShooterMathConstants;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -50,6 +54,7 @@ import frc.robot.subsystems.shooter.Shooter.ShooterState;
 import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.PathPlannerUtil;
 import java.util.List;
+import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 /**
@@ -163,8 +168,8 @@ public class RobotContainer {
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 
@@ -195,11 +200,14 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kIntake);
+                  if (!m_indexer.hasGamePiece()) {
+                    m_robotState.updateRobotAction(RobotAction.kIntake);
+                  }
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Intake button released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
 
                   // advance to indexing if still intaking
@@ -228,6 +236,7 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Eject button released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                   m_indexer.updateState(IndexerState.kIdle);
                 }));
@@ -243,6 +252,7 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Rev released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
 
@@ -252,11 +262,22 @@ public class RobotContainer {
         .onTrue(
             Commands.runOnce(
                 () -> {
-                  m_robotState.updateRobotAction(RobotAction.kFeeding);
+                  // check if robot is close enough to source to switch to midline feeding
+                  Translation2d robotTranslation = m_robotState.getEstimatedPose().getTranslation();
+                  Translation2d sourceTranslation = AllianceFlipUtil.apply(FieldConstants.kSource);
+                  double sourceDistance = robotTranslation.getDistance(sourceTranslation);
+                  if (sourceDistance < ShooterMathConstants.kMidpointTolerance.get()) {
+                    m_robotState.updateRobotAction(RobotAction.kMidlineFeeding);
+                  } else {
+                    m_robotState.updateRobotAction(RobotAction.kFeeding);
+                  }
+                  Logger.recordOutput("Feeding/Distance", sourceDistance);
+                  Logger.recordOutput("Feeding/Target", sourceTranslation);
                 }))
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
 
@@ -271,6 +292,7 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Amp released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
 
@@ -294,6 +316,7 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput("Stow/Subwoofer shot released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
 
@@ -320,6 +343,8 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput(
+                      "Stow/Midline hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
 
@@ -333,6 +358,8 @@ public class RobotContainer {
         .onFalse(
             Commands.runOnce(
                 () -> {
+                  Logger.recordOutput(
+                      "Stow/Setpoint hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
   }

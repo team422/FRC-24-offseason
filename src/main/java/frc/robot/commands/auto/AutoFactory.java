@@ -48,7 +48,23 @@ public class AutoFactory extends Command {
               RobotState.getInstance().updateRobotAction(RobotAction.kRevAndAlign);
             }));
 
+    NamedCommands.registerCommand(
+        "Coast",
+        Commands.runOnce(
+            () -> {
+              m_drive.setCoast();
+            }));
+
+    NamedCommands.registerCommand(
+        "Brake",
+        Commands.runOnce(
+            () -> {
+              m_drive.setBrake();
+            }));
+
     NamedCommands.registerCommand("AutoShoot", new AutoShoot());
+
+    NamedCommands.registerCommand("AutoShootNoAlign", new AutoShootNoAlign());
 
     AutoBuilder.configureHolonomic(
         m_drive::getPose, // Robot pose supplier
@@ -60,6 +76,7 @@ public class AutoFactory extends Command {
             // your Constants class
             new PIDConstants(2.5, 0.0, 0.0), // Translation PID constants
             new PIDConstants(4, 1.6, 0.0), // Rotation PID constants
+            // new PIDConstants(0.3, 0.0, 0.0), // Rotation PID constants
             DriveConstants.kMaxLinearSpeed, // Max module speed, in m/s
             DriveConstants
                 .kDriveBaseRadius, // Drive base radius in meters. Distance from robot center to

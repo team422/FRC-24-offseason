@@ -205,9 +205,9 @@ public final class Constants {
         new LoggedTunableNumber("Amp Bottom Velocity", 58.0);
 
     public static final LoggedTunableNumber kSubwooferTopVelocity =
-        new LoggedTunableNumber("Subwoofer Top Velocity", 75.0);
+        new LoggedTunableNumber("Subwoofer Top Velocity", 20.0);
     public static final LoggedTunableNumber kSubwooferBottomVelocity =
-        new LoggedTunableNumber("Subwoofer Bottom Velocity", 28.0);
+        new LoggedTunableNumber("Subwoofer Bottom Velocity", 85.0);
 
     public static final boolean kManualControl = false;
     public static final LoggedTunableNumber kManualTopVelocity =

@@ -16,4 +16,6 @@ public interface OperatorControls {
   public Trigger hockeyPuck();
 
   public Trigger midlineHockeyPuck();
+
+  public Trigger subwooferShot();
 }

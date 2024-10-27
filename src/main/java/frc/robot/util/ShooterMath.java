@@ -24,12 +24,13 @@ public class ShooterMath {
   public ShooterMath() {
     double speakerDistance = Units.feetToMeters(3);
     // Data for top flywheel speaker
-    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(0), 28.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(0), 20.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(6), 40.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(12), 45.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(18), 45.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(24), 45.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(30), 45.0);
+    m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(32), 45.000000);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(36), 45.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(42), 48.0);
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(48), 47.5);
@@ -38,12 +39,13 @@ public class ShooterMath {
     m_speakerTopMap.put(speakerDistance + Units.inchesToMeters(66), 47.0);
 
     // Data for bottom flywheel speaker
-    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(0), 75.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(0), 85.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(6), 72.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(12), 50.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(18), 45.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(24), 41.0);
-    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(30), 35.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(30), 37.0);
+    m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(32), 37.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(36), 35.0);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(42), 31.5);
     m_speakerBottomMap.put(speakerDistance + Units.inchesToMeters(48), 30.0);
@@ -66,16 +68,16 @@ public class ShooterMath {
     m_feedingTopMap.put(feedingDistance + Units.inchesToMeters(144), 78.0);
 
     // Data for bottom flywheel feeding
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-72), 12.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-48), 16.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-24), 38.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(0), 35.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(24), 30.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(48), 31.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(72), 29.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(96), 28.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(120), 29.0);
-    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(144), 38.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-72), 14.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-48), 18.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(-24), 40.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(0), 37.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(24), 32.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(48), 33.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(72), 31.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(96), 30.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(120), 31.0);
+    m_feedingBottomMap.put(feedingDistance + Units.inchesToMeters(144), 40.0);
   }
 
   public double getSpeakerDistance(Pose2d robotPose) {

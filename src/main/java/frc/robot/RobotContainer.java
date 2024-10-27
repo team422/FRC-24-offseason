@@ -160,6 +160,7 @@ public class RobotContainer {
     // Configure autos here
     m_autoChooser.addOption("Do Nothing", Commands.none());
     List<String> paths = PathPlannerUtil.getExistingPaths();
+    m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
     System.out.println("Paths: " + paths);
     for (String path : paths) {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
@@ -308,6 +309,7 @@ public class RobotContainer {
 
     m_driverControls
         .subwooferShot()
+        .or(m_operatorControls.subwooferShot())
         .onTrue(
             Commands.runOnce(
                 () -> {

@@ -44,4 +44,9 @@ public class OperatorControlsXbox implements OperatorControls {
   public Trigger midlineHockeyPuck() {
     return m_controller.y();
   }
+
+  @Override
+  public Trigger subwooferShot() {
+    return m_controller.x();
+  }
 }

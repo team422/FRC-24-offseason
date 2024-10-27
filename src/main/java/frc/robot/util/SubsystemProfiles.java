@@ -1,6 +1,8 @@
 package frc.robot.util;
 
+import edu.wpi.first.wpilibj.Timer;
 import java.util.HashMap;
+import org.littletonrobotics.junction.Logger;
 
 public class SubsystemProfiles {
   public Object[] profileInstances;
@@ -34,6 +36,11 @@ public class SubsystemProfiles {
   public void setCurrentProfile(Enum<?> profile) {
     lastProfile = currentProfile;
     currentProfile = profile;
+    Logger.recordOutput(
+        String.format("%s/Set", ProfileEnum.getSimpleName()),
+        String.format(
+            "%s to %s: %f",
+            lastProfile.toString(), currentProfile.toString(), Timer.getFPGATimestamp()));
   }
 
   public Enum<?> getCurrentProfile() {

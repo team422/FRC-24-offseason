@@ -161,7 +161,6 @@ public class RobotContainer {
     m_autoChooser.addOption("Do Nothing", Commands.none());
     List<String> paths = PathPlannerUtil.getExistingPaths();
     m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
-    System.out.println("Paths: " + paths);
     for (String path : paths) {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
     }
@@ -373,9 +372,5 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     return m_autoChooser.get();
-  }
-
-  public void updateRobotState() {
-    m_robotState.updateRobotState();
   }
 }

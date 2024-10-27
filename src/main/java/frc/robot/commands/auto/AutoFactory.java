@@ -76,7 +76,6 @@ public class AutoFactory extends Command {
             // your Constants class
             new PIDConstants(2.5, 0.0, 0.0), // Translation PID constants
             new PIDConstants(4, 1.6, 0.0), // Rotation PID constants
-            // new PIDConstants(0.3, 0.0, 0.0), // Rotation PID constants
             DriveConstants.kMaxLinearSpeed, // Max module speed, in m/s
             DriveConstants
                 .kDriveBaseRadius, // Drive base radius in meters. Distance from robot center to

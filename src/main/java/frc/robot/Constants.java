@@ -148,7 +148,7 @@ public final class Constants {
         new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
     public static final LoggedTunableNumber kIndexingVoltage =
         new LoggedTunableNumber("Indexer Indexing Voltage", -8.0);
-    public static final LoggedTunableNumber kReversingVoltage =
+    public static final LoggedTunableNumber kTeleopReversingVoltage =
         new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
     public static final LoggedTunableNumber kAutoReversingVoltage =
         new LoggedTunableNumber("Indexer Auto Reverse Voltage", 2.0);

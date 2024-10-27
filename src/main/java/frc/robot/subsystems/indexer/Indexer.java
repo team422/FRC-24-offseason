@@ -94,13 +94,14 @@ public class Indexer extends SubsystemBase {
 
     double voltage =
         DriverStation.isTeleop()
-            ? IndexerConstants.kReversingVoltage.get()
+            ? IndexerConstants.kTeleopReversingVoltage.get()
             : IndexerConstants.kAutoReversingVoltage.get();
     m_io.setVoltage(voltage);
   }
 
   private void shootingPeriodic() {
     if (!m_io.hasGamePiece()) {
+      // after we lose game piece keep going to make sure it's fully out
       if (m_shootTimeout.hasElapsed(IndexerConstants.kShootingTimeout.get())) {
         updateState(IndexerState.kIdle);
         idlePeriodic();

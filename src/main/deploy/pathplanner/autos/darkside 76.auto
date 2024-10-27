@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Idle"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShootNoAlign"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "dark side to 7"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "darkside 7 to shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "darkside shoot to 6"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "darkside 6 to shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AutoShoot"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}

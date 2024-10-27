@@ -14,6 +14,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -84,9 +85,14 @@ public class Robot extends LoggedRobot {
     // finished or interrupted commands, and running subsystem periodic() methods.
     // This must be called from the robot's periodic block in order for anything in
     // the Command-based framework to work.
+
+    RobotState.getInstance().updateRobotState();
+
+    double start = Timer.getFPGATimestamp();
+
     CommandScheduler.getInstance().run();
 
-    robotContainer.updateRobotState();
+    Logger.recordOutput("PeriodicTime/CommandScheduler", (double) Timer.getFPGATimestamp() - start);
   }
 
   /** This function is called once when the robot is disabled. */
@@ -106,6 +112,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.schedule();
     }
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during autonomous. */
@@ -122,6 +130,8 @@ public class Robot extends LoggedRobot {
     if (autonomousCommand != null) {
       autonomousCommand.cancel();
     }
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during operator control. */
@@ -133,6 +143,8 @@ public class Robot extends LoggedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+
+    RobotState.getInstance().onEnabled();
   }
 
   /** This function is called periodically during test mode. */

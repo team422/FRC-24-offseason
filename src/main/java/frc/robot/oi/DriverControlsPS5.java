@@ -22,11 +22,61 @@ public class DriverControlsPS5 implements DriverControls {
 
   @Override
   public double getTurn() {
-    return m_controller.getRightX();
+    return -m_controller.getRightX();
   }
 
   @Override
   public Trigger resetOdometry() {
     return m_controller.povUp();
+  }
+
+  @Override
+  public Trigger runIntake() {
+    return m_controller.R2();
+  }
+
+  @Override
+  public Trigger runIndexer() {
+    return m_controller.R1();
+  }
+
+  @Override
+  public Trigger ejectGamePiece() {
+    return m_controller.circle();
+  }
+
+  @Override
+  public Trigger revShooter() {
+    return m_controller.L2();
+  }
+
+  @Override
+  public Trigger hockeyPuck() {
+    return m_controller.L1();
+  }
+
+  @Override
+  public Trigger amp() {
+    return m_controller.triangle();
+  }
+
+  @Override
+  public Trigger cancelAmpLineup() {
+    return new Trigger(() -> Math.abs(m_controller.getRightX()) > 0.3);
+  }
+
+  @Override
+  public Trigger subwooferShot() {
+    return m_controller.cross();
+  }
+
+  @Override
+  public Trigger midlineHockeyPuck() {
+    return m_controller.square();
+  }
+
+  @Override
+  public Trigger setpointHockeyPuck() {
+    return m_controller.povLeft();
   }
 }

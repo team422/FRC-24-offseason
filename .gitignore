@@ -41,6 +41,8 @@
 
 # Log file
 *.log
+ctre_sim/*
+*.dat
 
 # BlueJ files
 *.ctxt

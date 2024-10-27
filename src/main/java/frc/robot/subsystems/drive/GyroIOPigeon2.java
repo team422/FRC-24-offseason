@@ -20,13 +20,15 @@ import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.RobotBase;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.Ports;
 import java.util.OptionalDouble;
 import java.util.Queue;
 
 /** IO implementation for Pigeon2 */
 public class GyroIOPigeon2 implements GyroIO {
-  private final Pigeon2 m_pigeon = new Pigeon2(20);
+  private final Pigeon2 m_pigeon = new Pigeon2(Ports.kPigeon, Ports.kCanivoreName);
   private final StatusSignal<Double> m_yaw = m_pigeon.getYaw();
   private final StatusSignal<Double> m_pitch = m_pigeon.getPitch();
   private final StatusSignal<Double> m_roll = m_pigeon.getRoll();
@@ -103,6 +105,11 @@ public class GyroIOPigeon2 implements GyroIO {
         BaseStatusSignal.refreshAll(
                 m_yaw, m_pitch, m_roll, m_yawVelocity, m_pitchVelocity, m_rollVelocity)
             .equals(StatusCode.OK);
+
+    if (RobotBase.isSimulation()) {
+      inputs.connected = false;
+    }
+
     inputs.yawPosition = Rotation2d.fromDegrees(m_yaw.getValueAsDouble());
     inputs.pitchPosition = Rotation2d.fromDegrees(m_pitch.getValueAsDouble());
     inputs.rollPosition = Rotation2d.fromDegrees(m_roll.getValueAsDouble());

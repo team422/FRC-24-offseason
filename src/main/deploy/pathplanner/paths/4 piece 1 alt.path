@@ -1,0 +1,97 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.9200628732046272,
+        "y": 5.65041903620703
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.8782852832881245,
+        "y": 6.600859206807472
+      },
+      "isLocked": false,
+      "linkedName": "2 shoot alt"
+    },
+    {
+      "anchor": {
+        "x": 2.880947441284196,
+        "y": 6.736636374036107
+      },
+      "prevControl": {
+        "x": 1.8573964883298733,
+        "y": 6.277082884954574
+      },
+      "nextControl": {
+        "x": 2.9956810262262503,
+        "y": 6.788149412173356
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.8887296807672502,
+        "y": 5.556419458894899
+      },
+      "prevControl": {
+        "x": 2.5206157282543575,
+        "y": 6.4650820395788395
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "1 shoot alt"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": -156.82255964394147,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 1.55,
+      "rotationDegrees": -162.34627977742522,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.85,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Intake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -177.08916217383236,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": {
+    "rotation": 177.6467031338917,
+    "velocity": 0
+  },
+  "useDefaultConstraints": false
+}

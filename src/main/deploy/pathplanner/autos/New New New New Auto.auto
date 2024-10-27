@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 2.0,
-      "y": 7.0
+      "x": 1.5753977563934778,
+      "y": 5.525086266457521
     },
-    "rotation": 180.0
+    "rotation": -178.81881108667338
   },
   "command": {
     "type": "sequential",
@@ -14,13 +14,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Run Flywheel"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Example Path"
+            "name": "AutoShoot"
           }
         }
       ]

@@ -272,7 +272,7 @@ public class RobotState {
       case kSetpointFeeding:
         m_intake.updateState(IntakeState.kIdle);
         m_shooter.updateState(ShooterState.kRevving);
-        m_drive.updateProfile(DriveProfiles.kAutoAlign);
+        m_drive.updateProfile(DriveProfiles.kDefault);
 
         break;
 

@@ -47,17 +47,20 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public Trigger revShooter() {
-    return m_controller.leftTrigger();
+    // return m_controller.a();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger hockeyPuck() {
-    return m_controller.leftBumper();
+    // return m_controller.leftBumper();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger amp() {
-    return m_controller.y();
+    // return m_controller.y();
+    return new Trigger(() -> false);
   }
 
   @Override
@@ -67,16 +70,17 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public Trigger subwooferShot() {
-    return m_controller.a();
+    return m_controller.leftTrigger();
   }
 
   @Override
   public Trigger midlineHockeyPuck() {
-    return m_controller.x();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger setpointHockeyPuck() {
-    return m_controller.povLeft();
+    return m_controller.leftBumper();
+    // return new Trigger(() -> false);
   }
 }

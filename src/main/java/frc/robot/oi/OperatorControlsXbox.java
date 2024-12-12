@@ -17,7 +17,7 @@ public class OperatorControlsXbox implements OperatorControls {
 
   @Override
   public Trigger revAndAlign() {
-    return m_controller.leftTrigger();
+    return m_controller.x();
   }
 
   @Override
@@ -47,6 +47,6 @@ public class OperatorControlsXbox implements OperatorControls {
 
   @Override
   public Trigger subwooferShot() {
-    return m_controller.x();
+    return m_controller.leftTrigger();
   }
 }

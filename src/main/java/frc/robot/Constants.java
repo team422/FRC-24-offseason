@@ -48,6 +48,13 @@ public final class Constants {
     public static final LoggedTunableNumber kTeleopRotationSpeed =
         new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
+    // for demos
+    public static final boolean kBabyMode = true;
+    public static final LoggedTunableNumber kBabyModeDriveFactor =
+        new LoggedTunableNumber("Baby Mode Drive Factor", 0.25);
+    public static final LoggedTunableNumber kBabyModeTurnFactor =
+        new LoggedTunableNumber("Baby Mode Turn Factor", 0.2);
+
     public static final Translation2d[] kModuleTranslations =
         new Translation2d[] {
           new Translation2d(kTrackWidthX / 2.0, kTrackWidthY / 2.0),
@@ -197,7 +204,7 @@ public final class Constants {
     public static final LoggedTunableNumber kBottomKS =
         new LoggedTunableNumber("Bottom Flywheel kS", 0.14);
     public static final LoggedTunableNumber kBottomKV =
-        new LoggedTunableNumber("Bottom Flywheel kV", 0.13);
+        new LoggedTunableNumber("Bottom Flywheel kV", 0.125);
 
     public static final LoggedTunableNumber kAmpTopVelocity =
         new LoggedTunableNumber("Amp Top Velocity", -3.5);
@@ -207,7 +214,7 @@ public final class Constants {
     public static final LoggedTunableNumber kSubwooferTopVelocity =
         new LoggedTunableNumber("Subwoofer Top Velocity", 20.0);
     public static final LoggedTunableNumber kSubwooferBottomVelocity =
-        new LoggedTunableNumber("Subwoofer Bottom Velocity", 85.0);
+        new LoggedTunableNumber("Subwoofer Bottom Velocity", 30.0);
 
     public static final boolean kManualControl = false;
     public static final LoggedTunableNumber kManualTopVelocity =

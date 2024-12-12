@@ -64,11 +64,14 @@ public class DriveCommands {
           boolean isFlipped =
               DriverStation.getAlliance().isPresent()
                   && DriverStation.getAlliance().get() == Alliance.Red;
+
+          double driveFactor = DriveConstants.kBabyMode ? DriveConstants.kBabyModeDriveFactor.get() : 1.0;
+          double turnFactor = DriveConstants.kBabyMode ? DriveConstants.kBabyModeTurnFactor.get() : 1.0;
           drive.setDesiredChassisSpeeds(
               ChassisSpeeds.fromFieldRelativeSpeeds(
-                  linearVelocity.getX() * DriveConstants.kMaxLinearSpeed,
-                  linearVelocity.getY() * DriveConstants.kMaxLinearSpeed,
-                  omega * DriveConstants.kTeleopRotationSpeed.get(),
+                  linearVelocity.getX() * DriveConstants.kMaxLinearSpeed * driveFactor,
+                  linearVelocity.getY() * DriveConstants.kMaxLinearSpeed * driveFactor,
+                  omega * DriveConstants.kTeleopRotationSpeed.get() * turnFactor,
                   isFlipped
                       ? drive.getRotation().plus(new Rotation2d(Math.PI))
                       : drive.getRotation()));

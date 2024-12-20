@@ -183,6 +183,15 @@ public class AprilTagVision extends SubsystemBase {
             useVisionRotation =
                 false; // since there are two possible poses we shouldn't rely on the rotation
 
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/robotPose3d1", robotPose3d1);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/robotPose3d2", robotPose3d2);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/cameraPose1", cameraPose1);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/cameraPose2", cameraPose2);
+
             break;
         }
 

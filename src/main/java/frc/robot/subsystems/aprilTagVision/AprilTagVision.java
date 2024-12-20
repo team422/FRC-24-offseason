@@ -68,6 +68,7 @@ public class AprilTagVision extends SubsystemBase {
       Logger.processInputs("AprilTagVision/Inst" + i, m_inputs[i]);
     }
 
+    List<Pose3d> allCameraPoses = new ArrayList<>();
     List<Pose2d> allRobotPoses = new ArrayList<>();
     List<Pose3d> allRobotPoses3d = new ArrayList<>();
     List<VisionObservation> allVisionObservations = new ArrayList<>();
@@ -281,6 +282,9 @@ public class AprilTagVision extends SubsystemBase {
         allRobotPoses.add(robotPose);
         allRobotPoses3d.add(robotPose3d);
 
+        // this will work?
+        allCameraPoses.add(cameraPose);
+
         // Log data from instance
         Logger.recordOutput(
             "AprilTagVision/Inst" + instanceIndex + "/LatencySecs",
@@ -296,6 +300,7 @@ public class AprilTagVision extends SubsystemBase {
     // Log robot poses
     Logger.recordOutput("AprilTagVision/RobotPoses", allRobotPoses.toArray(Pose2d[]::new));
     Logger.recordOutput("AprilTagVision/RobotPoses3d", allRobotPoses3d.toArray(Pose3d[]::new));
+    Logger.recordOutput("AprilTagVision/CameraPoses", allCameraPoses.toArray(Pose3d[]::new));
 
     // Log tag poses
     List<Pose3d> allTagPoses = new ArrayList<>();

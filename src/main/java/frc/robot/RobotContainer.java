@@ -28,8 +28,9 @@ import frc.robot.Constants.ShooterMathConstants;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
+import frc.robot.commands.drive.DriveToPoint;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -160,16 +161,18 @@ public class RobotContainer {
     // Configure autos here
     m_autoChooser.addOption("Do Nothing", Commands.none());
     List<String> paths = PathPlannerUtil.getExistingPaths();
-    m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
+    // m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
     for (String path : paths) {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
     }
+    m_autoChooser.addDefaultOption(
+        "drive to point", new DriveToPoint(m_drive, new Pose2d(3, 2, Rotation2d.fromDegrees(180))));
   }
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 

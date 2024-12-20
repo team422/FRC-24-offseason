@@ -76,6 +76,13 @@ public final class Constants {
     // on real everything in drive is backwards for some reason
     public static final boolean kRealReversed = true;
     public static final boolean kSimReversed = false;
+
+    public static final LoggedTunableNumber kDriveToPointP =
+        new LoggedTunableNumber("DriveToPoint P", 0.0);
+    public static final LoggedTunableNumber kDriveToPointI =
+        new LoggedTunableNumber("DriveToPoint I", 0.0);
+    public static final LoggedTunableNumber kDriveToPointD =
+        new LoggedTunableNumber("DriveToPoint D", 0.0);
   }
 
   public static final class AprilTagVisionConstants {

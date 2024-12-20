@@ -279,6 +279,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void setDesiredChassisSpeeds(ChassisSpeeds speeds) {
+    System.out.println("Setting desired chassis speeds: " + speeds.toString());
     m_desiredChassisSpeeds = speeds;
   }
 
@@ -390,5 +391,9 @@ public class Drive extends SubsystemBase {
 
   public void updateProfile(DriveProfiles newProfile) {
     m_profiles.setCurrentProfile(newProfile);
+  }
+
+  public boolean headingWithinTolerance() {
+    return Math.abs(m_headingController.getPositionError()) < Units.degreesToRadians(5);
   }
 }

@@ -42,6 +42,8 @@ public class DriveCommands {
       DoubleSupplier omegaSupplier) {
     return Commands.run(
         () -> {
+          System.out.println("joystick drive command");
+
           // Apply deadband
           double linearMagnitude =
               MathUtil.applyDeadband(

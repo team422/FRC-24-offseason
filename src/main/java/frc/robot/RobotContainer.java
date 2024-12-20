@@ -15,6 +15,7 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -93,6 +94,8 @@ public class RobotContainer {
 
   /** Configure the subsystems. */
   private void configureSubsystems() {
+    Logger.recordOutput("Calibration/EmptyPose3d", new Pose3d());
+
     m_aprilTagVision =
         new AprilTagVision(
             new AprilTagVisionIONorthstar("northstar_0", ""),

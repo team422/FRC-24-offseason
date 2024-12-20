@@ -100,11 +100,8 @@ public final class Constants {
         new Transform3d[] {
           // front right (shooter)
           new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(-5.410),
-                  Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
+              new Translation3d(0.270000, -0.137414, 0.197256),
+              new Rotation3d(-0.030000, -0.600000, -0.150000)),
 
           // back right (intake)
           new Transform3d(

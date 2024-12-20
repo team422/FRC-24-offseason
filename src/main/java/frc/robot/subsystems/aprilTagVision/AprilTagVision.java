@@ -65,7 +65,7 @@ public class AprilTagVision extends SubsystemBase {
     LoggedTunableNumber.ifChanged(
         hashCode(),
         () -> {
-          AprilTagVisionConstants.kCameraTransforms[0] =
+          AprilTagVisionConstants.kCameraTransforms[AprilTagVisionConstants.kCalibIndex] =
               new Transform3d(
                   new Translation3d(
                       AprilTagVisionConstants.cameraX.get(),

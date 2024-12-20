@@ -294,6 +294,8 @@ public class AprilTagVision extends SubsystemBase {
         Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/RobotPose3d", robotPose3d);
         Logger.recordOutput(
             "AprilTagVision/Inst" + instanceIndex + "/TagPoses", tagPoses.toArray(Pose3d[]::new));
+
+        Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose);
       }
     }
 

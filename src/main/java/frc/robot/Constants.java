@@ -130,6 +130,19 @@ public final class Constants {
                   Units.inchesToMeters(7.766)),
               new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(10))),
         };
+
+    public static final LoggedTunableNumber cameraX =
+        new LoggedTunableNumber("cameraX", kCameraTransforms[0].getX());
+    public static final LoggedTunableNumber cameraY =
+        new LoggedTunableNumber("cameraY", kCameraTransforms[0].getY());
+    public static final LoggedTunableNumber cameraZ =
+        new LoggedTunableNumber("cameraZ", kCameraTransforms[0].getZ());
+    public static final LoggedTunableNumber cameraRoll =
+        new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getY());
+    public static final LoggedTunableNumber cameraPitch =
+        new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getX());
+    public static final LoggedTunableNumber cameraYaw =
+        new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getZ());
   }
 
   public static final class IntakeConstants {

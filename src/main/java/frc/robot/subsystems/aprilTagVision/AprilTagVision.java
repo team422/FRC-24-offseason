@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -17,6 +18,7 @@ import frc.robot.Constants.AprilTagVisionConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIO.AprilTagVisionInputs;
+import frc.robot.util.LoggedTunableNumber;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -60,6 +62,27 @@ public class AprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          AprilTagVisionConstants.kCameraTransforms[0] =
+              new Transform3d(
+                  new Translation3d(
+                      AprilTagVisionConstants.cameraX.get(),
+                      AprilTagVisionConstants.cameraY.get(),
+                      AprilTagVisionConstants.cameraZ.get()),
+                  new Rotation3d(
+                      AprilTagVisionConstants.cameraRoll.get(),
+                      AprilTagVisionConstants.cameraPitch.get(),
+                      AprilTagVisionConstants.cameraYaw.get()));
+        },
+        AprilTagVisionConstants.cameraX,
+        AprilTagVisionConstants.cameraY,
+        AprilTagVisionConstants.cameraZ,
+        AprilTagVisionConstants.cameraRoll,
+        AprilTagVisionConstants.cameraPitch,
+        AprilTagVisionConstants.cameraYaw);
+
     double start = Timer.getFPGATimestamp();
 
     for (int i = 0; i < m_ios.length; i++) {

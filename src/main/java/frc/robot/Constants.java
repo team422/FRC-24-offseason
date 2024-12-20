@@ -140,9 +140,9 @@ public final class Constants {
     public static final LoggedTunableNumber cameraRoll =
         new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getY());
     public static final LoggedTunableNumber cameraPitch =
-        new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getX());
+        new LoggedTunableNumber("cameraPitch", kCameraTransforms[0].getX());
     public static final LoggedTunableNumber cameraYaw =
-        new LoggedTunableNumber("cameraRoll", kCameraTransforms[0].getZ());
+        new LoggedTunableNumber("cameraYaw", kCameraTransforms[0].getZ());
   }
 
   public static final class IntakeConstants {

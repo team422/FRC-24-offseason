@@ -363,6 +363,35 @@ public class RobotContainer {
                       "Stow/Setpoint hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
+
+    m_operatorControls
+        .incrementHeight()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.incrementReefSelectorHeight();
+                }));
+    m_operatorControls
+        .decrementHeight()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.decrementReefSelectorHeight();
+                }));
+    m_operatorControls
+        .incrementPosition()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.incrementReefSelectorPosition();
+                }));
+    m_operatorControls
+        .decrementPosition()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  m_drive.decrementReefSelectorPosition();
+                }));
   }
 
   /**

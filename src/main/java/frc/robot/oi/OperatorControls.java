@@ -18,4 +18,12 @@ public interface OperatorControls {
   public Trigger midlineHockeyPuck();
 
   public Trigger subwooferShot();
+
+  public Trigger incrementPosition();
+
+  public Trigger decrementPosition();
+
+  public Trigger incrementHeight();
+
+  public Trigger decrementHeight();
 }

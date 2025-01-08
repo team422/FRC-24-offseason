@@ -18,6 +18,7 @@ import static edu.wpi.first.units.Units.Volts;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Twist2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -34,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.util.LoggedTunableNumber;
+import frc.robot.util.ReefSelector;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
 import java.util.concurrent.locks.Lock;
@@ -79,6 +81,8 @@ public class Drive extends SubsystemBase {
 
   private int m_withinToleranceFrames = 0;
 
+  private ReefSelector m_reefSelector;
+
   public Drive(
       GyroIO gyroIO,
       ModuleIO flModuleIO,
@@ -90,6 +94,9 @@ public class Drive extends SubsystemBase {
     m_modules[1] = new Module(frModuleIO, 1);
     m_modules[2] = new Module(blModuleIO, 2);
     m_modules[3] = new Module(brModuleIO, 3);
+
+    // reef selector stuff
+    m_reefSelector = new ReefSelector();
 
     // Start threads (no-op for each if no signals have been created)
     PhoenixOdometryThread.getInstance().start();
@@ -197,6 +204,11 @@ public class Drive extends SubsystemBase {
     Logger.recordOutput("Drive/Profile", (DriveProfiles) m_profiles.getCurrentProfile());
 
     Logger.recordOutput("PeriodicTime/Drive", Timer.getFPGATimestamp() - start);
+
+    // reef selector logging
+    Logger.recordOutput("ReefSelector/Height", m_reefSelector.getHeight());
+    Logger.recordOutput("ReefSelector/Position", m_reefSelector.getPosition());
+    Logger.recordOutput("ReefSelector/Pose", m_reefSelector.getPose());
   }
 
   public void defaultPeriodic() {
@@ -390,5 +402,35 @@ public class Drive extends SubsystemBase {
 
   public void updateProfile(DriveProfiles newProfile) {
     m_profiles.setCurrentProfile(newProfile);
+  }
+
+  // Reef Selector methods
+
+  public Pose3d getReefSelectorPose() {
+    return m_reefSelector.getPose();
+  }
+
+  public int getReefSelectorHeight() {
+    return m_reefSelector.getHeight();
+  }
+
+  public int getReefSelectorPosition() {
+    return m_reefSelector.getPosition();
+  }
+
+  public void incrementReefSelectorHeight() {
+    m_reefSelector.incrementHeight();
+  }
+
+  public void decrementReefSelectorHeight() {
+    m_reefSelector.decrementHeight();
+  }
+
+  public void incrementReefSelectorPosition() {
+    m_reefSelector.incrementPosition();
+  }
+
+  public void decrementReefSelectorPosition() {
+    m_reefSelector.decrementPosition();
   }
 }

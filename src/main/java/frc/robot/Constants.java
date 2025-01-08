@@ -302,5 +302,21 @@ public final class Constants {
 
     // halfway between midline and wing
     public static final Translation2d kFeedingSetpoint = new Translation2d(7.137, 0.872);
+
+    // Reefscape constants
+    public static final Translation2d kRedReef =
+        new Translation2d(Units.inchesToMeters(159.79), Units.inchesToMeters(177.92));
+    public static final Translation2d kBlueReef =
+        new Translation2d(Units.inchesToMeters(159.79), Units.inchesToMeters(514.66));
+    public static final Translation2d kBranchOffsetXY =
+        new Translation2d(Units.inchesToMeters(6.814), Units.inchesToMeters(32.38));
+    public static final double kL1Height = Units.inchesToMeters(27.0);
+    public static final double kL2Height = Units.inchesToMeters(31.72);
+    public static final double kL3Height = Units.inchesToMeters(47.59);
+    public static final double kL4Height = Units.inchesToMeters(72);
+
+    public static final Rotation3d kLowWristAngle =
+        new Rotation3d(0, Units.degreesToRadians(145), 0);
+    public static final Rotation3d kL4WristAngle = new Rotation3d(0, Units.degreesToRadians(90), 0);
   }
 }

@@ -49,4 +49,24 @@ public class OperatorControlsXbox implements OperatorControls {
   public Trigger subwooferShot() {
     return m_controller.x();
   }
+
+  @Override
+  public Trigger incrementPosition() {
+    return m_controller.y();
+  }
+
+  @Override
+  public Trigger decrementPosition() {
+    return m_controller.a();
+  }
+
+  @Override
+  public Trigger incrementHeight() {
+    return m_controller.b();
+  }
+
+  @Override
+  public Trigger decrementHeight() {
+    return m_controller.x();
+  }
 }

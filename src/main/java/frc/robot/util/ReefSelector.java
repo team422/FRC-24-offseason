@@ -22,23 +22,21 @@ public class ReefSelector {
     Translation2d xyOffset =
         FieldConstants.kBlueReef.plus(
             new Translation2d(
-                    FieldConstants.kBranchOffsetXY.getX() * Math.pow(-1, (m_position % 2) + 1),
-                    FieldConstants.kBranchOffsetXY.getY())
+                    FieldConstants.kBranchOffsetXY.getX(),
+                    FieldConstants.kBranchOffsetXY.getY() * Math.pow(-1, m_position % 2))
                 .rotateBy(
                     new Rotation2d(
                         Units.degreesToRadians(60 * Math.floor((m_position - 0.5) / 2)))));
-    // I got x and y mixed up, so I swap them here:
-    xyOffset = new Translation2d(xyOffset.getY(), xyOffset.getX());
 
     // do similar logic for rotation heading:
     Rotation3d wristHeading =
         FieldConstants.kLowWristAngle.rotateBy(
-            new Rotation3d(0, 0, -Units.degreesToRadians(60 * Math.floor((m_position - 0.5) / 2))));
+            new Rotation3d(0, 0, Units.degreesToRadians(60 * Math.floor((m_position - 0.5) / 2))));
     if (m_height == 4) {
       wristHeading =
           FieldConstants.kL4WristAngle.rotateBy(
               new Rotation3d(
-                  0, 0, -Units.degreesToRadians(60 * Math.floor((m_position - 0.5) / 2))));
+                  0, 0, Units.degreesToRadians(60 * Math.floor((m_position - 0.5) / 2))));
     }
 
     // and finally, logic for the height:

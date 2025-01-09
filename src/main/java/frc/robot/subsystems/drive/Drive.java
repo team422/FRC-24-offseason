@@ -280,7 +280,6 @@ public class Drive extends SubsystemBase {
   }
 
   public void setDesiredChassisSpeeds(ChassisSpeeds speeds) {
-    System.out.println("Setting desired chassis speeds: " + speeds.toString());
     m_desiredChassisSpeeds = speeds;
   }
 

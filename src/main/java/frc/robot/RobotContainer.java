@@ -169,7 +169,8 @@ public class RobotContainer {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
     }
     m_autoChooser.addDefaultOption(
-        "drive to point", new DriveToPoint(m_drive, new Pose2d(3, 2, Rotation2d.fromDegrees(180))));
+        "Drive to point test",
+        new DriveToPoint(m_drive, new Pose2d(3.0, 2.0, new Rotation2d(Math.PI / 2))));
   }
 
   /** Configure the controllers. */

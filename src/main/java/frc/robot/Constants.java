@@ -40,11 +40,13 @@ public final class Constants {
 
   public static final class DriveConstants {
     public static final double kMaxLinearSpeed = 6.0; // meters per second
+    public static final double kMaxLinearAcceleration = 3.0; // meters per second squared
     public static final double kTrackWidthX = Units.inchesToMeters(15.25);
     public static final double kTrackWidthY = Units.inchesToMeters(16.25);
     public static final double kDriveBaseRadius =
         Math.hypot(kTrackWidthX / 2.0, kTrackWidthY / 2.0);
     public static final double kMaxAngularSpeed = kMaxLinearSpeed / kDriveBaseRadius;
+    public static final double kMaxAngularAcceleration = kMaxLinearAcceleration / kDriveBaseRadius;
     public static final LoggedTunableNumber kTeleopRotationSpeed =
         new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
@@ -78,11 +80,18 @@ public final class Constants {
     public static final boolean kSimReversed = false;
 
     public static final LoggedTunableNumber kDriveToPointP =
-        new LoggedTunableNumber("DriveToPoint P", 0.0);
+        new LoggedTunableNumber("DriveToPoint P", 3.0);
     public static final LoggedTunableNumber kDriveToPointI =
         new LoggedTunableNumber("DriveToPoint I", 0.0);
     public static final LoggedTunableNumber kDriveToPointD =
         new LoggedTunableNumber("DriveToPoint D", 0.0);
+
+    public static final LoggedTunableNumber kDriveToPointHeadingP =
+        new LoggedTunableNumber("DriveToPoint Heading P", 3.0);
+    public static final LoggedTunableNumber kDriveToPointHeadingI =
+        new LoggedTunableNumber("DriveToPoint Heading I", 0.0);
+    public static final LoggedTunableNumber kDriveToPointHeadingD =
+        new LoggedTunableNumber("DriveToPoint Heading D", 0.0);
   }
 
   public static final class AprilTagVisionConstants {

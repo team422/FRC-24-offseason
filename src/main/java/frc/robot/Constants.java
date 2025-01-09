@@ -304,19 +304,26 @@ public final class Constants {
     public static final Translation2d kFeedingSetpoint = new Translation2d(7.137, 0.872);
 
     // Reefscape constants
-    public static final Translation2d kRedReef =
-        new Translation2d(Units.inchesToMeters(177.92), Units.inchesToMeters(159.79));
-    public static final Translation2d kBlueReef =
-        new Translation2d(Units.inchesToMeters(514.66), Units.inchesToMeters(159.79));
+    public static final Translation2d kRedReefCenter =
+        new Translation2d(4.50, 4.03); // unused for now
+    public static final Translation2d kBlueReefCenter =
+        new Translation2d(13.06, 4.03); // unused for now
+    public static final Translation2d kRedCoralTip =
+        new Translation2d(3.62, 3.86); // unused for now
+    public static final Translation2d kReefDisplacementToCenter =
+        new Translation2d(4.28, 0); // mathed from above
+    public static final Translation2d kFieldCenter =
+        new Translation2d(8.78, 4.03); // mathed from above
     public static final Translation2d kBranchOffsetXY =
-        new Translation2d(Units.inchesToMeters(32.38), Units.inchesToMeters(6.814));
+        new Translation2d(0.81, 0.17); // mathed from above
+    public static final double kBranchInsetL4 =
+        0.05; // 0.81 - 0.76 // 0.76 being the x component of the L4 branch offset
     public static final double kL1Height = Units.inchesToMeters(27.0);
-    public static final double kL2Height = Units.inchesToMeters(31.72);
-    public static final double kL3Height = Units.inchesToMeters(47.59);
-    public static final double kL4Height = Units.inchesToMeters(72);
+    public static final double kL2Height = Units.inchesToMeters(32);
+    public static final double kL3Height = Units.inchesToMeters(48);
+    public static final double kL4Height = Units.inchesToMeters(73);
 
-    public static final Rotation3d kLowWristAngle =
-        new Rotation3d(0, Units.degreesToRadians(145), 0);
-    public static final Rotation3d kL4WristAngle = new Rotation3d(0, Units.degreesToRadians(90), 0);
+    public static final double kLowWristPitch = Units.degreesToRadians(145);
+    public static final double kL4WristPitch = Units.degreesToRadians(90);
   }
 }

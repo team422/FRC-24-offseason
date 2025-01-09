@@ -36,6 +36,7 @@ import frc.robot.subsystems.aprilTagVision.AprilTagVision.VisionObservation;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -54,7 +55,7 @@ public class Drive extends SubsystemBase {
     kAmpLineup
   }
 
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<DriveProfiles> m_profiles;
 
   private ChassisSpeeds m_desiredChassisSpeeds = new ChassisSpeeds();
 
@@ -112,12 +113,12 @@ public class Drive extends SubsystemBase {
                 null,
                 this));
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<DriveProfiles, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(DriveProfiles.kDefault, this::defaultPeriodic);
     periodicHash.put(DriveProfiles.kAutoAlign, this::autoAlignPeriodic);
     periodicHash.put(DriveProfiles.kAmpLineup, this::ampLineupPeriodic);
 
-    m_profiles = new SubsystemProfiles(DriveProfiles.class, periodicHash, DriveProfiles.kDefault);
+    m_profiles = new SubsystemProfiles<>(periodicHash, DriveProfiles.kDefault);
 
     m_headingController.enableContinuousInput(-Math.PI, Math.PI);
   }
@@ -194,7 +195,7 @@ public class Drive extends SubsystemBase {
       m_poseEstimator.updateWithTime(sampleTimestamps[i], m_rawGyroRotation, modulePositions);
     }
 
-    Logger.recordOutput("Drive/Profile", (DriveProfiles) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Drive/Profile", m_profiles.getCurrentProfile());
 
     Logger.recordOutput("PeriodicTime/Drive", Timer.getFPGATimestamp() - start);
   }

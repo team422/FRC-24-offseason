@@ -68,7 +68,7 @@ public class AprilTagVision extends SubsystemBase {
           AprilTagVisionConstants.kCameraTransforms[AprilTagVisionConstants.kCalibIndex] =
               new Transform3d(
                   new Translation3d(
-                      AprilTagVisionConstants.cameraX.get(),
+                      AprilTagVisionConstants.transformCameraX.get(),
                       AprilTagVisionConstants.cameraY.get(),
                       AprilTagVisionConstants.cameraZ.get()),
                   new Rotation3d(
@@ -76,7 +76,7 @@ public class AprilTagVision extends SubsystemBase {
                       AprilTagVisionConstants.cameraPitch.get(),
                       AprilTagVisionConstants.cameraYaw.get()));
         },
-        AprilTagVisionConstants.cameraX,
+        AprilTagVisionConstants.transformCameraX,
         AprilTagVisionConstants.cameraY,
         AprilTagVisionConstants.cameraZ,
         AprilTagVisionConstants.cameraRoll,

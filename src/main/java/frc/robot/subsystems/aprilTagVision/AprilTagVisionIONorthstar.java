@@ -9,7 +9,9 @@ package frc.robot.subsystems.aprilTagVision;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
 import edu.wpi.first.networktables.DoubleArraySubscriber;
+import edu.wpi.first.networktables.IntegerPublisher;
 import edu.wpi.first.networktables.IntegerSubscriber;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.PubSubOption;
@@ -25,6 +27,10 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
   private final DoubleArraySubscriber observationSubscriber;
   private final DoubleArraySubscriber demoObservationSubscriber;
   private final IntegerSubscriber fpsSubscriber;
+
+  private final DoubleArrayPublisher observationPublisher;
+  private final DoubleArrayPublisher demoObservationPublisher;
+  private final IntegerPublisher fpsPublisher;
 
   public AprilTagVisionIONorthstar(String instanceId, String cameraId) {
     var northstarTable = NetworkTableInstance.getDefault().getTable(instanceId);
@@ -58,6 +64,16 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
             .subscribe(
                 new double[] {}, PubSubOption.keepDuplicates(true), PubSubOption.sendAll(true));
     fpsSubscriber = outputTable.getIntegerTopic("fps").subscribe(0);
+
+    observationPublisher =
+        outputTable
+            .getDoubleArrayTopic("observations")
+            .publish(PubSubOption.keepDuplicates(true), PubSubOption.sendAll(true));
+    demoObservationPublisher =
+        outputTable
+            .getDoubleArrayTopic("demo_observations")
+            .publish(PubSubOption.keepDuplicates(true), PubSubOption.sendAll(true));
+    fpsPublisher = outputTable.getIntegerTopic("fps").publish();
   }
 
   public void updateInputs(AprilTagVisionInputs inputs) {
@@ -73,5 +89,9 @@ public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
       inputs.demoFrame = demoFrame;
     }
     inputs.fps = fpsSubscriber.get();
+
+    observationPublisher.accept(new double[] {1, 0, 0, 0, 0.5, 1, 0, 0, 0, 20000});
+    demoObservationPublisher.accept(new double[0]);
+    fpsPublisher.set(50);
   }
 }

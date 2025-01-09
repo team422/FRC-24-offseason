@@ -8,12 +8,13 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
   private FlywheelIO m_io;
   public final FlywheelInputsAutoLogged m_inputs;
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<ShooterState> m_profiles;
   private PIDController m_topController;
   private PIDController m_bottomController;
   private SimpleMotorFeedforward m_topFeedforward;
@@ -44,13 +45,13 @@ public class Shooter extends SubsystemBase {
 
     m_inputs = new FlywheelInputsAutoLogged();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<ShooterState, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(ShooterState.kIdle, this::idlePeriodic);
     periodicHash.put(ShooterState.kRevving, this::revvingPeriodic);
     periodicHash.put(ShooterState.kEjecting, this::ejectingPeriodic);
     periodicHash.put(ShooterState.kAmp, this::ampPeriodic);
     periodicHash.put(ShooterState.kManualControl, this::manualControlPeriodic);
-    m_profiles = new SubsystemProfiles(ShooterState.class, periodicHash, ShooterState.kIdle);
+    m_profiles = new SubsystemProfiles<>(periodicHash, ShooterState.kIdle);
   }
 
   @Override
@@ -66,7 +67,7 @@ public class Shooter extends SubsystemBase {
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Shooter", m_inputs);
-    Logger.recordOutput("Shooter/State", (ShooterState) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Shooter/State", m_profiles.getCurrentProfile());
 
     Logger.recordOutput("PeriodicTime/Shooter", Timer.getFPGATimestamp() - start);
   }
@@ -184,7 +185,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public ShooterState getState() {
-    return (ShooterState) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   public void setDesiredVelocity(double topVelocityRPS, double bottomVelocityRPS) {

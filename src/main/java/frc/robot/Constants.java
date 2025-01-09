@@ -121,24 +121,24 @@ public final class Constants {
 
           // front left (shooter)
           new Transform3d(
-              new Translation3d(0.270000, -0.137414, 0.197256),
-              new Rotation3d(-0.030000, -0.600000, -0.150000)),
+              new Translation3d(0.270000, 0.127414, 0.197256),
+              new Rotation3d(-0.030000, -0.600000, 0.150000)),
         };
 
-    public static final int kCalibIndex = 3;
+    public static final int kCalibIndex = 1;
 
-    public static final LoggedTunableNumber cameraX =
+    public static final LoggedTunableNumber transformCameraX =
         new LoggedTunableNumber("cameraX", kCameraTransforms[kCalibIndex].getX());
     public static final LoggedTunableNumber cameraY =
         new LoggedTunableNumber("cameraY", kCameraTransforms[kCalibIndex].getY());
     public static final LoggedTunableNumber cameraZ =
         new LoggedTunableNumber("cameraZ", kCameraTransforms[kCalibIndex].getZ());
     public static final LoggedTunableNumber cameraRoll =
-        new LoggedTunableNumber("cameraRoll", kCameraTransforms[kCalibIndex].getY());
+        new LoggedTunableNumber("cameraRoll", kCameraTransforms[kCalibIndex].getRotation().getX());
     public static final LoggedTunableNumber cameraPitch =
-        new LoggedTunableNumber("cameraPitch", kCameraTransforms[kCalibIndex].getX());
+        new LoggedTunableNumber("cameraPitch", kCameraTransforms[kCalibIndex].getRotation().getY());
     public static final LoggedTunableNumber cameraYaw =
-        new LoggedTunableNumber("cameraYaw", kCameraTransforms[kCalibIndex].getZ());
+        new LoggedTunableNumber("cameraYaw", kCameraTransforms[kCalibIndex].getRotation().getZ());
   }
 
   public static final class IntakeConstants {

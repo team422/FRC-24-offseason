@@ -23,6 +23,7 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterMath;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 @SuppressWarnings("unused")
@@ -55,7 +56,7 @@ public class RobotState {
     kAutoShootNoAlign,
   }
 
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<RobotAction> m_profiles;
 
   private RobotState(
       Drive drive, Intake intake, Indexer indexer, Shooter shooter, AprilTagVision aprilTagVision) {
@@ -67,7 +68,7 @@ public class RobotState {
 
     m_shooterMath = new ShooterMath();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<RobotAction, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(RobotAction.kTeleopDefault, () -> {});
     periodicHash.put(RobotAction.kIntake, () -> {});
     periodicHash.put(RobotAction.kVomitting, () -> {});
@@ -82,7 +83,7 @@ public class RobotState {
     periodicHash.put(RobotAction.kAutoDefault, () -> {});
     periodicHash.put(RobotAction.kAutoShoot, this::autoShootPeriodic);
     periodicHash.put(RobotAction.kAutoShootNoAlign, this::autoShootNoAlignPeriodic);
-    m_profiles = new SubsystemProfiles(RobotAction.class, periodicHash, RobotAction.kTeleopDefault);
+    m_profiles = new SubsystemProfiles<>(periodicHash, RobotAction.kTeleopDefault);
   }
 
   public static void start(
@@ -102,7 +103,7 @@ public class RobotState {
 
     m_profiles.getPeriodicFunction().run();
 
-    Logger.recordOutput("RobotState/CurrentAction", (RobotAction) m_profiles.getCurrentProfile());
+    Logger.recordOutput("RobotState/CurrentAction", m_profiles.getCurrentProfile());
     Logger.recordOutput(
         "Alliance",
         DriverStation.getAlliance().isPresent()
@@ -321,7 +322,7 @@ public class RobotState {
   }
 
   public RobotAction getRobotAction() {
-    return (RobotAction) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   public void setDrive(DriveProfiles profile) {

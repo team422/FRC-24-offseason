@@ -40,15 +40,14 @@ public class ReefSelector {
                                 ? FieldConstants.kBranchInsetL4
                                 : 0), // pull setpoint closer to reef for L4
                         FieldConstants.kBranchOffsetXY.getY()
-                            * Math.pow(-1, m_position % 2)) // flip y pose for odd positions
+                            * (m_position % 2 == 0 ? 1 : -1)) // flip y pose for odd positions
                     .rotateBy(
                         new Rotation2d(
                             Units.degreesToRadians(
                                 60
                                     * Math.floor(
                                         (m_position - 0.5) / 2))))) // rotate to correct branch pair
-            .rotateBy(
-                Rotation2d.fromDegrees(AllianceFlipUtil.shouldFlip() ? 180 : 0)); // flip if on red
+            .rotateBy(Rotation2d.fromDegrees(180)); // flip due to origin placement
 
     Translation2d xyPos =
         FieldConstants.kFieldCenter.plus(xyPosRelToCenter); // translate to origin-relative
@@ -73,9 +72,11 @@ public class ReefSelector {
             : FieldConstants.kL4WristPitch; // adjust angle if on L4
     double wristYawRad =
         Units.degreesToRadians(
-            60 * Math.floor((m_position - 0.5) / 2)
-                + (AllianceFlipUtil.shouldFlip() ? 180 : 0)); // flip if on red
-
+            180
+                + 60
+                    * Math.floor(
+                        (m_position - 0.5) / 2)); // rotate to correct heading based on m_position
+                        
     // Create and return final Pose3d
     return new Pose3d(
         xyPos.getX(),

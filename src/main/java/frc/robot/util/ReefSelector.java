@@ -47,8 +47,8 @@ public class ReefSelector {
                                 60
                                     * Math.floor(
                                         (m_position - 0.5) / 2))))) // rotate to correct branch pair
-            .rotateBy(Rotation2d.fromDegrees(180)); // flip due to origin placement
-
+            .rotateBy(
+                Rotation2d.fromDegrees(AllianceFlipUtil.shouldFlip() ? 0 : 180)); // flip if on blue
     Translation2d xyPos =
         FieldConstants.kFieldCenter.plus(xyPosRelToCenter); // translate to origin-relative
 
@@ -72,11 +72,10 @@ public class ReefSelector {
             : FieldConstants.kL4WristPitch; // adjust angle if on L4
     double wristYawRad =
         Units.degreesToRadians(
-            180
-                + 60
-                    * Math.floor(
-                        (m_position - 0.5) / 2)); // rotate to correct heading based on m_position
-                        
+            60 * Math.floor((m_position - 0.5) / 2) // rotate to correct heading based on m_position
+                + (AllianceFlipUtil.shouldFlip() ? 0 : 180) // flip based on alliance
+            );
+
     // Create and return final Pose3d
     return new Pose3d(
         xyPos.getX(),

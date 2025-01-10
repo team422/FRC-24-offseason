@@ -19,6 +19,11 @@ public class ReefSelector {
 
   public Pose3d getPose() {
 
+    // define some constants that are used a couple times
+
+    int side = (m_position - 1) / 2; // calc side of hexagon from m_position,
+    int degreeOffset = 60 * side;
+
     // do fancy maths and logic to determine offset from center of reef to selected branch
 
     // Main logic for selecting branch position relative to reef center:
@@ -43,10 +48,7 @@ public class ReefSelector {
                             * (m_position % 2 == 0 ? 1 : -1)) // flip y pose for odd positions
                     .rotateBy(
                         new Rotation2d(
-                            Units.degreesToRadians(
-                                60
-                                    * Math.floor(
-                                        (m_position - 0.5) / 2))))) // rotate to correct branch pair
+                            Units.degreesToRadians(degreeOffset)))) // rotate to correct branch pair
             .rotateBy(
                 Rotation2d.fromDegrees(AllianceFlipUtil.shouldFlip() ? 0 : 180)); // flip if on blue
     Translation2d xyPos =
@@ -72,7 +74,7 @@ public class ReefSelector {
             : FieldConstants.kL4WristPitch; // adjust angle if on L4
     double wristYawRad =
         Units.degreesToRadians(
-            60 * Math.floor((m_position - 0.5) / 2) // rotate to correct heading based on m_position
+            degreeOffset // rotate to correct heading based on m_position
                 + (AllianceFlipUtil.shouldFlip() ? 0 : 180) // flip based on alliance
             );
 

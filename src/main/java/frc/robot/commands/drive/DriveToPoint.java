@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
@@ -42,8 +43,8 @@ public class DriveToPoint extends Command {
 
     m_headingController.enableContinuousInput(-Math.PI, Math.PI);
 
-    m_driveController.setTolerance(0.0);
-    m_headingController.setTolerance(0.0);
+    m_driveController.setTolerance(Units.inchesToMeters(0.5));
+    m_headingController.setTolerance(Units.degreesToRadians(0.0));
   }
 
   @Override

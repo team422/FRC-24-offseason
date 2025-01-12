@@ -41,6 +41,9 @@ public class DriveToPoint extends Command {
     addRequirements(m_drive);
 
     m_headingController.enableContinuousInput(-Math.PI, Math.PI);
+
+    m_driveController.setTolerance(0.0);
+    m_headingController.setTolerance(0.0);
   }
 
   @Override

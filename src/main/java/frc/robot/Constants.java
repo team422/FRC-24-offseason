@@ -134,7 +134,7 @@ public final class Constants {
               new Rotation3d(-0.030000, -0.600000, 0.150000)),
         };
 
-    public static final int kCalibIndex = 1;
+    public static final int kCalibIndex = 3;
 
     public static final LoggedTunableNumber transformCameraX =
         new LoggedTunableNumber("cameraX", kCameraTransforms[kCalibIndex].getX());

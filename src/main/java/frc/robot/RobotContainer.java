@@ -99,8 +99,8 @@ public class RobotContainer {
     m_aprilTagVision =
         new AprilTagVision(
             new AprilTagVisionIONorthstar("northstar_0", ""),
-            new AprilTagVisionIONorthstar("northstar_1", ""),
-            new AprilTagVisionIONorthstar("northstar_2", ""),
+            // new AprilTagVisionIONorthstar("northstar_1", ""),
+            // new AprilTagVisionIONorthstar("northstar_2", ""),
             new AprilTagVisionIONorthstar("northstar_3", ""));
 
     if (RobotBase.isReal()) {
@@ -169,7 +169,8 @@ public class RobotContainer {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
     }
     m_autoChooser.addDefaultOption(
-        "Drive to point test", new DriveToPoint(m_drive, new Pose2d(1.93, 5.89, new Rotation2d())));
+        "Drive to point test",
+        new DriveToPoint(m_drive, new Pose2d(1.93, 5.89, new Rotation2d(Math.PI))));
   }
 
   /** Configure the controllers. */

@@ -44,7 +44,7 @@ public class DriveToPoint extends Command {
     m_headingController.enableContinuousInput(-Math.PI, Math.PI);
 
     m_driveController.setTolerance(Units.inchesToMeters(0.5));
-    m_headingController.setTolerance(Units.degreesToRadians(0.0));
+    m_headingController.setTolerance(Units.degreesToRadians(1));
   }
 
   @Override

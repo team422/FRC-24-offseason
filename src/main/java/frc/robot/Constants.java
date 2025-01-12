@@ -109,7 +109,7 @@ public final class Constants {
         new Transform3d[] {
           // front right (shooter)
           new Transform3d(
-              new Translation3d(0.270000, -0.137414, 0.197256),
+              new Translation3d(0.270000, -0.137414, 0.065),
               new Rotation3d(-0.030000, -0.600000, -0.150000)),
 
           // back right (intake)
@@ -130,7 +130,7 @@ public final class Constants {
 
           // front left (shooter)
           new Transform3d(
-              new Translation3d(0.270000, 0.127414, 0.197256),
+              new Translation3d(0.270000, 0.127414, 0.065),
               new Rotation3d(-0.030000, -0.600000, 0.150000)),
         };
 

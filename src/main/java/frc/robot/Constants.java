@@ -39,8 +39,8 @@ public final class Constants {
   public static final boolean kTuningMode = true;
 
   public static final class DriveConstants {
-    public static final double kMaxLinearSpeed = 6.0; // meters per second
-    public static final double kMaxLinearAcceleration = 3.0; // meters per second squared
+    public static final double kMaxLinearSpeed = 0.5; // meters per second
+    public static final double kMaxLinearAcceleration = 0.25; // meters per second squared
     public static final double kTrackWidthX = Units.inchesToMeters(15.25);
     public static final double kTrackWidthY = Units.inchesToMeters(16.25);
     public static final double kDriveBaseRadius =

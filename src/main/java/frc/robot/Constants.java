@@ -130,8 +130,11 @@ public final class Constants {
 
           // front left (shooter)
           new Transform3d(
-              new Translation3d(0.270000, 0.127414, 0.215),
-              new Rotation3d(0.06, -0.600000, 0.150000)),
+              Units.inchesToMeters(9.454),
+              Units.inchesToMeters(5.541),
+              Units.inchesToMeters(7.766),
+              new Rotation3d(0.0, Units.degreesToRadians(-55), 0.0)
+                  .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(9.97)))),
         };
 
     public static final int kCalibIndex = 3;

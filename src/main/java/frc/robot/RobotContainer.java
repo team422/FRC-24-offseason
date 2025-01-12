@@ -99,8 +99,8 @@ public class RobotContainer {
     m_aprilTagVision =
         new AprilTagVision(
             new AprilTagVisionIONorthstar("northstar_0", ""),
-            // new AprilTagVisionIONorthstar("northstar_1", ""),
-            // new AprilTagVisionIONorthstar("northstar_2", ""),
+            new AprilTagVisionIONorthstar("northstar_1", ""),
+            new AprilTagVisionIONorthstar("northstar_2", ""),
             new AprilTagVisionIONorthstar("northstar_3", ""));
 
     if (RobotBase.isReal()) {

@@ -152,7 +152,8 @@ public class ModuleIOSparkMax implements ModuleIO {
 
     m_turnAbsolutePosition = m_cancoder.getAbsolutePosition();
 
-    BaseStatusSignal.setUpdateFrequencyForAll(75.0, m_turnAbsolutePosition);
+    BaseStatusSignal.setUpdateFrequencyForAll(
+        DriveConstants.kOdometryFrequency, m_turnAbsolutePosition);
   }
 
   @Override
@@ -171,9 +172,12 @@ public class ModuleIOSparkMax implements ModuleIO {
         Rotation2d.fromRotations(m_turnAbsolutePosition.getValueAsDouble())
             .minus(m_absoluteEncoderOffset);
 
-    inputs.turnPosition =
-        Rotation2d.fromRotations(
-            m_turnRelativeEncoder.getPosition() / DriveConstants.kTurnGearRatio);
+    // For SparkMax, the relative encoders can't be trusted so we will always use the cancoder
+    inputs.turnPosition = inputs.turnAbsolutePosition;
+    // inputs.turnPosition =
+    //     Rotation2d.fromRotations(
+    //         m_turnRelativeEncoder.getPosition() / DriveConstants.kTurnGearRatio);
+
     inputs.turnVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(m_turnRelativeEncoder.getVelocity())
             / DriveConstants.kTurnGearRatio;

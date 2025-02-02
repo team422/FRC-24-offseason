@@ -16,8 +16,8 @@ import edu.wpi.first.networktables.PubSubOption;
 import frc.robot.Constants.FieldConstants;
 
 public class AprilTagVisionIONorthstar implements AprilTagVisionIO {
-  private static final int cameraResolutionWidth = 1600;
-  private static final int cameraResolutionHeight = 1200;
+  private static final int cameraResolutionWidth = 1280;
+  private static final int cameraResolutionHeight = 800;
   private static final int cameraAutoExposure = 1;
   private static final int cameraExposure = 30;
   private static final int cameraGain = 50;

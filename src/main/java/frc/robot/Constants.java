@@ -256,30 +256,30 @@ public final class Constants {
   }
 
   public static final class Ports {
-    public static final int kFrontLeftDrive = 0;
-    public static final int kFrontLeftTurn = 1;
-    public static final int kFrontLeftCancoder = 2;
+    public static final int kFrontLeftDrive = 1;
+    public static final int kFrontLeftTurn = 2;
+    public static final int kFrontLeftCancoder = 3;
 
-    public static final int kFrontRightDrive = 3;
-    public static final int kFrontRightTurn = 4;
-    public static final int kFrontRightCancoder = 5;
+    public static final int kFrontRightDrive = 4;
+    public static final int kFrontRightTurn = 5;
+    public static final int kFrontRightCancoder = 6;
 
-    public static final int kBackLeftDrive = 6;
-    public static final int kBackLeftTurn = 7;
-    public static final int kBackLeftCancoder = 8;
+    public static final int kBackLeftDrive = 7;
+    public static final int kBackLeftTurn = 8;
+    public static final int kBackLeftCancoder = 9;
 
-    public static final int kBackRightDrive = 9;
-    public static final int kBackRightTurn = 10;
-    public static final int kBackRightCancoder = 11;
+    public static final int kBackRightDrive = 10;
+    public static final int kBackRightTurn = 11;
+    public static final int kBackRightCancoder = 12;
 
     public static final int kPigeon = 22;
 
-    public static final String kCanivoreName = "Drivetrain";
+    public static final String kCanivoreName = "";
 
-    public static final int kIntakeNeo = 3;
-    public static final int kIndexerNeo = 4;
-    public static final int kTopFlywheel = 5;
-    public static final int kBottomFlywheel = 6;
+    public static final int kIntakeNeo = 13;
+    public static final int kIndexerNeo = 14;
+    public static final int kTopFlywheel = 15;
+    public static final int kBottomFlywheel = 16;
 
     public static final int kPhotoElectricOne = 8;
     public static final int kPhotoElectricTwo = 9;

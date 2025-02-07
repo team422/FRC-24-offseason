@@ -92,6 +92,10 @@ public final class Constants {
         new LoggedTunableNumber("DriveToPoint Heading I", 0.0);
     public static final LoggedTunableNumber kDriveToPointHeadingD =
         new LoggedTunableNumber("DriveToPoint Heading D", 0.0);
+
+    // radians per second squared to be considered slipping
+    public static final LoggedTunableNumber kSlipThreshold =
+        new LoggedTunableNumber("Slip Threshold", 150000);
   }
 
   public static final class AprilTagVisionConstants {

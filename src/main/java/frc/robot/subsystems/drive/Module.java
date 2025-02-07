@@ -189,4 +189,12 @@ public class Module {
   public double getCharacterizationVelocity() {
     return m_inputs.driveVelocityRadPerSec;
   }
+
+  public double getDriveCurrent() {
+    return m_inputs.driveCurrentAmps[0];
+  }
+
+  public double getDriveAcceleration() {
+    return m_inputs.driveAccelerationRadPerSecSq;
+  }
 }

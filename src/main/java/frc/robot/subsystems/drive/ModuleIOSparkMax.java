@@ -59,6 +59,9 @@ public class ModuleIOSparkMax implements ModuleIO {
   private final boolean m_isTurnMotorInverted = true;
   private final Rotation2d m_absoluteEncoderOffset;
 
+  // for calculating acceleration
+  private double m_lastVelocity = 0.0;
+
   public ModuleIOSparkMax(int index) {
     switch (index) {
       case 0:
@@ -165,6 +168,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.driveVelocityRadPerSec =
         Units.rotationsPerMinuteToRadiansPerSecond(m_driveEncoder.getVelocity())
             / DriveConstants.kDriveGearRatio;
+    inputs.driveAccelerationRadPerSecSq = calculateDriveAcceleration(0.02);
     inputs.driveAppliedVolts = m_driveSparkMax.getAppliedOutput() * m_driveSparkMax.getBusVoltage();
     inputs.driveCurrentAmps = new double[] {m_driveSparkMax.getOutputCurrent()};
 
@@ -218,5 +222,12 @@ public class ModuleIOSparkMax implements ModuleIO {
   @Override
   public void setTurnBrakeMode(boolean enable) {
     m_turnSparkMax.setIdleMode(enable ? IdleMode.kBrake : IdleMode.kCoast);
+  }
+
+  private double calculateDriveAcceleration(double dt) {
+    double velocity = m_driveEncoder.getVelocity();
+    double acceleration = (velocity - m_lastVelocity) / dt;
+    m_lastVelocity = velocity;
+    return acceleration;
   }
 }

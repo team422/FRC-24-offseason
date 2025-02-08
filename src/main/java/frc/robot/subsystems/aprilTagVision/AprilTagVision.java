@@ -224,6 +224,8 @@ public class AprilTagVision extends SubsystemBase {
                 "AprilTagVision/Inst" + instanceIndex + "/cameraPose1", cameraPose1);
             Logger.recordOutput(
                 "AprilTagVision/Inst" + instanceIndex + "/cameraPose2", cameraPose2);
+            Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/error1", error1);
+            Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/error2", error2);
 
             break;
         }

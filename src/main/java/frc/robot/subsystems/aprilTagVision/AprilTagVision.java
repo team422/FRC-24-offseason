@@ -286,6 +286,16 @@ public class AprilTagVision extends SubsystemBase {
               && speeds.vyMetersPerSecond < AprilTagVisionConstants.kRotationSpeedThreshold) {
             useVisionRotation = true;
           }
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/distance", distance);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/error", error);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/speedX",
+              speeds.vxMetersPerSecond);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/speedY",
+              speeds.vyMetersPerSecond);
         }
 
         // Calculate average distance to tag

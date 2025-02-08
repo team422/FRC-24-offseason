@@ -102,11 +102,18 @@ public final class Constants {
     public static final double kAmbiguityThreshold = 0.4;
     public static final double kTargetLogTimeSecs = 0.1;
     public static final double kFieldBorderMargin = 0.5;
-    public static final double kZMargin = 0.0125;
+    public static final double kZMargin = 0.75;
     public static final LoggedTunableNumber kXYStandardDeviationCoefficient =
         new LoggedTunableNumber("xyStandardDeviationCoefficient", 0.005, "Cameras");
     public static final LoggedTunableNumber kThetaStandardDeviationCoefficient =
         new LoggedTunableNumber("thetaStandardDeviationCoefficient", 0.01, "Cameras");
+
+    public static final double kErrorStandardDeviationThreshold = 0.2; // acceptable error
+
+    // tolerances for using the vision rotation, temp values
+    public static final double kRotationErrorThreshold = 0.1;
+    public static final double kRotationDistanceThreshold = Units.inchesToMeters(8);
+    public static final double kRotationSpeedThreshold = 0.2; // m/s
 
     // transform from center of robot to camera
     public static final Transform3d[] kCameraTransforms =
@@ -146,7 +153,7 @@ public final class Constants {
           //         .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(9.97)))),
           new Transform3d(),
           new Transform3d(
-              Units.inchesToMeters(-10.526),
+              Units.inchesToMeters(10.526),
               Units.inchesToMeters(0.0),
               Units.inchesToMeters(8.5),
               new Rotation3d()),

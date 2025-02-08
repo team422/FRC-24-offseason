@@ -2,6 +2,7 @@ package frc.robot;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -317,6 +318,10 @@ public class RobotState {
     return m_drive.getPose();
   }
 
+  public ChassisSpeeds getRobotSpeeds() {
+    return m_drive.getChassisSpeeds();
+  }
+
   public void addVisionObservation(VisionObservation observation) {
     m_drive.addVisionObservation(observation);
   }
@@ -348,5 +353,15 @@ public class RobotState {
 
     setDefaultAction();
     m_indexer.updateState(IndexerState.kIdle);
+  }
+
+  private int m_numVisionGyroObservations = 0;
+
+  public void incrementNumVisionGyroObservations() {
+    m_numVisionGyroObservations++;
+  }
+
+  public int getNumVisionGyroObservations() {
+    return m_numVisionGyroObservations;
   }
 }

@@ -112,7 +112,7 @@ public final class Constants {
 
     // tolerances for using the vision rotation, temp values
     public static final double kRotationErrorThreshold = 0.1;
-    public static final double kRotationDistanceThreshold = Units.inchesToMeters(8);
+    public static final double kRotationDistanceThreshold = Units.inchesToMeters(36);
     public static final double kRotationSpeedThreshold = 0.2; // m/s
 
     // transform from center of robot to camera

@@ -286,6 +286,9 @@ public class AprilTagVision extends SubsystemBase {
               && speeds.vyMetersPerSecond < AprilTagVisionConstants.kRotationSpeedThreshold) {
             useVisionRotation = true;
           }
+
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/TagPose", tagPose);
           Logger.recordOutput(
               "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/distance", distance);
           Logger.recordOutput(

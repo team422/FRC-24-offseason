@@ -199,13 +199,13 @@ public class AprilTagVision extends SubsystemBase {
             if (error1 < error2 * AprilTagVisionConstants.kAmbiguityThreshold
                 || error2 < error1 * AprilTagVisionConstants.kAmbiguityThreshold) {
               // Select based on odometry estimated rotation (which projection is closer)
-              Rotation2d currentRotation =
-                  RobotState.getInstance().getEstimatedPose().getRotation();
-              Rotation2d visionRotation1 = robotPose3d1.toPose2d().getRotation();
-              Rotation2d visionRotation2 = robotPose3d2.toPose2d().getRotation();
-              double angle1 = Math.abs(currentRotation.minus(visionRotation1).getRadians());
-              double angle2 = Math.abs(currentRotation.minus(visionRotation2).getRadians());
-              if (angle1 < angle2) {
+              // Rotation2d currentRotation =
+              //     RobotState.getInstance().getEstimatedPose().getRotation();
+              // Rotation2d visionRotation1 = robotPose3d1.toPose2d().getRotation();
+              // Rotation2d visionRotation2 = robotPose3d2.toPose2d().getRotation();
+              // double angle1 = Math.abs(currentRotation.minus(visionRotation1).getRadians());
+              // double angle2 = Math.abs(currentRotation.minus(visionRotation2).getRadians());
+              if (error1 < error2) {
                 cameraPose = cameraPose1;
                 robotPose3d = robotPose3d1;
                 error = error1;

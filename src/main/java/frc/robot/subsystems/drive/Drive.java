@@ -212,7 +212,7 @@ public class Drive extends SubsystemBase {
       Logger.recordOutput("ModuleOutputs/Module" + i + "/curAccelRate", accel);
       Logger.recordOutput(
           "ModuleOutputs/Module" + i + "/curAccelRateTimesSpeed",
-          Math.abs(accel) * m_modules[i].getCharacterizationVelocity());
+          Math.abs(accel * m_modules[i].getCharacterizationVelocity()));
     }
 
     Logger.recordOutput("Drive/Slip", slip);

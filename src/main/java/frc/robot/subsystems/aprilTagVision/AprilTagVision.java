@@ -278,7 +278,8 @@ public class AprilTagVision extends SubsystemBase {
         // should only ever be single tag but leaving it in for now in case we switch
         if (!useVisionRotation) {
           Pose3d tagPose = tagPoses.get(0);
-          double distance = tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+          // double distance = tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+          double distance = 0;
           ChassisSpeeds speeds = RobotState.getInstance().getRobotSpeeds();
           if (error < AprilTagVisionConstants.kRotationErrorThreshold
               && distance < AprilTagVisionConstants.kRotationDistanceThreshold

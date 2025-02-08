@@ -144,14 +144,17 @@ public final class Constants {
           //     Units.inchesToMeters(7.766),
           //     new Rotation3d(0.0, Units.degreesToRadians(-35), 0.0)
           //         .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(9.97)))),
+          new Transform3d(),
           new Transform3d(
               Units.inchesToMeters(0.0),
               Units.inchesToMeters(10.526),
               Units.inchesToMeters(8.5),
               new Rotation3d()),
+          new Transform3d(),
+          new Transform3d(),
         };
 
-    public static final int kCalibIndex = 3;
+    public static final int kCalibIndex = 1;
 
     public static final LoggedTunableNumber transformCameraX =
         new LoggedTunableNumber("cameraX", kCameraTransforms[kCalibIndex].getX());

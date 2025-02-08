@@ -102,7 +102,7 @@ public final class Constants {
     public static final double kAmbiguityThreshold = 0.4;
     public static final double kTargetLogTimeSecs = 0.1;
     public static final double kFieldBorderMargin = 0.5;
-    public static final double kZMargin = 0.75;
+    public static final double kZMargin = 0.0125;
     public static final LoggedTunableNumber kXYStandardDeviationCoefficient =
         new LoggedTunableNumber("xyStandardDeviationCoefficient", 0.005, "Cameras");
     public static final LoggedTunableNumber kThetaStandardDeviationCoefficient =

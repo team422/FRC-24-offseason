@@ -229,9 +229,13 @@ public class AprilTagVision extends SubsystemBase {
                 > FieldConstants.kFieldLength + AprilTagVisionConstants.kFieldBorderMargin
             || robotPose3d.getY() < -AprilTagVisionConstants.kFieldBorderMargin
             || robotPose3d.getY()
-                > FieldConstants.kFieldWidth + AprilTagVisionConstants.kFieldBorderMargin
-            || robotPose3d.getZ() < -AprilTagVisionConstants.kZMargin
+                > FieldConstants.kFieldWidth + AprilTagVisionConstants.kFieldBorderMargin) {
+          continue;
+        }
+        if (robotPose3d.getZ() < -AprilTagVisionConstants.kZMargin
             || robotPose3d.getZ() > AprilTagVisionConstants.kZMargin) {
+          System.out.println("FAILED THE Z CHECK");
+          Logger.recordOutput("Epicly failed", robotPose3d);
           continue;
         }
 

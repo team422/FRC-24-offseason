@@ -388,6 +388,10 @@ public class RobotContainer {
                   Pose2d newPose = drivePose.transformBy(transform);
                   m_drive.setPose(newPose);
                 }));
+
+    m_driverControls
+        .autoScore1()
+        .onTrue(new DriveToPoint(m_drive, new Pose2d(14.75, 4.37, Rotation2d.fromDegrees(-169))));
   }
 
   /**

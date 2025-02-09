@@ -76,7 +76,7 @@ public final class Constants {
         new LoggedTunableNumber("Drive Heading D", 0.05);
 
     // on real everything in drive is backwards for some reason
-    public static final boolean kRealReversed = true;
+    public static final boolean kRealReversed = false;
     public static final boolean kSimReversed = false;
 
     public static final LoggedTunableNumber kDriveToPointP =

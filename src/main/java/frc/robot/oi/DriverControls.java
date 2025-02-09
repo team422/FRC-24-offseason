@@ -32,4 +32,16 @@ public interface DriverControls {
   public Trigger midlineHockeyPuck();
 
   public Trigger setpointHockeyPuck();
+
+  public default Trigger autoScore1() {
+    return new Trigger(() -> false);
+  }
+
+  public default Trigger autoScore2() {
+    return new Trigger(() -> false);
+  }
+
+  public default Trigger fuckYouOdometry() {
+    return new Trigger(() -> false);
+  }
 }

@@ -17,6 +17,7 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -369,6 +370,23 @@ public class RobotContainer {
                   Logger.recordOutput(
                       "Stow/Setpoint hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
+                }));
+
+    m_driverControls
+        .fuckYouOdometry()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Pose2d drivePose = m_drive.getPose();
+                  Rotation2d transformAngle = Rotation2d.fromRotations(Math.random());
+                  double transformDistance = Math.random() * 0.8 + 1;
+                  // split to x and y
+                  Transform2d transform =
+                      new Transform2d(
+                          new Translation2d(transformDistance, 0).rotateBy(transformAngle),
+                          new Rotation2d());
+                  Pose2d newPose = drivePose.transformBy(transform);
+                  m_drive.setPose(newPose);
                 }));
   }
 

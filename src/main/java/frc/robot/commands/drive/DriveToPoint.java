@@ -12,6 +12,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.subsystems.drive.Drive;
+import frc.robot.util.LoggedTunableNumber;
 import org.littletonrobotics.junction.Logger;
 
 public class DriveToPoint extends Command {
@@ -47,6 +48,14 @@ public class DriveToPoint extends Command {
     m_headingController.setTolerance(Units.degreesToRadians(1));
   }
 
+  public void setTargetPose(Pose2d targetPose) {
+    m_targetPose = targetPose;
+    if (isScheduled()) {
+      cancel();
+      schedule();
+    }
+  }
+
   @Override
   public void initialize() {
     Pose2d currentPose = m_drive.getPose();
@@ -71,6 +80,23 @@ public class DriveToPoint extends Command {
 
   @Override
   public void execute() {
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          m_driveController.setP(DriveConstants.kDriveToPointP.get());
+          m_driveController.setI(DriveConstants.kDriveToPointI.get());
+          m_driveController.setD(DriveConstants.kDriveToPointD.get());
+          m_headingController.setP(DriveConstants.kDriveToPointHeadingP.get());
+          m_headingController.setI(DriveConstants.kDriveToPointHeadingI.get());
+          m_headingController.setD(DriveConstants.kDriveToPointHeadingD.get());
+        },
+        DriveConstants.kDriveToPointP,
+        DriveConstants.kDriveToPointI,
+        DriveConstants.kDriveToPointD,
+        DriveConstants.kDriveToPointHeadingP,
+        DriveConstants.kDriveToPointHeadingI,
+        DriveConstants.kDriveToPointHeadingD);
+
     Pose2d currentPose = m_drive.getPose();
 
     double currentDistance =
@@ -97,6 +123,7 @@ public class DriveToPoint extends Command {
 
     // evil math
     // blame 254 for making this because i dont fully understand it
+    // update: i understand it now :)
     Translation2d driveVelocity =
         new Pose2d(
                 0.0,
@@ -113,6 +140,7 @@ public class DriveToPoint extends Command {
     Logger.recordOutput("DriveToPoint/DriveDistance", currentDistance);
     Logger.recordOutput("DriveToPoint/HeadingError", headingError);
 
+    Logger.recordOutput("DriveToPoint/FFScaler", ffScaler);
     Logger.recordOutput("DriveToPoint/DriveVelocityScalar", driveVelocityScalar);
     Logger.recordOutput("DriveToPoint/HeadingVelocity", headingVelocity);
     Logger.recordOutput("DriveToPoint/DriveVelocityX", driveVelocity.getX());

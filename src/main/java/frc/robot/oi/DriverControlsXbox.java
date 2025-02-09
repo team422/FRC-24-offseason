@@ -42,7 +42,7 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public Trigger ejectGamePiece() {
-    return m_controller.b();
+    return new Trigger(() -> false);
   }
 
   @Override
@@ -52,7 +52,7 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public Trigger hockeyPuck() {
-    return m_controller.leftBumper();
+    return new Trigger(() -> false);
   }
 
   @Override
@@ -78,5 +78,20 @@ public class DriverControlsXbox implements DriverControls {
   @Override
   public Trigger setpointHockeyPuck() {
     return m_controller.povLeft();
+  }
+
+  @Override
+  public Trigger autoScore1() {
+    return m_controller.b();
+  }
+
+  @Override
+  public Trigger autoScore2() {
+    return m_controller.leftBumper();
+  }
+
+  @Override
+  public Trigger fuckYouOdometry() {
+    return m_controller.start();
   }
 }

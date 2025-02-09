@@ -97,12 +97,11 @@ public class RobotContainer {
   private void configureSubsystems() {
     Logger.recordOutput("Calibration/EmptyPose3d", new Pose3d());
 
-    m_aprilTagVision =
-        new AprilTagVision(
-            new AprilTagVisionIONorthstar("northstar_0", ""),
-            new AprilTagVisionIONorthstar("northstar_1", ""),
-            new AprilTagVisionIONorthstar("northstar_2", ""),
-            new AprilTagVisionIONorthstar("northstar_3", ""));
+    m_aprilTagVision = new AprilTagVision(new AprilTagVisionIONorthstar("", ""));
+    // new AprilTagVisionIONorthstar("northstar_0", ""),
+    // new AprilTagVisionIONorthstar("northstar_1", ""),
+    // new AprilTagVisionIONorthstar("northstar_2", ""),
+    // new AprilTagVisionIONorthstar("northstar_3", ""));
 
     if (RobotBase.isReal()) {
       m_drive =

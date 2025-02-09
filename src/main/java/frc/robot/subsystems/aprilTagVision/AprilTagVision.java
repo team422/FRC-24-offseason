@@ -335,6 +335,8 @@ public class AprilTagVision extends SubsystemBase {
           thetaStandardDeviation = Double.POSITIVE_INFINITY;
         }
 
+        xyStandardDeviation = Double.POSITIVE_INFINITY;
+
         double gyroAccuracyFactor = 1.0;
         if (RobotState.getInstance().getNumVisionGyroObservations() > 100) {
           // Calculate difference between vision and gyro rotation

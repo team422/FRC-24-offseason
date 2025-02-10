@@ -37,6 +37,9 @@ public class ModuleIOSim implements ModuleIO {
   private double m_driveAppliedVolts = 0.0;
   private double m_turnAppliedVolts = 0.0;
 
+  // for calculating acceleration
+  private double m_lastVelocity = 0.0;
+
   @Override
   public void updateInputs(ModuleIOInputs inputs) {
     m_driveSim.update(LOOP_PERIOD_SECS);
@@ -44,6 +47,7 @@ public class ModuleIOSim implements ModuleIO {
 
     inputs.drivePositionRad = m_driveSim.getAngularPositionRad();
     inputs.driveVelocityRadPerSec = m_driveSim.getAngularVelocityRadPerSec();
+    inputs.driveAccelerationRadPerSecSq = calculateDriveAcceleration(LOOP_PERIOD_SECS);
     inputs.driveAppliedVolts = m_driveAppliedVolts;
     inputs.driveCurrentAmps = new double[] {Math.abs(m_driveSim.getCurrentDrawAmps())};
 
@@ -69,5 +73,12 @@ public class ModuleIOSim implements ModuleIO {
   public void setTurnVoltage(double volts) {
     m_turnAppliedVolts = MathUtil.clamp(volts, -12.0, 12.0);
     m_turnSim.setInputVoltage(m_turnAppliedVolts);
+  }
+
+  private double calculateDriveAcceleration(double dt) {
+    double velocity = m_driveSim.getAngularVelocityRadPerSec();
+    double acceleration = (velocity - m_lastVelocity) / dt;
+    m_lastVelocity = velocity;
+    return acceleration;
   }
 }

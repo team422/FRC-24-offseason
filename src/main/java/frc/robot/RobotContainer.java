@@ -15,7 +15,9 @@ package frc.robot;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj.Timer;
@@ -28,8 +30,9 @@ import frc.robot.Constants.ShooterMathConstants;
 import frc.robot.RobotState.RobotAction;
 import frc.robot.commands.DriveCommands;
 import frc.robot.commands.auto.AutoFactory;
+import frc.robot.commands.drive.DriveToPoint;
 import frc.robot.oi.DriverControls;
-import frc.robot.oi.DriverControlsPS5;
+import frc.robot.oi.DriverControlsXbox;
 import frc.robot.oi.OperatorControls;
 import frc.robot.oi.OperatorControlsXbox;
 import frc.robot.subsystems.aprilTagVision.AprilTagVision;
@@ -38,7 +41,7 @@ import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.drive.Drive.DriveProfiles;
 import frc.robot.subsystems.drive.GyroIOPigeon2;
 import frc.robot.subsystems.drive.ModuleIOSim;
-import frc.robot.subsystems.drive.ModuleIOTalonFX;
+import frc.robot.subsystems.drive.ModuleIOSparkMax;
 import frc.robot.subsystems.indexer.Indexer;
 import frc.robot.subsystems.indexer.Indexer.IndexerState;
 import frc.robot.subsystems.indexer.IndexerIONeo;
@@ -92,6 +95,8 @@ public class RobotContainer {
 
   /** Configure the subsystems. */
   private void configureSubsystems() {
+    Logger.recordOutput("Calibration/EmptyPose3d", new Pose3d());
+
     m_aprilTagVision =
         new AprilTagVision(
             new AprilTagVisionIONorthstar("northstar_0", ""),
@@ -102,11 +107,11 @@ public class RobotContainer {
     if (RobotBase.isReal()) {
       m_drive =
           new Drive(
-              new GyroIOPigeon2(true),
-              new ModuleIOTalonFX(0),
-              new ModuleIOTalonFX(1),
-              new ModuleIOTalonFX(2),
-              new ModuleIOTalonFX(3));
+              new GyroIOPigeon2(false),
+              new ModuleIOSparkMax(0),
+              new ModuleIOSparkMax(1),
+              new ModuleIOSparkMax(2),
+              new ModuleIOSparkMax(3));
 
       m_intake = new Intake(new IntakeIONeo(Ports.kIntakeNeo));
 
@@ -127,7 +132,7 @@ public class RobotContainer {
     } else {
       m_drive =
           new Drive(
-              new GyroIOPigeon2(true),
+              new GyroIOPigeon2(false),
               new ModuleIOSim(),
               new ModuleIOSim(),
               new ModuleIOSim(),
@@ -160,16 +165,21 @@ public class RobotContainer {
     // Configure autos here
     m_autoChooser.addOption("Do Nothing", Commands.none());
     List<String> paths = PathPlannerUtil.getExistingPaths();
-    m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
+    // m_autoChooser.addDefaultOption("4 piece alt", m_autoFactory.getAutoCommand("4 piece alt"));
     for (String path : paths) {
       m_autoChooser.addOption(path, m_autoFactory.getAutoCommand(path));
     }
+    m_autoChooser.addDefaultOption(
+        "Drive to point test",
+        new DriveToPoint(m_drive, new Pose2d(1.93, 5.89, new Rotation2d(Math.PI))));
+    m_autoChooser.addOption(
+        "Drive characterization", DriveCommands.feedforwardCharacterization(m_drive));
   }
 
   /** Configure the controllers. */
   private void configureControllers() {
-    m_driverControls = new DriverControlsPS5(0);
-    // m_driverControls = new DriverControlsXbox(0);
+    // m_driverControls = new DriverControlsPS5(0);
+    m_driverControls = new DriverControlsXbox(0);
     m_operatorControls = new OperatorControlsXbox(5);
   }
 
@@ -363,6 +373,31 @@ public class RobotContainer {
                       "Stow/Setpoint hockey puck released", Timer.getFPGATimestamp());
                   m_robotState.setDefaultAction();
                 }));
+
+    m_driverControls
+        .fuckYouOdometry()
+        .onTrue(
+            Commands.runOnce(
+                () -> {
+                  Pose2d drivePose = m_drive.getPose();
+                  Rotation2d transformAngle = Rotation2d.fromRotations(Math.random());
+                  double transformDistance = Math.random() * 0.8 + 1;
+                  // split to x and y
+                  Transform2d transform =
+                      new Transform2d(
+                          new Translation2d(transformDistance, 0).rotateBy(transformAngle),
+                          new Rotation2d());
+                  Pose2d newPose = drivePose.transformBy(transform);
+                  m_drive.setPose(newPose);
+                }));
+
+    m_driverControls
+        .autoScore1()
+        .onTrue(new DriveToPoint(m_drive, new Pose2d(14.75, 4.37, Rotation2d.fromDegrees(-169))));
+
+    m_driverControls
+        .visionToggle()
+        .onTrue(Commands.runOnce(() -> RobotState.getInstance().toggleVision()));
   }
 
   /**

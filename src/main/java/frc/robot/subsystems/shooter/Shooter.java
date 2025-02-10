@@ -1,19 +1,20 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Shooter extends SubsystemBase {
   private FlywheelIO m_io;
   public final FlywheelInputsAutoLogged m_inputs;
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<ShooterState> m_profiles;
   private PIDController m_topController;
   private PIDController m_bottomController;
   private SimpleMotorFeedforward m_topFeedforward;
@@ -44,18 +45,18 @@ public class Shooter extends SubsystemBase {
 
     m_inputs = new FlywheelInputsAutoLogged();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<ShooterState, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(ShooterState.kIdle, this::idlePeriodic);
     periodicHash.put(ShooterState.kRevving, this::revvingPeriodic);
     periodicHash.put(ShooterState.kEjecting, this::ejectingPeriodic);
     periodicHash.put(ShooterState.kAmp, this::ampPeriodic);
     periodicHash.put(ShooterState.kManualControl, this::manualControlPeriodic);
-    m_profiles = new SubsystemProfiles(ShooterState.class, periodicHash, ShooterState.kIdle);
+    m_profiles = new SubsystemProfiles<>(periodicHash, ShooterState.kIdle);
   }
 
   @Override
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     if (ShooterConstants.kManualControl) {
       updateState(ShooterState.kManualControl);
@@ -66,9 +67,9 @@ public class Shooter extends SubsystemBase {
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Shooter", m_inputs);
-    Logger.recordOutput("Shooter/State", (ShooterState) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Shooter/State", m_profiles.getCurrentProfile());
 
-    Logger.recordOutput("PeriodicTime/Shooter", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/Shooter", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   public void idlePeriodic() {
@@ -184,7 +185,7 @@ public class Shooter extends SubsystemBase {
   }
 
   public ShooterState getState() {
-    return (ShooterState) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   public void setDesiredVelocity(double topVelocityRPS, double bottomVelocityRPS) {

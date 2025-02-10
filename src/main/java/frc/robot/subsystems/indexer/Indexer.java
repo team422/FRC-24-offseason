@@ -1,5 +1,6 @@
 package frc.robot.subsystems.indexer;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -7,12 +8,13 @@ import frc.robot.Constants.IndexerConstants;
 import frc.robot.RobotState;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Indexer extends SubsystemBase {
   private IndexerIO m_io;
   public final IndexerInputsAutoLogged m_inputs;
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<IndexerState> m_profiles;
 
   private Timer m_shootTimeout = new Timer();
   private Timer m_indexTimeout = new Timer();
@@ -31,28 +33,28 @@ public class Indexer extends SubsystemBase {
     m_io = io;
     m_inputs = new IndexerInputsAutoLogged();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<IndexerState, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(IndexerState.kIdle, this::idlePeriodic);
     periodicHash.put(IndexerState.kIntaking, this::intakingPeriodic);
     periodicHash.put(IndexerState.kIndexing, this::indexingPeriodic);
     periodicHash.put(IndexerState.kReversing, this::reversingPeriodic);
     periodicHash.put(IndexerState.kShooting, this::shootingPeriodic);
     periodicHash.put(IndexerState.kVomitting, this::vomittingPeriodic);
-    m_profiles = new SubsystemProfiles(IndexerState.class, periodicHash, IndexerState.kIdle);
+    m_profiles = new SubsystemProfiles<>(periodicHash, IndexerState.kIdle);
   }
 
   @Override
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Indexer", m_inputs);
-    Logger.recordOutput("Indexer/State", (IndexerState) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Indexer/State", m_profiles.getCurrentProfile());
 
-    Logger.recordOutput("PeriodicTime/Indexer", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/Indexer", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   private void idlePeriodic() {
@@ -141,7 +143,7 @@ public class Indexer extends SubsystemBase {
   }
 
   public IndexerState getState() {
-    return (IndexerState) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   public boolean hasGamePiece() {

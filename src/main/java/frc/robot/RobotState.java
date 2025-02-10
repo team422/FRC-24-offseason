@@ -1,7 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -23,6 +25,7 @@ import frc.robot.util.AllianceFlipUtil;
 import frc.robot.util.ShooterMath;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 @SuppressWarnings("unused")
@@ -55,7 +58,7 @@ public class RobotState {
     kAutoShootNoAlign,
   }
 
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<RobotAction> m_profiles;
 
   private RobotState(
       Drive drive, Intake intake, Indexer indexer, Shooter shooter, AprilTagVision aprilTagVision) {
@@ -67,7 +70,7 @@ public class RobotState {
 
     m_shooterMath = new ShooterMath();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<RobotAction, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(RobotAction.kTeleopDefault, () -> {});
     periodicHash.put(RobotAction.kIntake, () -> {});
     periodicHash.put(RobotAction.kVomitting, () -> {});
@@ -82,7 +85,7 @@ public class RobotState {
     periodicHash.put(RobotAction.kAutoDefault, () -> {});
     periodicHash.put(RobotAction.kAutoShoot, this::autoShootPeriodic);
     periodicHash.put(RobotAction.kAutoShootNoAlign, this::autoShootNoAlignPeriodic);
-    m_profiles = new SubsystemProfiles(RobotAction.class, periodicHash, RobotAction.kTeleopDefault);
+    m_profiles = new SubsystemProfiles<>(periodicHash, RobotAction.kTeleopDefault);
   }
 
   public static void start(
@@ -98,18 +101,18 @@ public class RobotState {
   }
 
   public void updateRobotState() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     m_profiles.getPeriodicFunction().run();
 
-    Logger.recordOutput("RobotState/CurrentAction", (RobotAction) m_profiles.getCurrentProfile());
+    Logger.recordOutput("RobotState/CurrentAction", m_profiles.getCurrentProfile());
     Logger.recordOutput(
         "Alliance",
         DriverStation.getAlliance().isPresent()
             ? DriverStation.getAlliance().get().toString()
             : "Unknown");
 
-    Logger.recordOutput("PeriodicTime/RobotState", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/RobotState", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   public void revAndAlignPeriodic() {
@@ -245,6 +248,12 @@ public class RobotState {
     m_drive.setDesiredHeading(heading);
   }
 
+  private boolean m_useVision = true;
+
+  public void toggleVision() {
+    m_useVision = !m_useVision;
+  }
+
   public void ampLineupPeriodic() {}
 
   public void updateRobotAction(RobotAction newAction) {
@@ -316,12 +325,19 @@ public class RobotState {
     return m_drive.getPose();
   }
 
+  public ChassisSpeeds getRobotSpeeds() {
+    return m_drive.getChassisSpeeds();
+  }
+
   public void addVisionObservation(VisionObservation observation) {
+    if (!m_useVision) {
+      return;
+    }
     m_drive.addVisionObservation(observation);
   }
 
   public RobotAction getRobotAction() {
-    return (RobotAction) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   public void setDrive(DriveProfiles profile) {
@@ -347,5 +363,15 @@ public class RobotState {
 
     setDefaultAction();
     m_indexer.updateState(IndexerState.kIdle);
+  }
+
+  private int m_numVisionGyroObservations = 0;
+
+  public void incrementNumVisionGyroObservations() {
+    m_numVisionGyroObservations++;
+  }
+
+  public int getNumVisionGyroObservations() {
+    return m_numVisionGyroObservations;
   }
 }

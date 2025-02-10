@@ -1,6 +1,7 @@
 package frc.robot.subsystems.aprilTagVision;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -8,7 +9,9 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Quaternion;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.Timer;
@@ -17,6 +20,7 @@ import frc.robot.Constants.AprilTagVisionConstants;
 import frc.robot.Constants.FieldConstants;
 import frc.robot.RobotState;
 import frc.robot.subsystems.aprilTagVision.AprilTagVisionIO.AprilTagVisionInputs;
+import frc.robot.util.LoggedTunableNumber;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -34,6 +38,9 @@ public class AprilTagVision extends SubsystemBase {
 
   private Map<Integer, Double> m_lastFrameTimes;
   private Map<Integer, Double> m_lastTagDetectionTimes;
+
+  double gyroAccuracyConstant =
+      3.0; // higher numbers means the less we trust the vision/gyro sensor fusion
 
   public AprilTagVision(AprilTagVisionIO... ios) {
     m_ios = ios;
@@ -60,7 +67,28 @@ public class AprilTagVision extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
+
+    LoggedTunableNumber.ifChanged(
+        hashCode(),
+        () -> {
+          AprilTagVisionConstants.kCameraTransforms[AprilTagVisionConstants.kCalibIndex] =
+              new Transform3d(
+                  new Translation3d(
+                      AprilTagVisionConstants.transformCameraX.get(),
+                      AprilTagVisionConstants.cameraY.get(),
+                      AprilTagVisionConstants.cameraZ.get()),
+                  new Rotation3d(
+                      AprilTagVisionConstants.cameraRoll.get(),
+                      AprilTagVisionConstants.cameraPitch.get(),
+                      AprilTagVisionConstants.cameraYaw.get()));
+        },
+        AprilTagVisionConstants.transformCameraX,
+        AprilTagVisionConstants.cameraY,
+        AprilTagVisionConstants.cameraZ,
+        AprilTagVisionConstants.cameraRoll,
+        AprilTagVisionConstants.cameraPitch,
+        AprilTagVisionConstants.cameraYaw);
 
     for (int i = 0; i < m_ios.length; i++) {
       m_ios[i].updateInputs(m_inputs[i]);
@@ -68,6 +96,7 @@ public class AprilTagVision extends SubsystemBase {
       Logger.processInputs("AprilTagVision/Inst" + i, m_inputs[i]);
     }
 
+    List<Pose3d> allCameraPoses = new ArrayList<>();
     List<Pose2d> allRobotPoses = new ArrayList<>();
     List<Pose3d> allRobotPoses3d = new ArrayList<>();
     List<VisionObservation> allVisionObservations = new ArrayList<>();
@@ -94,6 +123,7 @@ public class AprilTagVision extends SubsystemBase {
         Pose3d cameraPose = null;
         Pose3d robotPose3d = null;
         boolean useVisionRotation = false;
+        double error = 0;
         switch (tagCount) {
           case 0:
             // No tag, do nothing
@@ -117,6 +147,9 @@ public class AprilTagVision extends SubsystemBase {
                     AprilTagVisionConstants.kCameraTransforms[instanceIndex].inverse());
 
             useVisionRotation = true;
+
+            error = values[1];
+
             break;
           case 2:
             // Two possible poses (one tag detected), need to choose one
@@ -139,6 +172,8 @@ public class AprilTagVision extends SubsystemBase {
             double rotationX2 = values[14];
             double rotationY2 = values[15];
             double rotationZ2 = values[16];
+
+            // TODO: add blacklist TO PI, NOT HERE
 
             Pose3d cameraPose1 =
                 new Pose3d(
@@ -164,23 +199,33 @@ public class AprilTagVision extends SubsystemBase {
             if (error1 < error2 * AprilTagVisionConstants.kAmbiguityThreshold
                 || error2 < error1 * AprilTagVisionConstants.kAmbiguityThreshold) {
               // Select based on odometry estimated rotation (which projection is closer)
-              Rotation2d currentRotation =
-                  RobotState.getInstance().getEstimatedPose().getRotation();
-              Rotation2d visionRotation1 = robotPose3d1.toPose2d().getRotation();
-              Rotation2d visionRotation2 = robotPose3d2.toPose2d().getRotation();
-              double angle1 = Math.abs(currentRotation.minus(visionRotation1).getRadians());
-              double angle2 = Math.abs(currentRotation.minus(visionRotation2).getRadians());
-              if (angle1 < angle2) {
+              // Rotation2d currentRotation =
+              //     RobotState.getInstance().getEstimatedPose().getRotation();
+              // Rotation2d visionRotation1 = robotPose3d1.toPose2d().getRotation();
+              // Rotation2d visionRotation2 = robotPose3d2.toPose2d().getRotation();
+              // double angle1 = Math.abs(currentRotation.minus(visionRotation1).getRadians());
+              // double angle2 = Math.abs(currentRotation.minus(visionRotation2).getRadians());
+              if (error1 < error2) {
                 cameraPose = cameraPose1;
                 robotPose3d = robotPose3d1;
+                error = error1;
               } else {
                 cameraPose = cameraPose2;
                 robotPose3d = robotPose3d2;
+                error = error2;
               }
             }
 
-            useVisionRotation =
-                false; // since there are two possible poses we shouldn't rely on the rotation
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/robotPose3d1", robotPose3d1);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/robotPose3d2", robotPose3d2);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/cameraPose1", cameraPose1);
+            Logger.recordOutput(
+                "AprilTagVision/Inst" + instanceIndex + "/cameraPose2", cameraPose2);
+            Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/error1", error1);
+            Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/error2", error2);
 
             break;
         }
@@ -231,6 +276,36 @@ public class AprilTagVision extends SubsystemBase {
           tagPose.ifPresent(tagPoses::add);
         }
 
+        // if camera error low, distance to tag small, robot not moving, we can trust rotation
+        // should only ever be single tag but leaving it in for now in case we switch
+        if (!useVisionRotation) {
+          Pose3d tagPose = tagPoses.get(0);
+          // double distance = tagPose.getTranslation().getDistance(cameraPose.getTranslation());
+          double distance = 0;
+          ChassisSpeeds speeds = RobotState.getInstance().getRobotSpeeds();
+          if (error < AprilTagVisionConstants.kRotationErrorThreshold
+              && Math.abs(distance) < AprilTagVisionConstants.kRotationDistanceThreshold
+              && Math.abs(speeds.vxMetersPerSecond)
+                  < AprilTagVisionConstants.kRotationSpeedThreshold
+              && Math.abs(speeds.vyMetersPerSecond)
+                  < AprilTagVisionConstants.kRotationSpeedThreshold) {
+            useVisionRotation = true;
+          }
+
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/TagPose", tagPose);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/distance", distance);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/error", error);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/speedX",
+              speeds.vxMetersPerSecond);
+          Logger.recordOutput(
+              "AprilTagVision/Inst" + instanceIndex + "/visionRotationCheck/speedY",
+              speeds.vyMetersPerSecond);
+        }
+
         // Calculate average distance to tag
         double totalDistance = 0.0;
         for (Pose3d tagPose : tagPoses) {
@@ -240,18 +315,19 @@ public class AprilTagVision extends SubsystemBase {
 
         // Add observation to list
         double xyStandardDeviation = 1;
-        if (edu.wpi.first.wpilibj.RobotState.isAutonomous()) {
-          xyStandardDeviation =
-              3.3
-                  * AprilTagVisionConstants.kXYStandardDeviationCoefficient.get()
-                  * Math.pow(averageDistance, 2.0)
-                  / tagPoses.size();
-        } else {
-          xyStandardDeviation =
-              AprilTagVisionConstants.kXYStandardDeviationCoefficient.get()
-                  * Math.pow(averageDistance, 2.0)
-                  / tagPoses.size();
-        }
+        xyStandardDeviation =
+            AprilTagVisionConstants.kXYStandardDeviationCoefficient.get()
+                // evil math
+                // if the error is under the threshold, we make the standard deviation smaller
+                // but if the error is above the threshold, we make the standard deviation larger
+                // i had to use desmos for this
+                // * Math.pow(error + 1 - AprilTagVisionConstants.kErrorStandardDeviationThreshold,
+                // 4)
+
+                // back to normal math
+                * Math.pow(averageDistance, 2.0)
+                / tagPoses.size();
+
         double thetaStandardDeviation = 1;
         if (useVisionRotation) {
           thetaStandardDeviation =
@@ -260,6 +336,27 @@ public class AprilTagVision extends SubsystemBase {
                   / tagPoses.size();
         } else {
           thetaStandardDeviation = Double.POSITIVE_INFINITY;
+        }
+
+        double gyroAccuracyFactor = 1.0;
+        if (RobotState.getInstance().getNumVisionGyroObservations() > 100) {
+          // Calculate difference between vision and gyro rotation
+          Rotation2d visionRotation = robotPose.getRotation();
+          Rotation2d gyroRotation = RobotState.getInstance().getEstimatedPose().getRotation();
+          double angleDifference = Math.abs(visionRotation.minus(gyroRotation).getDegrees());
+          // if we are more than 1 degree off, reduce accuracy
+          // now we don't just wanna 100% trust it if it has the same rotation
+          gyroAccuracyFactor = Math.max(0.3, angleDifference * gyroAccuracyConstant);
+          // if it is 2 degrees off, we are increasing our standard deviation by 2
+          xyStandardDeviation *= gyroAccuracyFactor;
+          // this should not change our theta standard deviation as our gyroscope will not correct
+          // if we do
+        }
+        if (thetaStandardDeviation
+            < 0.1) // check if the rotation standard deviation is low, if so add to
+        // numVisionGyroObservations
+        {
+          RobotState.getInstance().incrementNumVisionGyroObservations();
         }
 
         Logger.recordOutput(
@@ -281,6 +378,9 @@ public class AprilTagVision extends SubsystemBase {
         allRobotPoses.add(robotPose);
         allRobotPoses3d.add(robotPose3d);
 
+        // this will work?
+        allCameraPoses.add(cameraPose);
+
         // Log data from instance
         Logger.recordOutput(
             "AprilTagVision/Inst" + instanceIndex + "/LatencySecs",
@@ -290,12 +390,15 @@ public class AprilTagVision extends SubsystemBase {
         Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/RobotPose3d", robotPose3d);
         Logger.recordOutput(
             "AprilTagVision/Inst" + instanceIndex + "/TagPoses", tagPoses.toArray(Pose3d[]::new));
+
+        Logger.recordOutput("AprilTagVision/Inst" + instanceIndex + "/CameraPose", cameraPose);
       }
     }
 
     // Log robot poses
     Logger.recordOutput("AprilTagVision/RobotPoses", allRobotPoses.toArray(Pose2d[]::new));
     Logger.recordOutput("AprilTagVision/RobotPoses3d", allRobotPoses3d.toArray(Pose3d[]::new));
+    Logger.recordOutput("AprilTagVision/CameraPoses", allCameraPoses.toArray(Pose3d[]::new));
 
     // Log tag poses
     List<Pose3d> allTagPoses = new ArrayList<>();
@@ -307,6 +410,7 @@ public class AprilTagVision extends SubsystemBase {
     }
 
     // Send to RobotState
+    // TODO: mess around
     int maxObservations = 10;
     if (allVisionObservations.size() > maxObservations) {
       allVisionObservations = allVisionObservations.subList(0, maxObservations);
@@ -316,6 +420,6 @@ public class AprilTagVision extends SubsystemBase {
         .sorted(Comparator.comparingDouble(VisionObservation::timestamp))
         .forEach(RobotState.getInstance()::addVisionObservation);
 
-    Logger.recordOutput("PeriodicTime/AprilTagVision", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/AprilTagVision", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 }

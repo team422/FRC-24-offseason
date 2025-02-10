@@ -1,16 +1,18 @@
 package frc.robot.subsystems.intake;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.util.SubsystemProfiles;
 import java.util.HashMap;
+import java.util.Map;
 import org.littletonrobotics.junction.Logger;
 
 public class Intake extends SubsystemBase {
   private IntakeIO m_io;
   public final IntakeInputsAutoLogged m_inputs;
-  private SubsystemProfiles m_profiles;
+  private SubsystemProfiles<IntakeState> m_profiles;
 
   public enum IntakeState {
     kIdle,
@@ -22,25 +24,25 @@ public class Intake extends SubsystemBase {
     m_io = io;
     m_inputs = new IntakeInputsAutoLogged();
 
-    HashMap<Enum<?>, Runnable> periodicHash = new HashMap<>();
+    Map<IntakeState, Runnable> periodicHash = new HashMap<>();
     periodicHash.put(IntakeState.kIdle, this::idlePeriodic);
     periodicHash.put(IntakeState.kIntaking, this::intakingPeriodic);
     periodicHash.put(IntakeState.kVomitting, this::vomittingPeriodic);
-    m_profiles = new SubsystemProfiles(IntakeState.class, periodicHash, IntakeState.kIdle);
+    m_profiles = new SubsystemProfiles<>(periodicHash, IntakeState.kIdle);
   }
 
   @Override
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     m_io.updateInputs(m_inputs);
 
     m_profiles.getPeriodicFunction().run();
 
     Logger.processInputs("Intake", m_inputs);
-    Logger.recordOutput("Intake/State", (IntakeState) m_profiles.getCurrentProfile());
+    Logger.recordOutput("Intake/State", m_profiles.getCurrentProfile());
 
-    Logger.recordOutput("PeriodicTime/Intake", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/Intake", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   private void idlePeriodic() {
@@ -73,7 +75,7 @@ public class Intake extends SubsystemBase {
   }
 
   public IntakeState getState() {
-    return (IntakeState) m_profiles.getCurrentProfile();
+    return m_profiles.getCurrentProfile();
   }
 
   // Written by Ronith Kollipara

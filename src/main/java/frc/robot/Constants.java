@@ -39,12 +39,14 @@ public final class Constants {
   public static final boolean kTuningMode = true;
 
   public static final class DriveConstants {
-    public static final double kMaxLinearSpeed = 6.0; // meters per second
+    public static final double kMaxLinearSpeed = 4.0; // meters per second
+    public static final double kMaxLinearAcceleration = 1.5; // meters per second squared
     public static final double kTrackWidthX = Units.inchesToMeters(15.25);
     public static final double kTrackWidthY = Units.inchesToMeters(16.25);
     public static final double kDriveBaseRadius =
         Math.hypot(kTrackWidthX / 2.0, kTrackWidthY / 2.0);
     public static final double kMaxAngularSpeed = kMaxLinearSpeed / kDriveBaseRadius;
+    public static final double kMaxAngularAcceleration = kMaxLinearAcceleration / kDriveBaseRadius;
     public static final LoggedTunableNumber kTeleopRotationSpeed =
         new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
@@ -76,6 +78,24 @@ public final class Constants {
     // on real everything in drive is backwards for some reason
     public static final boolean kRealReversed = true;
     public static final boolean kSimReversed = false;
+
+    public static final LoggedTunableNumber kDriveToPointP =
+        new LoggedTunableNumber("DriveToPoint P", 3.0);
+    public static final LoggedTunableNumber kDriveToPointI =
+        new LoggedTunableNumber("DriveToPoint I", 0.0);
+    public static final LoggedTunableNumber kDriveToPointD =
+        new LoggedTunableNumber("DriveToPoint D", 0.0);
+
+    public static final LoggedTunableNumber kDriveToPointHeadingP =
+        new LoggedTunableNumber("DriveToPoint Heading P", 3.0);
+    public static final LoggedTunableNumber kDriveToPointHeadingI =
+        new LoggedTunableNumber("DriveToPoint Heading I", 0.0);
+    public static final LoggedTunableNumber kDriveToPointHeadingD =
+        new LoggedTunableNumber("DriveToPoint Heading D", 0.0);
+
+    // radians per second squared to be considered slipping
+    public static final LoggedTunableNumber kSlipThreshold =
+        new LoggedTunableNumber("Slip Threshold", 150000);
   }
 
   public static final class AprilTagVisionConstants {
@@ -88,41 +108,73 @@ public final class Constants {
     public static final LoggedTunableNumber kThetaStandardDeviationCoefficient =
         new LoggedTunableNumber("thetaStandardDeviationCoefficient", 0.01, "Cameras");
 
+    public static final double kErrorStandardDeviationThreshold = 0.2; // acceptable error
+
+    // tolerances for using the vision rotation, temp values
+    public static final double kRotationErrorThreshold = 0.3;
+    public static final double kRotationDistanceThreshold = Units.inchesToMeters(36);
+    public static final double kRotationSpeedThreshold = 0.2; // m/s
+
     // transform from center of robot to camera
     public static final Transform3d[] kCameraTransforms =
         new Transform3d[] {
-          // front right (shooter)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(-5.410),
-                  Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(-10))),
+          // // front right (shooter)
+          // new Transform3d(
+          //     Units.inchesToMeters(9.454),
+          //     Units.inchesToMeters(-5.541),
+          //     Units.inchesToMeters(7.766),
+          //     new Rotation3d(0.0, Units.degreesToRadians(-35), 0.0)
+          //         .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(-9.97)))),
 
-          // back right (intake)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(-14.620),
-                  Units.inchesToMeters(4.673),
-                  Units.inchesToMeters(8.585)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+          // // back right (intake)
+          // new Transform3d(
+          //     new Translation3d(
+          //         Units.inchesToMeters(-14.620),
+          //         Units.inchesToMeters(4.673),
+          //         Units.inchesToMeters(8.585)),
+          //     new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 -
+          // 10))),
 
-          // back left (intake)
-          new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(-14.620),
-                  Units.inchesToMeters(4.673),
-                  Units.inchesToMeters(8.585)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 - 10))),
+          // // back left (intake)
+          // new Transform3d(
+          //     new Translation3d(
+          //         Units.inchesToMeters(-14.620),
+          //         Units.inchesToMeters(4.673),
+          //         Units.inchesToMeters(8.585)),
+          //     new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(180 -
+          // 10))),
 
-          // front left (shooter)
+          // // front left (shooter)
+          // new Transform3d(
+          //     Units.inchesToMeters(9.454),
+          //     Units.inchesToMeters(5.541),
+          //     Units.inchesToMeters(7.766),
+          //     new Rotation3d(0.0, Units.degreesToRadians(-35), 0.0)
+          //         .rotateBy(new Rotation3d(0.0, 0.0, Units.degreesToRadians(9.97)))),
+          new Transform3d(),
           new Transform3d(
-              new Translation3d(
-                  Units.inchesToMeters(9.454),
-                  Units.inchesToMeters(5.410),
-                  Units.inchesToMeters(7.766)),
-              new Rotation3d(0.0, Units.degreesToRadians(-35), Units.degreesToRadians(10))),
+              Units.inchesToMeters(10.526),
+              Units.inchesToMeters(0.0),
+              Units.inchesToMeters(8.5),
+              new Rotation3d()),
+          new Transform3d(),
+          new Transform3d(),
         };
+
+    public static final int kCalibIndex = 1;
+
+    public static final LoggedTunableNumber transformCameraX =
+        new LoggedTunableNumber("cameraX", kCameraTransforms[kCalibIndex].getX());
+    public static final LoggedTunableNumber cameraY =
+        new LoggedTunableNumber("cameraY", kCameraTransforms[kCalibIndex].getY());
+    public static final LoggedTunableNumber cameraZ =
+        new LoggedTunableNumber("cameraZ", kCameraTransforms[kCalibIndex].getZ());
+    public static final LoggedTunableNumber cameraRoll =
+        new LoggedTunableNumber("cameraRoll", kCameraTransforms[kCalibIndex].getRotation().getX());
+    public static final LoggedTunableNumber cameraPitch =
+        new LoggedTunableNumber("cameraPitch", kCameraTransforms[kCalibIndex].getRotation().getY());
+    public static final LoggedTunableNumber cameraYaw =
+        new LoggedTunableNumber("cameraYaw", kCameraTransforms[kCalibIndex].getRotation().getZ());
   }
 
   public static final class IntakeConstants {
@@ -225,30 +277,30 @@ public final class Constants {
   }
 
   public static final class Ports {
-    public static final int kFrontLeftDrive = 0;
-    public static final int kFrontLeftTurn = 1;
-    public static final int kFrontLeftCancoder = 2;
+    public static final int kFrontLeftDrive = 1;
+    public static final int kFrontLeftTurn = 2;
+    public static final int kFrontLeftCancoder = 3;
 
-    public static final int kFrontRightDrive = 3;
-    public static final int kFrontRightTurn = 4;
-    public static final int kFrontRightCancoder = 5;
+    public static final int kFrontRightDrive = 4;
+    public static final int kFrontRightTurn = 5;
+    public static final int kFrontRightCancoder = 6;
 
-    public static final int kBackLeftDrive = 6;
-    public static final int kBackLeftTurn = 7;
-    public static final int kBackLeftCancoder = 8;
+    public static final int kBackLeftDrive = 7;
+    public static final int kBackLeftTurn = 8;
+    public static final int kBackLeftCancoder = 9;
 
-    public static final int kBackRightDrive = 9;
-    public static final int kBackRightTurn = 10;
-    public static final int kBackRightCancoder = 11;
+    public static final int kBackRightDrive = 10;
+    public static final int kBackRightTurn = 11;
+    public static final int kBackRightCancoder = 12;
 
     public static final int kPigeon = 22;
 
-    public static final String kCanivoreName = "Drivetrain";
+    public static final String kCanivoreName = "";
 
-    public static final int kIntakeNeo = 3;
-    public static final int kIndexerNeo = 4;
-    public static final int kTopFlywheel = 5;
-    public static final int kBottomFlywheel = 6;
+    public static final int kIntakeNeo = 13;
+    public static final int kIndexerNeo = 14;
+    public static final int kTopFlywheel = 15;
+    public static final int kBottomFlywheel = 16;
 
     public static final int kPhotoElectricOne = 8;
     public static final int kPhotoElectricTwo = 9;

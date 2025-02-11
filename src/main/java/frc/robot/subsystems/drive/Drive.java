@@ -15,6 +15,8 @@ package frc.robot.subsystems.drive;
 
 import static edu.wpi.first.units.Units.Volts;
 
+import edu.wpi.first.hal.HALUtil;
+import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -24,10 +26,11 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
@@ -124,7 +127,7 @@ public class Drive extends SubsystemBase {
   }
 
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     m_odometryLock.lock(); // Prevents odometry updates while reading data
     m_gyroIO.updateInputs(m_gyroInputs);
@@ -219,7 +222,7 @@ public class Drive extends SubsystemBase {
 
     Logger.recordOutput("Drive/Profile", m_profiles.getCurrentProfile());
 
-    Logger.recordOutput("PeriodicTime/Drive", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/Drive", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   public void defaultPeriodic() {
@@ -398,8 +401,9 @@ public class Drive extends SubsystemBase {
    * @param visionPose The pose of the robot as measured by the vision camera.
    * @param timestamp The timestamp of the vision measurement in seconds.
    */
-  public void addVisionMeasurement(Pose2d visionPose, double timestamp) {
-    m_poseEstimator.addVisionMeasurement(visionPose, timestamp);
+  public void addVisionMeasurement(
+      Pose2d visionPose, double timestamp, Matrix<N3, N1> standardDeviations) {
+    m_poseEstimator.addVisionMeasurement(visionPose, timestamp, standardDeviations);
   }
 
   /**
@@ -408,7 +412,8 @@ public class Drive extends SubsystemBase {
    * @param observation The VisionObservation object containing the vision data.
    */
   public void addVisionObservation(VisionObservation observation) {
-    addVisionMeasurement(observation.visionPose(), observation.timestamp());
+    addVisionMeasurement(
+        observation.visionPose(), observation.timestamp(), observation.standardDeviations());
   }
 
   public void updateProfile(DriveProfiles newProfile) {
@@ -417,5 +422,19 @@ public class Drive extends SubsystemBase {
 
   public boolean headingWithinTolerance() {
     return Math.abs(m_headingController.getPositionError()) < Units.degreesToRadians(5);
+  }
+
+  public void runCharacterization(double output) {
+    for (int i = 0; i < 4; i++) {
+      m_modules[i].runCharacterization(output);
+    }
+  }
+
+  public double getFFCharacterizationVelocity() {
+    double output = 0.0;
+    for (int i = 0; i < 4; i++) {
+      output += m_modules[i].getCharacterizationVelocity() / 4.0;
+    }
+    return output;
   }
 }

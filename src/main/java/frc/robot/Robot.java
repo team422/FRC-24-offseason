@@ -13,8 +13,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.wpilibj.RobotBase;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
@@ -88,11 +88,11 @@ public class Robot extends LoggedRobot {
 
     RobotState.getInstance().updateRobotState();
 
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     CommandScheduler.getInstance().run();
 
-    Logger.recordOutput("PeriodicTime/CommandScheduler", (double) Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/CommandScheduler", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   /** This function is called once when the robot is disabled. */

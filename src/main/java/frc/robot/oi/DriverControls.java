@@ -44,4 +44,8 @@ public interface DriverControls {
   public default Trigger fuckYouOdometry() {
     return new Trigger(() -> false);
   }
+
+  public default Trigger visionToggle() {
+    return new Trigger(() -> false);
+  }
 }

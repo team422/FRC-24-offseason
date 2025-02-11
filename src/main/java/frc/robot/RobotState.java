@@ -1,5 +1,6 @@
 package frc.robot;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -100,7 +101,7 @@ public class RobotState {
   }
 
   public void updateRobotState() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     m_profiles.getPeriodicFunction().run();
 
@@ -111,7 +112,7 @@ public class RobotState {
             ? DriverStation.getAlliance().get().toString()
             : "Unknown");
 
-    Logger.recordOutput("PeriodicTime/RobotState", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/RobotState", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   public void revAndAlignPeriodic() {
@@ -247,6 +248,12 @@ public class RobotState {
     m_drive.setDesiredHeading(heading);
   }
 
+  private boolean m_useVision = true;
+
+  public void toggleVision() {
+    m_useVision = !m_useVision;
+  }
+
   public void ampLineupPeriodic() {}
 
   public void updateRobotAction(RobotAction newAction) {
@@ -323,6 +330,9 @@ public class RobotState {
   }
 
   public void addVisionObservation(VisionObservation observation) {
+    if (!m_useVision) {
+      return;
+    }
     m_drive.addVisionObservation(observation);
   }
 

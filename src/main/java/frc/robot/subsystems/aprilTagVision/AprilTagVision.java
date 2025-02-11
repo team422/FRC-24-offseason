@@ -284,9 +284,11 @@ public class AprilTagVision extends SubsystemBase {
           double distance = 0;
           ChassisSpeeds speeds = RobotState.getInstance().getRobotSpeeds();
           if (error < AprilTagVisionConstants.kRotationErrorThreshold
-              && distance < AprilTagVisionConstants.kRotationDistanceThreshold
-              && speeds.vxMetersPerSecond < AprilTagVisionConstants.kRotationSpeedThreshold
-              && speeds.vyMetersPerSecond < AprilTagVisionConstants.kRotationSpeedThreshold) {
+              && Math.abs(distance) < AprilTagVisionConstants.kRotationDistanceThreshold
+              && Math.abs(speeds.vxMetersPerSecond)
+                  < AprilTagVisionConstants.kRotationSpeedThreshold
+              && Math.abs(speeds.vyMetersPerSecond)
+                  < AprilTagVisionConstants.kRotationSpeedThreshold) {
             useVisionRotation = true;
           }
 
@@ -319,7 +321,8 @@ public class AprilTagVision extends SubsystemBase {
                 // if the error is under the threshold, we make the standard deviation smaller
                 // but if the error is above the threshold, we make the standard deviation larger
                 // i had to use desmos for this
-                * Math.pow(error + 1 - AprilTagVisionConstants.kErrorStandardDeviationThreshold, 4)
+                // * Math.pow(error + 1 - AprilTagVisionConstants.kErrorStandardDeviationThreshold,
+                // 4)
 
                 // back to normal math
                 * Math.pow(averageDistance, 2.0)

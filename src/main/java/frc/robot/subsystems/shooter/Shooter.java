@@ -1,8 +1,8 @@
 package frc.robot.subsystems.shooter;
 
+import edu.wpi.first.hal.HALUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.util.LoggedTunableNumber;
@@ -56,7 +56,7 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    double start = Timer.getFPGATimestamp();
+    double start = HALUtil.getFPGATime();
 
     if (ShooterConstants.kManualControl) {
       updateState(ShooterState.kManualControl);
@@ -69,7 +69,7 @@ public class Shooter extends SubsystemBase {
     Logger.processInputs("Shooter", m_inputs);
     Logger.recordOutput("Shooter/State", m_profiles.getCurrentProfile());
 
-    Logger.recordOutput("PeriodicTime/Shooter", Timer.getFPGATimestamp() - start);
+    Logger.recordOutput("PeriodicTime/Shooter", (HALUtil.getFPGATime() - start) / 1000.0);
   }
 
   public void idlePeriodic() {

@@ -39,8 +39,8 @@ public final class Constants {
   public static final boolean kTuningMode = true;
 
   public static final class DriveConstants {
-    public static final double kMaxLinearSpeed = 2.0; // meters per second
-    public static final double kMaxLinearAcceleration = 0.5; // meters per second squared
+    public static final double kMaxLinearSpeed = 4.0; // meters per second
+    public static final double kMaxLinearAcceleration = 1.5; // meters per second squared
     public static final double kTrackWidthX = Units.inchesToMeters(15.25);
     public static final double kTrackWidthY = Units.inchesToMeters(16.25);
     public static final double kDriveBaseRadius =
@@ -111,7 +111,7 @@ public final class Constants {
     public static final double kErrorStandardDeviationThreshold = 0.2; // acceptable error
 
     // tolerances for using the vision rotation, temp values
-    public static final double kRotationErrorThreshold = 0.2;
+    public static final double kRotationErrorThreshold = 0.3;
     public static final double kRotationDistanceThreshold = Units.inchesToMeters(36);
     public static final double kRotationSpeedThreshold = 0.2; // m/s
 

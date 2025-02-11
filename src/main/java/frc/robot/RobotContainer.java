@@ -172,6 +172,8 @@ public class RobotContainer {
     m_autoChooser.addDefaultOption(
         "Drive to point test",
         new DriveToPoint(m_drive, new Pose2d(1.93, 5.89, new Rotation2d(Math.PI))));
+    m_autoChooser.addOption(
+        "Drive characterization", DriveCommands.feedforwardCharacterization(m_drive));
   }
 
   /** Configure the controllers. */
@@ -392,6 +394,10 @@ public class RobotContainer {
     m_driverControls
         .autoScore1()
         .onTrue(new DriveToPoint(m_drive, new Pose2d(14.75, 4.37, Rotation2d.fromDegrees(-169))));
+
+    m_driverControls
+        .visionToggle()
+        .onTrue(Commands.runOnce(() -> RobotState.getInstance().toggleVision()));
   }
 
   /**

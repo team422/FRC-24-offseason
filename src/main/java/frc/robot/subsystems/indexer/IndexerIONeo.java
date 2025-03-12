@@ -14,6 +14,7 @@ public class IndexerIONeo implements IndexerIO {
 
   public IndexerIONeo(int motorPort, int photoElectricOnePort, int photoElectricTwoPort) {
     m_motor = new CANSparkMax(motorPort, MotorType.kBrushless);
+    m_motor.restoreFactoryDefaults(true);
     m_motor.setIdleMode(IdleMode.kCoast);
     m_encoder = m_motor.getEncoder();
 

@@ -14,7 +14,7 @@ public class FlywheelIONeo implements FlywheelIO {
   public FlywheelIONeo(int topPort, int bottomPort) {
     m_topMotor = new CANSparkMax(topPort, MotorType.kBrushless);
     m_topMotor.setIdleMode(IdleMode.kCoast);
-    m_topMotor.setInverted(true);
+    m_topMotor.setInverted(false);
     m_topEncoder = m_topMotor.getEncoder();
 
     m_bottomMotor = new CANSparkMax(bottomPort, MotorType.kBrushless);

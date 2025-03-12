@@ -20,6 +20,8 @@ public class FlywheelIONeo implements FlywheelIO {
     m_bottomMotor.setIdleMode(IdleMode.kCoast);
     m_bottomEncoder = m_bottomMotor.getEncoder();
     m_bottomMotor.setInverted(true); // bottom is inverted so that positive velocity is outward
+
+    m_topMotor.setInverted(true);
   }
 
   @Override

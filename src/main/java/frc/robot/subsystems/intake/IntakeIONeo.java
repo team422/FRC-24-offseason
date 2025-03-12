@@ -12,6 +12,7 @@ public class IntakeIONeo implements IntakeIO {
   public IntakeIONeo(int port) {
     m_motor = new CANSparkMax(port, MotorType.kBrushless);
     m_motor.setIdleMode(IdleMode.kCoast);
+    m_motor.setInverted(true);
     m_encoder = m_motor.getEncoder();
   }
 

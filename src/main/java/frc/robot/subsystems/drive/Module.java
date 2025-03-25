@@ -75,7 +75,11 @@ public class Module {
     // Run closed loop turn control
     if (m_angleSetpoint != null) {
       m_io.setTurnVoltage(
-          m_turnFeedback.calculate(getAngle().getRadians(), m_angleSetpoint.getRadians()));
+        m_turnFeedback.calculate(getAngle().getRadians(), m_angleSetpoint.getRadians()));
+      Logger.recordOutput("Module"+m_index+"/TurnSetpoint", m_angleSetpoint.getDegrees());
+      Logger.recordOutput("Module"+m_index+"/TurnAngle", getAngle().getDegrees());
+      Logger.recordOutput("Module"+m_index+"/TurnError", m_turnFeedback.getPositionError());
+      Logger.recordOutput("Module"+m_index+"/TurnVoltage", m_turnFeedback.calculate(getAngle().getRadians(), m_angleSetpoint.getRadians()));
 
       // Run closed loop drive control
       // Only allowed if closed loop turn control is running

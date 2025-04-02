@@ -49,7 +49,7 @@ public final class Constants {
         new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
     // for demos
-    public static final boolean kBabyMode = true;
+    public static final boolean kBabyMode = false;
     public static final LoggedTunableNumber kBabyModeDriveFactor =
         new LoggedTunableNumber("Baby Mode Drive Factor", 0.25);
     public static final LoggedTunableNumber kBabyModeTurnFactor =

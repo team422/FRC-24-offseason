@@ -80,7 +80,7 @@ public class DriverControlsXbox implements DriverControls {
 
   @Override
   public Trigger setpointHockeyPuck() {
-    return m_controller.leftBumper();
-    // return new Trigger(() -> false);
+    // return m_controller.leftBumper();
+    return new Trigger(() -> false);
   }
 }

@@ -47,17 +47,20 @@ public class DriverControlsPS5 implements DriverControls {
 
   @Override
   public Trigger revShooter() {
-    return m_controller.L2();
+    // return m_controller.L2();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger hockeyPuck() {
-    return m_controller.L1();
+    // return m_controller.L1();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger amp() {
-    return m_controller.triangle();
+    // return m_controller.triangle();
+    return new Trigger(() -> false);
   }
 
   @Override
@@ -67,16 +70,18 @@ public class DriverControlsPS5 implements DriverControls {
 
   @Override
   public Trigger subwooferShot() {
-    return m_controller.cross();
+    return m_controller.L2();
   }
 
   @Override
   public Trigger midlineHockeyPuck() {
-    return m_controller.square();
+    // return m_controller.square();
+    return new Trigger(() -> false);
   }
 
   @Override
   public Trigger setpointHockeyPuck() {
-    return m_controller.povLeft();
+    // return m_controller.L1();
+    return new Trigger(() -> false);
   }
 }

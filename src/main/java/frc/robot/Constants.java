@@ -49,9 +49,9 @@ public final class Constants {
         new LoggedTunableNumber("Teleop Rotation Speed", 10.0);
 
     // for demos
-    public static final boolean kBabyMode = false;
+    public static final boolean kBabyMode = true;
     public static final LoggedTunableNumber kBabyModeDriveFactor =
-        new LoggedTunableNumber("Baby Mode Drive Factor", 0.25);
+        new LoggedTunableNumber("Baby Mode Drive Factor", 0.1);
     public static final LoggedTunableNumber kBabyModeTurnFactor =
         new LoggedTunableNumber("Baby Mode Turn Factor", 0.2);
 
@@ -136,7 +136,7 @@ public final class Constants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("Intake Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakeVoltage =
-        new LoggedTunableNumber("Intake Voltage", -10.0);
+        new LoggedTunableNumber("Intake Voltage", -6.0);
     public static final LoggedTunableNumber kOuttakeVoltage =
         new LoggedTunableNumber("Outtake Voltage", 7.0);
 
@@ -152,17 +152,17 @@ public final class Constants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("Indexer Idle Voltage", 0.0);
     public static final LoggedTunableNumber kIntakingVoltage =
-        new LoggedTunableNumber("Indexer Intake Voltage", -8.0);
+        new LoggedTunableNumber("Indexer Intake Voltage", -6.0);
     public static final LoggedTunableNumber kIndexingVoltage =
-        new LoggedTunableNumber("Indexer Indexing Voltage", -8.0);
+        new LoggedTunableNumber("Indexer Indexing Voltage", -6.0);
     public static final LoggedTunableNumber kTeleopReversingVoltage =
-        new LoggedTunableNumber("Indexer Reverse Voltage", 8.0);
+        new LoggedTunableNumber("Indexer Reverse Voltage", 6.0);
     public static final LoggedTunableNumber kAutoReversingVoltage =
         new LoggedTunableNumber("Indexer Auto Reverse Voltage", 2.0);
     public static final LoggedTunableNumber kShootingVoltage =
-        new LoggedTunableNumber("Indexer Shooting Voltage", -12.0);
+        new LoggedTunableNumber("Indexer Shooting Voltage", -8.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("Indexer Eject Voltage", 8.0);
+        new LoggedTunableNumber("Indexer Eject Voltage", 6.0);
 
     public static final LoggedTunableNumber kShootingTimeout =
         new LoggedTunableNumber("Indexer Shooting Timeout", 0.75);
@@ -185,7 +185,7 @@ public final class Constants {
     public static final LoggedTunableNumber kIdleVoltage =
         new LoggedTunableNumber("Shooter Idle Voltage", 0.0);
     public static final LoggedTunableNumber kEjectingVoltage =
-        new LoggedTunableNumber("Shooter Ejecting Voltage", 7.0);
+        new LoggedTunableNumber("Shooter Ejecting Voltage", 4.0);
 
     public static final LoggedTunableNumber kFlywheelP =
         new LoggedTunableNumber("Flywheel P", 0.01);
